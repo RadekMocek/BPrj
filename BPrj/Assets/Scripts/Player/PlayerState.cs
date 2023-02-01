@@ -7,7 +7,7 @@ public abstract class PlayerState
     protected Animator anim;
 
     protected Vector2 playerToCursorDirection;
-    protected Vector2 movementInput;
+    protected Vector2 movementInput;    
 
     public PlayerState(Player player)
     {
@@ -16,7 +16,7 @@ public abstract class PlayerState
         anim = player.Anim;
     }
 
-    public /*virtual*/ void Enter()
+    public virtual void Enter()
     {
         Debug.Log($"Player changed to {this.GetType().Name}.");
     }

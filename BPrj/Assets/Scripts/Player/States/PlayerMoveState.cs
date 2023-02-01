@@ -15,6 +15,8 @@ public class PlayerMoveState : PlayerState
         base.Update();
 
         // Animation logic
+        #region Look in cursor's direction
+        /*
         if (Mathf.Abs(playerToCursorDirection.x) > Mathf.Abs(playerToCursorDirection.y)) {
             if (playerToCursorDirection.x > 0) {
                 anim.CrossFade("Player_Walk_Right", 0);
@@ -31,9 +33,28 @@ public class PlayerMoveState : PlayerState
                 anim.CrossFade("Player_Walk_Down", 0);
             }
         }
+        */
+        #endregion
+        if (movementInput.y > 0) {
+            anim.CrossFade("Player_Walk_Up", 0);
+            player.LastMovementDirection = 0;
+        }
+        else if (movementInput.y < 0) {
+            anim.CrossFade("Player_Walk_Down", 0);
+            player.LastMovementDirection = 2;
+        }
+        else if (movementInput.x < 0) {
+            anim.CrossFade("Player_Walk_Left", 0);
+            player.LastMovementDirection = 3;
+        }
+        else if (movementInput.x > 0) {
+            anim.CrossFade("Player_Walk_Right", 0);
+            player.LastMovementDirection = 1;
+        }
 
         // Movement logic
-        player.transform.Translate(movementSpeed * Time.deltaTime * movementInput);
+        //player.transform.Translate(movementSpeed * Time.deltaTime * movementInput);
+        player.SetVelocity(movementSpeed * movementInput);
 
         // ChangeState logic
         if (movementInput.magnitude == 0) {

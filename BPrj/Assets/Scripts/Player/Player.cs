@@ -3,6 +3,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // Component references
+    private Rigidbody2D RB { get; set; }
     private PlayerInputHandler IH { get; set; }
     public Animator Anim { get; private set; }
 
@@ -17,7 +18,14 @@ public class Player : MonoBehaviour
     }
 
     // Movement
-    public Vector2 GetNormalizedMovementInput() => new Vector3(IH.MovementX, IH.MovementY).normalized;
+    private Vector2 movementInputTempVector;
+    public Vector2 GetNormalizedMovementInput()
+    {
+        movementInputTempVector.Set(IH.MovementX, IH.MovementY);
+        return movementInputTempVector.normalized;
+    }
+    public int LastMovementDirection { get; set; } // 0 = up; 1 = right; 2 = down; 3 = left
+    public void SetVelocity(Vector2 velocity) => RB.velocity = velocity;
 
     // Cursor position
     private Vector3 cursorPosition;
@@ -35,6 +43,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         // Set components references
+        RB = GetComponent<Rigidbody2D>();
         IH = GetComponent<PlayerInputHandler>();
         Anim = GetComponent<Animator>();
 

@@ -8,7 +8,7 @@ public class PlayerMoveState : PlayerState
     {
     }
 
-    private float movementSpeed = 3.0f;
+    private float movementSpeed = 4.5f;
 
     public override void Update()
     {

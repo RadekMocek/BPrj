@@ -2,32 +2,35 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // Component references
+    // == Component references =============
     private Rigidbody2D RB { get; set; }
     private PlayerInputHandler IH { get; set; }
     public Animator Anim { get; private set; }
 
-    // State machine
+    // == State machine ====================
     private PlayerState CurrentState { get; set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
+
     public void ChangeState(PlayerState newState)
     {
         newState.Enter();
         CurrentState = newState;
     }
 
-    // Movement
-    private Vector2 movementInputTempVector;
+    // == Movement =========================
+    private Vector2 movementInputTempVector; // Saving input to variable so we don't have to call new() every frame
+    public int LastMovementDirection { get; set; } // 0 = up; 1 = right; 2 = down; 3 = left; used in IdleState.Enter() to set correct sprite
+
     public Vector2 GetNormalizedMovementInput()
     {
         movementInputTempVector.Set(IH.MovementX, IH.MovementY);
         return movementInputTempVector.normalized;
     }
-    public int LastMovementDirection { get; set; } // 0 = up; 1 = right; 2 = down; 3 = left
+
     public void SetVelocity(Vector2 velocity) => RB.velocity = velocity;
 
-    // Cursor position
+    // == Cursor position ==================
     private Vector3 cursorPosition;
     private Vector2 cursorCoordinates;
     public Vector2 GetPlayerToCursorDirection()
@@ -39,7 +42,7 @@ public class Player : MonoBehaviour
         return ((cursorCoordinates - (Vector2)this.transform.position).normalized);
     }
 
-    // MonoBehaviour functions
+    // == MonoBehaviour functions ==========
     private void Awake()
     {
         // Set components references
@@ -54,6 +57,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        LastMovementDirection = 2; // Facing down
         ChangeState(IdleState);
     }
 

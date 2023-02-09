@@ -6,9 +6,10 @@ public abstract class PlayerState
     protected Player player;
     protected Animator anim;
 
-    // Data from player used in particular states
+    // Data from player/input used in particular states
     protected Vector2 playerToCursorDirection;
-    protected Vector2 movementInput;    
+    protected Vector2 movementInput;
+    protected bool sneakInputPressedThisFrame;
 
     // Initialization
     public PlayerState(Player player)
@@ -35,5 +36,6 @@ public abstract class PlayerState
         // Get player's data
         playerToCursorDirection = player.GetPlayerToCursorDirection();
         movementInput = player.GetNormalizedMovementInput();
+        sneakInputPressedThisFrame = player.IH.SneakAction.WasPressedThisFrame();
     }
 }

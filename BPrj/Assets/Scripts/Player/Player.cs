@@ -4,13 +4,15 @@ public class Player : MonoBehaviour
 {
     // == Component references =============
     private Rigidbody2D RB { get; set; }
-    private PlayerInputHandler IH { get; set; }
+    public PlayerInputHandler IH { get; private set; }
     public Animator Anim { get; private set; }
 
     // == State machine ====================
     private PlayerState CurrentState { get; set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
+    public PlayerSneakIdleState SneakIdleState { get; private set; }
+    public PlayerSneakMoveState SneakMoveState { get; private set; }
 
     public void ChangeState(PlayerState newState)
     {
@@ -33,12 +35,15 @@ public class Player : MonoBehaviour
     // == Cursor position ==================
     private Vector3 cursorPosition;
     private Vector2 cursorCoordinates;
-    public Vector2 GetPlayerToCursorDirection()
+    public void UpdateCursorPositionAndCoordinates()
     {
         cursorPosition = Input.mousePosition;
         cursorPosition.z = Camera.main.nearClipPlane;
         cursorCoordinates = Camera.main.ScreenToWorldPoint(cursorPosition);
-
+    }
+    public Vector2 GetPlayerToCursorDirection()
+    {
+        UpdateCursorPositionAndCoordinates();
         return ((cursorCoordinates - (Vector2)this.transform.position).normalized);
     }
 
@@ -53,6 +58,8 @@ public class Player : MonoBehaviour
         // States initialization
         IdleState = new PlayerIdleState(this);
         MoveState = new PlayerMoveState(this);
+        SneakIdleState = new PlayerSneakIdleState(this);
+        SneakMoveState = new PlayerSneakMoveState(this);
     }
 
     private void Start()
@@ -63,11 +70,25 @@ public class Player : MonoBehaviour
 
     private void FixedUpdate()
     {
+        // State logic
         CurrentState.FixedUpdate();
     }
 
     private void Update()
     {
+        // State logic
         CurrentState.Update();
+
+        // Cursor
+        if (Input.GetMouseButtonDown(1)) {
+            UpdateCursorPositionAndCoordinates();
+            RaycastHit2D hit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
+            if (hit) {
+                var hitGO = hit.transform.gameObject;
+                if (hitGO.TryGetComponent<IRightClickable>(out IRightClickable hitScript)) {
+                    hitScript.OnRightClick(this);
+                }
+            }
+        }
     }
 }

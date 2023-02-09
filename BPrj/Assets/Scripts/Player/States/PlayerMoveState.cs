@@ -60,5 +60,8 @@ public class PlayerMoveState : PlayerState
         if (movementInput.magnitude == 0) {
             player.ChangeState(player.IdleState);
         }
+        else if (sneakInputPressedThisFrame) {
+            player.ChangeState(player.SneakMoveState);
+        }
     }
 }

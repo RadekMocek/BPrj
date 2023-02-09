@@ -10,6 +10,7 @@ public class PlayerIdleState : PlayerState
     {
         base.Enter();
 
+        // Choose correct animation
         if (player.LastMovementDirection == 0) anim.CrossFade("Player_Idle_Up", 0);
         else if (player.LastMovementDirection == 1) anim.CrossFade("Player_Idle_Right", 0);
         else if (player.LastMovementDirection == 2) anim.CrossFade("Player_Idle_Down", 0);
@@ -45,6 +46,9 @@ public class PlayerIdleState : PlayerState
         // ChangeState logic
         if (movementInput.magnitude != 0) {
             player.ChangeState(player.MoveState);
+        }
+        else if (sneakInputPressedThisFrame) {
+            player.ChangeState(player.SneakIdleState);
         }
     }
 }

@@ -5,7 +5,7 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour
 {
     // Component references
-    private PlayerInput PI { get; set; }
+    private PlayerInput PI;
 
     // Available actions
     private InputAction leftAction;

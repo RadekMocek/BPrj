@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 74dae494343423c4998d7ca390237069
+guid: 01dc9cfd7f80b814693dfbc709b162f6
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -105,49 +105,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: SneakPlaceholder_0
-      rect:
-        serializedVersion: 2
-        x: 0
-        y: 32
-        width: 16
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.06}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 3556a236883182b4d95c1116a3bad0ea
-      internalID: -49203604
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SneakPlaceholder_1
-      rect:
-        serializedVersion: 2
-        x: 16
-        y: 32
-        width: 16
-        height: 32
-      alignment: 9
-      pivot: {x: 0.5, y: 0.06}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 0afb8122bc2e95340a62550a30665648
-      internalID: 417692160
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: SneakPlaceholder_2
+      name: Player_Sneak_Up_0
       rect:
         serializedVersion: 2
         x: 0
@@ -161,14 +119,14 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 74501da3f3a8cb841816fb5798af1fcb
-      internalID: 228577880
+      spriteID: 561672d172e99e54eab844f85dd22794
+      internalID: -1697973195
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: SneakPlaceholder_3
+      name: Player_Sneak_Up_1
       rect:
         serializedVersion: 2
         x: 16
@@ -182,8 +140,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: c9ba1ff02e30fce4b998abc682f7ee31
-      internalID: -336533023
+      spriteID: 8bdf29f77ae20fd4292eebd89eb7e763
+      internalID: 39793156
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Sneak_Up_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e11dce18160af68459fbe9708bd1d37c
+      internalID: 1378251374
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Player_Sneak_Up_3
+      rect:
+        serializedVersion: 2
+        x: 48
+        y: 0
+        width: 16
+        height: 32
+      alignment: 9
+      pivot: {x: 0.5, y: 0.06}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d2018a9998a2af84b9d7a30de02417da
+      internalID: -908656495
       vertices: []
       indices: 
       edges: []
@@ -199,10 +199,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      SneakPlaceholder_2: 228577880
-      SneakPlaceholder_0: -49203604
-      SneakPlaceholder_1: 417692160
-      SneakPlaceholder_3: -336533023
+      Player_Sneak_Up_0: -1697973195
+      Player_Sneak_Up_1: 39793156
+      Player_Sneak_Up_3: -908656495
+      Player_Sneak_Up_2: 1378251374
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

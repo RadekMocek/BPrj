@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    // == Values set in the editor =========
+    [field: SerializeField] public Transform Center { get; private set; } // Center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
+
     // == Component references =============
-    private Rigidbody2D RB { get; set; }
+    private Rigidbody2D RB;
     public PlayerInputHandler IH { get; private set; }
     public Animator Anim { get; private set; }
 
@@ -27,7 +30,7 @@ public class Player : MonoBehaviour
     public Vector2 GetNormalizedMovementInput()
     {
         movementInputTempVector.Set(IH.MovementX, IH.MovementY);
-        return movementInputTempVector.normalized;
+        return (movementInputTempVector.normalized);
     }
 
     public void SetVelocity(Vector2 velocity) => RB.velocity = velocity;
@@ -35,16 +38,30 @@ public class Player : MonoBehaviour
     // == Cursor position ==================
     private Vector3 cursorPosition;
     private Vector2 cursorCoordinates;
+
     public void UpdateCursorPositionAndCoordinates()
     {
         cursorPosition = Input.mousePosition;
         cursorPosition.z = Camera.main.nearClipPlane;
         cursorCoordinates = Camera.main.ScreenToWorldPoint(cursorPosition);
     }
-    public Vector2 GetPlayerToCursorDirection()
+
+    //public Vector2 GetPlayerToCursorDirection() => ((cursorCoordinates - (Vector2)this.transform.position).normalized);
+
+    // == Weapon handling ==================
+    public bool WeaponEquipped { get; private set; }
+    private GameObject weaponGO;
+    public Transform WeaponTransform { get; private set; }
+    public SpriteRenderer WeaponSR { get; private set; }
+
+    public void EquipWeapon(GameObject newWeapon)
     {
-        UpdateCursorPositionAndCoordinates();
-        return ((cursorCoordinates - (Vector2)this.transform.position).normalized);
+        weaponGO = newWeapon;
+        WeaponTransform = weaponGO.transform;
+        WeaponTransform.SetParent(this.transform);
+        WeaponSR = weaponGO.GetComponent<SpriteRenderer>();
+        WeaponEquipped = true;
+        CurrentState.UpdateWeaponPosition();
     }
 
     // == MonoBehaviour functions ==========
@@ -64,7 +81,10 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
+        WeaponEquipped = false;
+
         LastMovementDirection = 2; // Facing down
+        
         ChangeState(IdleState);
     }
 
@@ -79,13 +99,16 @@ public class Player : MonoBehaviour
         // State logic
         CurrentState.Update();
 
+        // Update sub-functions
+        UpdateCursorPositionAndCoordinates();
+
         // Cursor
+        // - Right click
         if (Input.GetMouseButtonDown(1)) {
-            UpdateCursorPositionAndCoordinates();
             RaycastHit2D hit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
             if (hit) {
                 var hitGO = hit.transform.gameObject;
-                if (hitGO.TryGetComponent<IRightClickable>(out IRightClickable hitScript)) {
+                if (hitGO.TryGetComponent(out IRightClickable hitScript)) {
                     hitScript.OnRightClick(this);
                 }
             }

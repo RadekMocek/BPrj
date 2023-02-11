@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerSneakIdleState : PlayerState
+public class PlayerSneakIdleState : PlayerSneakSuperState
 {
     public PlayerSneakIdleState(Player player) : base(player)
     {
@@ -17,6 +13,9 @@ public class PlayerSneakIdleState : PlayerState
         else if (player.LastMovementDirection == 1) anim.CrossFade("Player_Sneak_Idle_Right", 0);
         else if (player.LastMovementDirection == 2) anim.CrossFade("Player_Sneak_Idle_Down", 0);
         else if (player.LastMovementDirection == 3) anim.CrossFade("Player_Sneak_Idle_Left", 0);
+
+        // Choose correct weapon position
+        UpdateWeaponPosition();
     }
 
     public override void Update()

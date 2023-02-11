@@ -6,7 +6,7 @@ SpriteAtlas:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: InitialTilesAtlas
+  m_Name: TilesAtlas
   m_EditorData:
     serializedVersion: 2
     textureSettings:
@@ -45,11 +45,27 @@ SpriteAtlas:
     variantMultiplier: 1
     packables:
     - {fileID: 2800000, guid: 390aade91d261444f9dc327e680e2939, type: 3}
+    - {fileID: 2800000, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: -1502664915, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -805884811, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -384908545, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: 397929682, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -1964691824, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: 1404760778, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -753633446, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -2130658342, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -310276341, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -1295133423, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: 907205201, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: 324984255, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: 1521606342, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -520709256, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+  - {fileID: -1994630230, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
   - {fileID: 181911417, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   - {fileID: 1343842492, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   - {fileID: 1832692367, guid: 390aade91d261444f9dc327e680e2939, type: 3}
@@ -63,6 +79,21 @@ SpriteAtlas:
   - {fileID: -2095062419, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   - {fileID: 80597358, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Floor1_1
+  - Floor1_0
+  - Floor1_3
+  - Floor1_2
+  - Floor1_5
+  - Floor1_4
+  - Floor1_7
+  - Floor1_6
+  - Floor1_9
+  - Floor1_8
+  - Floor1_10
+  - Floor1_11
+  - Floor1_12
+  - Floor1_13
+  - Floor1_14
   - TilesBasic_10
   - TilesBasic_11
   - TilesBasic_9
@@ -76,5 +107,5 @@ SpriteAtlas:
   - TilesBasic_7
   - TilesBasic_6
   m_RenderDataMap: {}
-  m_Tag: InitialTilesAtlas
+  m_Tag: TilesAtlas
   m_IsVariant: 0

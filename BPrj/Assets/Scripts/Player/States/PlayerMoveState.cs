@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class PlayerMoveState : PlayerState
 {
     public PlayerMoveState(Player player) : base(player)
@@ -15,26 +11,6 @@ public class PlayerMoveState : PlayerState
         base.Update();
 
         // Animation logic
-        #region Look in cursor's direction
-        /*
-        if (Mathf.Abs(playerToCursorDirection.x) > Mathf.Abs(playerToCursorDirection.y)) {
-            if (playerToCursorDirection.x > 0) {
-                anim.CrossFade("Player_Walk_Right", 0);
-            }
-            else {
-                anim.CrossFade("Player_Walk_Left", 0);
-            }
-        }
-        else {
-            if (playerToCursorDirection.y > 0) {
-                anim.CrossFade("Player_Walk_Up", 0);
-            }
-            else {
-                anim.CrossFade("Player_Walk_Down", 0);
-            }
-        }
-        */
-        #endregion
         if (movementInput.y > 0) {
             anim.CrossFade("Player_Walk_Up", 0);
             player.LastMovementDirection = 0;
@@ -52,8 +28,10 @@ public class PlayerMoveState : PlayerState
             player.LastMovementDirection = 1;
         }
 
+        // Update weapon position according to movement direction
+        UpdateWeaponPosition();
+
         // Movement logic
-        //player.transform.Translate(movementSpeed * Time.deltaTime * movementInput);
         player.SetVelocity(movementSpeed * movementInput);
 
         // ChangeState logic

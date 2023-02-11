@@ -1,8 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class PlayerSneakMoveState : PlayerState
+public class PlayerSneakMoveState : PlayerSneakSuperState
 {
     public PlayerSneakMoveState(Player player) : base(player)
     {
@@ -31,6 +27,9 @@ public class PlayerSneakMoveState : PlayerState
             anim.CrossFade("Player_Sneak_Walk_Right", 0);
             player.LastMovementDirection = 1;
         }
+
+        // Update weapon position according to movement direction
+        UpdateWeaponPosition();
 
         // Movement logic
         player.SetVelocity(movementSpeed * movementInput);

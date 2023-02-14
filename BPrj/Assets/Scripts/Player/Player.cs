@@ -3,10 +3,10 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // == Values set in the editor =========
-    [field: SerializeField] public Transform Center { get; private set; } // Center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
+    [field: SerializeField] public Transform Core { get; private set; } // Aprox. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
 
     // == Component references =============
-    private Rigidbody2D RB;
+    public Rigidbody2D RB { get; private set; }
     public PlayerInputHandler IH { get; private set; }
     public Animator Anim { get; private set; }
 
@@ -16,6 +16,8 @@ public class Player : MonoBehaviour
     public PlayerMoveState MoveState { get; private set; }
     public PlayerSneakIdleState SneakIdleState { get; private set; }
     public PlayerSneakMoveState SneakMoveState { get; private set; }
+    public PlayerAttackState AttackState { get; private set; }
+    public PlayerDashState DashState { get; private set; }
 
     public void ChangeState(PlayerState newState)
     {
@@ -25,7 +27,7 @@ public class Player : MonoBehaviour
 
     // == Movement =========================
     private Vector2 movementInputTempVector; // Saving input to variable so we don't have to call new() every frame
-    public int LastMovementDirection { get; set; } // 0 = up; 1 = right; 2 = down; 3 = left; used in IdleState.Enter() to set correct sprite
+    public Direction LastMovementDirection { get; set; } // Used in IdleState.Enter()/... to set correct sprite
 
     public Vector2 GetNormalizedMovementInput()
     {
@@ -33,7 +35,8 @@ public class Player : MonoBehaviour
         return (movementInputTempVector.normalized);
     }
 
-    public void SetVelocity(Vector2 velocity) => RB.velocity = velocity;
+    // == Sneaking =========================
+    public bool Sneaking { get; set; }
 
     // == Cursor position ==================
     private Vector3 cursorPosition;
@@ -46,7 +49,7 @@ public class Player : MonoBehaviour
         cursorCoordinates = Camera.main.ScreenToWorldPoint(cursorPosition);
     }
 
-    //public Vector2 GetPlayerToCursorDirection() => ((cursorCoordinates - (Vector2)this.transform.position).normalized);
+    public Vector2 GetPlayerCoreToCursorDirection() => ((cursorCoordinates - (Vector2)Core.position).normalized);
 
     // == Weapon handling ==================
     public bool WeaponEquipped { get; private set; }
@@ -60,6 +63,7 @@ public class Player : MonoBehaviour
         WeaponTransform = weaponGO.transform;
         WeaponTransform.SetParent(this.transform);
         WeaponSR = weaponGO.GetComponent<SpriteRenderer>();
+        WeaponSR.sortingLayerName = "Player";
         WeaponEquipped = true;
         CurrentState.UpdateWeaponPosition();
     }
@@ -77,13 +81,17 @@ public class Player : MonoBehaviour
         MoveState = new PlayerMoveState(this);
         SneakIdleState = new PlayerSneakIdleState(this);
         SneakMoveState = new PlayerSneakMoveState(this);
+        AttackState = new PlayerAttackState(this);
+        DashState = new PlayerDashState(this);
     }
 
     private void Start()
     {
-        WeaponEquipped = false;
+        LastMovementDirection = Direction.Down;
 
-        LastMovementDirection = 2; // Facing down
+        Sneaking = false;
+
+        WeaponEquipped = false;
         
         ChangeState(IdleState);
     }
@@ -113,5 +121,16 @@ public class Player : MonoBehaviour
                 }
             }
         }
+
+        // Debug
+        //Debug.Log(Sneaking);
+    }
+
+    // Debug
+    public Vector2 gizmoCircleCenter;
+    public float gizmoCircleRadius;
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawWireSphere(gizmoCircleCenter, gizmoCircleRadius);
     }
 }

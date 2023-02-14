@@ -13,6 +13,7 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction upAction;
     private InputAction downAction;
     public InputAction SneakAction { get; private set; }
+    public InputAction DashAction { get; private set; }
 
     // Information about pressed keys can be read from these properties
     public int MovementX { get; private set; } // -1 = left; 1 = right; 0 = both/none
@@ -22,16 +23,13 @@ public class PlayerInputHandler : MonoBehaviour
     private void Awake()
     {
         PI = GetComponent<PlayerInput>();
-    }
 
-    private void Start()
-    {
-        // Initialize actions
         leftAction = PI.actions["Left"];
         rightAction = PI.actions["Right"];
         upAction = PI.actions["Up"];
         downAction = PI.actions["Down"];
         SneakAction = PI.actions["Sneak"];
+        DashAction = PI.actions["Dash"];
     }
 
     private void Update()

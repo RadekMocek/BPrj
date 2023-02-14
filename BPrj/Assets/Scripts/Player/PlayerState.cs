@@ -7,7 +7,7 @@ public abstract class PlayerState
     protected Animator anim;
 
     // Data from player/input used in particular states
-    //protected Vector2 playerToCursorDirection;
+    protected Vector2 playerToCursorDirection;
     protected Vector2 movementInput;
     protected bool sneakInputPressedThisFrame;
 
@@ -26,6 +26,7 @@ public abstract class PlayerState
     public virtual void Enter()
     {
         //Debug.Log($"Player changed to {this.GetType().Name}.");
+        UpdatePlayerData();
     }
 
     // Called every physics update
@@ -37,8 +38,13 @@ public abstract class PlayerState
     // Called every frame
     public virtual void Update()
     {
-        // Get player's data
-        //playerToCursorDirection = player.GetPlayerToCursorDirection();
+        UpdatePlayerData();        
+    }
+
+    // Update data from player
+    private void UpdatePlayerData()
+    {
+        playerToCursorDirection = player.GetPlayerCoreToCursorDirection();
         movementInput = player.GetNormalizedMovementInput();
         sneakInputPressedThisFrame = player.IH.SneakAction.WasPressedThisFrame();
     }
@@ -51,22 +57,22 @@ public abstract class PlayerState
 
     protected virtual void UpdateWeaponPositionInner()
     {
-        if (player.LastMovementDirection == 0) { // Up
+        if (player.LastMovementDirection == Direction.Up) { // Up
             tempWeaponPosition.Set(.55f, .58f);
             tempWeaponRotation = Quaternion.Euler(-180, 75, -90);
             player.WeaponSR.sortingOrder = -1;
         }
-        else if (player.LastMovementDirection == 1) { // Right
+        else if (player.LastMovementDirection == Direction.Right) { // Right
             tempWeaponPosition.Set(.27f, .50f);
             tempWeaponRotation = Quaternion.Euler(180, 0, -90);
             player.WeaponSR.sortingOrder = 1;
         }
-        else if (player.LastMovementDirection == 2) { // Down
+        else if (player.LastMovementDirection == Direction.Down) { // Down
             tempWeaponPosition.Set(-.45f, .50f);
             tempWeaponRotation = Quaternion.Euler(-180, -110, -90);
             player.WeaponSR.sortingOrder = 1;
         }
-        else if (player.LastMovementDirection == 3) { // Left
+        else if (player.LastMovementDirection == Direction.Left) { // Left
             tempWeaponPosition.Set(-.50f, .60f);
             tempWeaponRotation = Quaternion.Euler(0, 0, 90);
             player.WeaponSR.sortingOrder = -1;

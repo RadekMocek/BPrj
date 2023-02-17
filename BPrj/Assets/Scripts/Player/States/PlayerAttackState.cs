@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class PlayerAttackState : PlayerState
@@ -8,13 +10,19 @@ public class PlayerAttackState : PlayerState
 
     // Attack consist of motion on the circular sector until it reaches the angle corresponding to the cursor's location ("swing"), damage is then dealt in the near area.
     // Player is also being pushed a little in the attack's direction ("slip").
+    // There is a slow little anticipation ("backSwing") prior to swinging and delay after the swing ("recovery")
+
+    private readonly float backSwingDuration = 0.3f;
+    private readonly int backSwingSpeed = 80;
 
     private readonly int swingCircularSectorAngle = 80;
-    private readonly int swingSpeed = 600;
+    private readonly int swingSpeed = 1000;
     private readonly float swingDistanceFromCore = 0.8f;    // Weapon distance from Player.Core while swinging
     private readonly float damageDistanceFromCore = 1.0f;   // Distance between Player.Core and center of damage dealing area
     private readonly float damageRadius = 0.6f;
     private readonly float slipSpeed = 1.0f;
+
+    private readonly float recoveryDuration = .15f;
 
     private float angle;
     private float endingAngle;
@@ -22,9 +30,16 @@ public class PlayerAttackState : PlayerState
     private Vector2 weaponRawPosition;
     private Vector2 slipDirection;
 
+    private bool recovering;
+    private float recoveryStartTime;
+
     public override void Enter()
     {
         base.Enter();
+
+        // Init
+        recovering = false;
+        player.RB.velocity = Vector2.zero;
 
         // Calculate angle from player to cursor (this is also a z-rotation angle of the weapon)
         endingAngle = (int)(Mathf.Rad2Deg * Mathf.Atan2(playerToCursorDirection.y, playerToCursorDirection.x));
@@ -61,10 +76,11 @@ public class PlayerAttackState : PlayerState
                 anim.CrossFade($"Player_{animationType}_Up", 0);
                 player.LastMovementDirection = Direction.Up;
                 slipDirection.Set(0, 1);
-                // Same deal as when attacking right
+                /*
                 (angle, endingAngle) = (endingAngle + swingCircularSectorAngle, angle + swingCircularSectorAngle);
                 angleAdditionMultiplier = -1;
                 player.WeaponSR.flipX = true;
+                */
             }
             // Down
             else {
@@ -75,52 +91,82 @@ public class PlayerAttackState : PlayerState
             }
         }
 
-        // Slip
-        player.RB.velocity = slipDirection * slipSpeed;
+        // Initial position
+        ApplyPositionAndRotationAccordingToAngle();
     }
-    
-    //FixedUpdate() => transform.RotateAround(target.position, new Vector3(0, 0, 1), speed); // (?)
 
     public override void Update()
     {
         base.Update();
 
-        // Increase the angle, recalculate position, set position and rotation:
-        angle += swingSpeed * Time.deltaTime * angleAdditionMultiplier;
-        
+        if (recovering) {
+            if (Time.time > recoveryStartTime + recoveryDuration) {
+                AttackEnd();
+            }
+            return;
+        }
+
+        if (Time.time < enterTime + backSwingDuration) {
+
+            angle -= backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
+            ApplyPositionAndRotationAccordingToAngle();
+
+        }
+        else { 
+
+            // Slip
+            if (player.RB.velocity == Vector2.zero) player.RB.velocity = slipDirection * slipSpeed;
+
+            // Increase the angle, recalculate position, set position and rotation:
+            angle += swingSpeed * Time.deltaTime * angleAdditionMultiplier;
+            ApplyPositionAndRotationAccordingToAngle();
+
+            // When we reach the endingAngle:
+            if (angleAdditionMultiplier == 1 && angle >= endingAngle || angleAdditionMultiplier == -1 && angle <= endingAngle) {
+                // Disable slip
+                player.RB.velocity = Vector2.zero;
+
+                // TEMP
+                //player.gizmoCircleCenter = (Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition);
+                //player.gizmoCircleRadius = damageRadius;
+                // ----
+
+                // Deal damage to IDamageable
+                var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius); //TODO: pøidat layermask?
+                foreach (var hit in hits) {
+                    if (hit.TryGetComponent(out IDamageable hitScript)) {
+                        hitScript.ReceiveDamage();
+                    }
+                }
+
+                // Recovery
+                recovering = true;
+                recoveryStartTime = Time.time;
+                
+            }
+
+        }
+    }
+
+    private void ApplyPositionAndRotationAccordingToAngle()
+    {
         weaponRawPosition.Set(/*x*/Mathf.Cos(Mathf.Deg2Rad * angle), /*y*/Mathf.Sin(Mathf.Deg2Rad * angle));
 
         player.WeaponTransform.SetLocalPositionAndRotation(
             (weaponRawPosition * swingDistanceFromCore + (Vector2)player.Core.localPosition),
             (Quaternion.Euler(0, 0, angle - 90))
         );
-        
-        // When we reach the endingAngle:
-        if (angleAdditionMultiplier == 1 && angle >= endingAngle || angleAdditionMultiplier == -1 && angle <= endingAngle) {
-            // Disable slip
-            player.RB.velocity = Vector2.zero;
+    }
 
-            // TEMP
-            //player.gizmoCircleCenter = (Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition);
-            //player.gizmoCircleRadius = damageRadius;
-            // ----
+    private void AttackEnd()
+    {
+        // Unmirror the sprite in case attack direction was right or up
+        player.WeaponSR.flipX = false;
 
-            // Deal damage to IDamageable
-            var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius); //TODO: pøidat layermask?
-            foreach (var hit in hits) {
-                if (hit.TryGetComponent(out IDamageable hitScript)) {
-                    hitScript.ReceiveDamage();
-                }
-            }
-
-            // Unmirror the sprite in case attack direction was right or up
-            player.WeaponSR.flipX = false;
-
-            // ChangeState logic
-            if (!player.Sneaking)
-                player.ChangeState(player.IdleState);
-            else
-                player.ChangeState(player.SneakIdleState);
-        }
+        // ChangeState logic
+        if (!player.Sneaking)
+            player.ChangeState(player.IdleState);
+        else
+            player.ChangeState(player.SneakIdleState);
     }
 }

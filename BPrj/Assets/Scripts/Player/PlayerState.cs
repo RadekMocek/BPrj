@@ -12,6 +12,7 @@ public abstract class PlayerState
     protected bool sneakInputPressedThisFrame;
 
     // Helpful variables
+    protected float enterTime;
     protected Vector2 tempWeaponPosition;
     protected Quaternion tempWeaponRotation;
 
@@ -26,6 +27,7 @@ public abstract class PlayerState
     public virtual void Enter()
     {
         //Debug.Log($"Player changed to {this.GetType().Name}.");
+        enterTime = Time.time;
         UpdatePlayerData();
     }
 

@@ -1,4 +1,6 @@
+using UnityEngine;
+
 public interface IDamageable
 {
-    void ReceiveDamage();
+    void ReceiveDamage(Vector2 direction);
 }

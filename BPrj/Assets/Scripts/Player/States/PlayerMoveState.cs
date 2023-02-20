@@ -14,6 +14,7 @@ public class PlayerMoveState : PlayerState
     private float movementSpeed;
     private Vector2 momentumDirection;
     private float momentumSpeed;
+    //private string correctAnimationName;
 
     public override void Enter()
     {
@@ -27,15 +28,17 @@ public class PlayerMoveState : PlayerState
     public override void Update()
     {
         base.Update();
-
+        
         // Animation logic
         if (isPrimaryAxisVertical) {
             if (movementInput.y > 0) {
                 anim.CrossFade("Player_Walk_Up", 0);
+                //correctAnimationName = "Player_Walk_Up";
                 player.LastMovementDirection = Direction.Up;
             }
             else if (movementInput.y < 0) {
                 anim.CrossFade("Player_Walk_Down", 0);
+                //correctAnimationName = "Player_Walk_Down";
                 player.LastMovementDirection = Direction.Down;
             }
             else {
@@ -45,16 +48,23 @@ public class PlayerMoveState : PlayerState
         else {
             if (movementInput.x < 0) {
                 anim.CrossFade("Player_Walk_Left", 0);
+                //correctAnimationName = "Player_Walk_Left";
                 player.LastMovementDirection = Direction.Left;
             }
             else if (movementInput.x > 0) {
                 anim.CrossFade("Player_Walk_Right", 0);
+                //correctAnimationName = "Player_Walk_Right";
                 player.LastMovementDirection = Direction.Right;
             }
             else {
                 isPrimaryAxisVertical = true;
             }
         }
+        /*
+        if (correctAnimationName != anim.GetCurrentAnimatorClipInfo(0)[0].clip.name) {
+            anim.CrossFade(correctAnimationName, 0);
+        }
+        */
 
         // Update weapon position according to movement direction
         UpdateWeaponPosition();
@@ -85,8 +95,17 @@ public class PlayerMoveState : PlayerState
         else if (sneakInputPressedThisFrame) {
             player.ChangeState(player.SneakMoveState);
         }
-        else if (Input.GetMouseButtonDown(0) && player.WeaponEquipped) {
-            player.ChangeState(player.AttackState);
+        else if (player.WeaponEquipped) {
+            if (Input.GetMouseButtonDown(0)) {
+                player.ChangeState(player.AttackLightState);
+            }
+            else if (Input.GetMouseButtonDown(1)) {
+                player.ChangeState(player.AttackHeavyState);
+            }
+        }
+        else if (dashInputPressedThisFrame) {
+            player.DashState.dashDirection = movementInput;
+            player.ChangeState(player.DashState);
         }
     }
 }

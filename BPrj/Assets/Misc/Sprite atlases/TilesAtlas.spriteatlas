@@ -46,11 +46,13 @@ SpriteAtlas:
     packables:
     - {fileID: 2800000, guid: 390aade91d261444f9dc327e680e2939, type: 3}
     - {fileID: 2800000, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
+    - {fileID: 2800000, guid: d2091a701a9fc19448e5b0554058db13, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: 21300000, guid: d2091a701a9fc19448e5b0554058db13, type: 3}
   - {fileID: -1502664915, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
   - {fileID: -805884811, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
   - {fileID: -384908545, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
@@ -79,6 +81,7 @@ SpriteAtlas:
   - {fileID: -2095062419, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   - {fileID: 80597358, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Wall
   - Floor1_1
   - Floor1_0
   - Floor1_3

@@ -3,7 +3,8 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // == Values set in the editor =========
-    [field: SerializeField] public Transform Core { get; private set; } // Aprox. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
+    [field: Header("Transforms")]
+    [field: SerializeField] public Transform Core { get; private set; } // Approx. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
 
     // == Component references =============
     public Rigidbody2D RB { get; private set; }
@@ -11,18 +12,22 @@ public class Player : MonoBehaviour
     public Animator Anim { get; private set; }
 
     // == State machine ====================
-    private PlayerState CurrentState { get; set; }
+    private PlayerState currentState;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerSneakIdleState SneakIdleState { get; private set; }
     public PlayerSneakMoveState SneakMoveState { get; private set; }
-    public PlayerAttackState AttackState { get; private set; }
+    public PlayerAttackLightState AttackLightState { get; private set; }
+    public PlayerAttackHeavyState AttackHeavyState { get; private set; }
     public PlayerDashState DashState { get; private set; }
 
     public void ChangeState(PlayerState newState)
     {
+        if (currentState == IdleState) IdleState.momentumDirection = Vector2.zero;
+        else if (currentState == SneakIdleState) SneakIdleState.momentumDirection = Vector2.zero;
+
         newState.Enter();
-        CurrentState = newState;
+        currentState = newState;
     }
 
     // == Movement =========================
@@ -65,7 +70,7 @@ public class Player : MonoBehaviour
         WeaponSR = weaponGO.GetComponent<SpriteRenderer>();
         WeaponSR.sortingLayerName = "Player";
         WeaponEquipped = true;
-        CurrentState.UpdateWeaponPosition();
+        currentState.UpdateWeaponPosition();
     }
 
     // == MonoBehaviour functions ==========
@@ -81,7 +86,8 @@ public class Player : MonoBehaviour
         MoveState = new PlayerMoveState(this);
         SneakIdleState = new PlayerSneakIdleState(this);
         SneakMoveState = new PlayerSneakMoveState(this);
-        AttackState = new PlayerAttackState(this);
+        AttackLightState = new PlayerAttackLightState(this);
+        AttackHeavyState = new PlayerAttackHeavyState(this);
         DashState = new PlayerDashState(this);
     }
 
@@ -99,20 +105,20 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         // State logic
-        CurrentState.FixedUpdate();
+        currentState.FixedUpdate();
     }
 
     private void Update()
     {
         // State logic
-        CurrentState.Update();
+        currentState.Update();
 
         // Update sub-functions
         UpdateCursorPositionAndCoordinates();
 
         // Cursor
-        // - Right click
-        if (Input.GetMouseButtonDown(1)) {
+        // - Interact
+        if (IH.InteractAction.WasPressedThisFrame()) {
             RaycastHit2D hit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
             if (hit) {
                 var hitGO = hit.transform.gameObject;
@@ -127,6 +133,7 @@ public class Player : MonoBehaviour
     }
 
     // Debug
+    [Header("Debug")]
     public Vector2 gizmoCircleCenter;
     public float gizmoCircleRadius;
     private void OnDrawGizmos()

@@ -46,17 +46,20 @@ public class PlayerIdleState : PlayerState
 
         // ChangeState logic
         if (movementInput.magnitude != 0) {
-            momentumDirection = Vector2.zero;
             player.ChangeState(player.MoveState);
         }
         else if (sneakInputPressedThisFrame) {
-            momentumDirection = Vector2.zero;
             player.ChangeState(player.SneakIdleState);
         }
-        else if (Input.GetMouseButtonDown(0) && player.WeaponEquipped) {
-            momentumDirection = Vector2.zero;
-            player.ChangeState(player.AttackState);
+        else if (player.WeaponEquipped) {
+            if (Input.GetMouseButtonDown(0)) {
+                player.ChangeState(player.AttackLightState);
+            }
+            else if (Input.GetMouseButtonDown(1)) {
+                player.ChangeState(player.AttackHeavyState);
+            }
         }
+
     }
 
 }

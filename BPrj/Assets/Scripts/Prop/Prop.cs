@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class Prop : MonoBehaviour, IDamageable
 {
-    public void ReceiveDamage()
+    private Rigidbody2D RB;
+
+    public void ReceiveDamage(Vector2 direction)
     {
-        Debug.Log("Received damage!");
+        RB.AddForce(1000 * direction);
+    }
+
+    private void Awake()
+    {
+        RB = GetComponent<Rigidbody2D>();
     }
 }

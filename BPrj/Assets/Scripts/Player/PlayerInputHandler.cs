@@ -14,6 +14,7 @@ public class PlayerInputHandler : MonoBehaviour
     private InputAction downAction;
     public InputAction SneakAction { get; private set; }
     public InputAction DashAction { get; private set; }
+    public InputAction InteractAction { get; private set; }
 
     // Information about pressed keys can be read from these properties
     public int MovementX { get; private set; } // -1 = left; 1 = right; 0 = both/none
@@ -30,6 +31,7 @@ public class PlayerInputHandler : MonoBehaviour
         downAction = PI.actions["Down"];
         SneakAction = PI.actions["Sneak"];
         DashAction = PI.actions["Dash"];
+        InteractAction = PI.actions["Interact"];
     }
 
     private void Update()

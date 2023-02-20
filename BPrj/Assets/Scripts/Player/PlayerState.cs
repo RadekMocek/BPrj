@@ -10,6 +10,7 @@ public abstract class PlayerState
     protected Vector2 playerToCursorDirection;
     protected Vector2 movementInput;
     protected bool sneakInputPressedThisFrame;
+    protected bool dashInputPressedThisFrame;
 
     // Helpful variables
     protected float enterTime;
@@ -49,6 +50,7 @@ public abstract class PlayerState
         playerToCursorDirection = player.GetPlayerCoreToCursorDirection();
         movementInput = player.GetNormalizedMovementInput();
         sneakInputPressedThisFrame = player.IH.SneakAction.WasPressedThisFrame();
+        dashInputPressedThisFrame = player.IH.DashAction.WasPressedThisFrame();
     }
 
     // Update equipped weapon position, rotation, order in layer

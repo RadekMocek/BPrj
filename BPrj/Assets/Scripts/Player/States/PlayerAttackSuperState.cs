@@ -1,10 +1,8 @@
-using System.Collections;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public class PlayerAttackState : PlayerState
+public class PlayerAttackSuperState : PlayerState
 {
-    public PlayerAttackState(Player player) : base(player)
+    public PlayerAttackSuperState(Player player) : base(player)
     {
     }
 
@@ -12,23 +10,22 @@ public class PlayerAttackState : PlayerState
     // Player is also being pushed a little in the attack's direction ("slip").
     // There is a slow little anticipation ("backSwing") prior to swinging and delay after the swing ("recovery")
 
-    private readonly float backSwingDuration = 0.3f;
-    private readonly int backSwingSpeed = 80;
+    protected float backSwingDuration = 0.3f;
+    protected int backSwingSpeed = 80;
 
-    private readonly int swingCircularSectorAngle = 80;
-    private readonly int swingSpeed = 1000;
-    private readonly float swingDistanceFromCore = 0.8f;    // Weapon distance from Player.Core while swinging
-    private readonly float damageDistanceFromCore = 1.0f;   // Distance between Player.Core and center of damage dealing area
-    private readonly float damageRadius = 0.6f;
-    private readonly float slipSpeed = 1.0f;
+    protected int swingCircularSectorAngle = 80;
+    protected int swingSpeed = 1000;
+    protected float swingDistanceFromCore = 0.8f;    // Weapon distance from Player.Core while swinging
+    protected float damageDistanceFromCore = 1.0f;   // Distance between Player.Core and center of damage dealing area
+    protected float damageRadius = 0.6f;
+    protected float slipSpeed = 1.0f;
 
-    private readonly float recoveryDuration = .15f;
+    protected float recoveryDuration = .15f;
 
     private float angle;
     private float endingAngle;
     private int angleAdditionMultiplier;
     private Vector2 weaponRawPosition;
-    private Vector2 slipDirection;
 
     private bool recovering;
     private float recoveryStartTime;
@@ -54,11 +51,10 @@ public class PlayerAttackState : PlayerState
                 player.WeaponSR.sortingOrder = 1; // Sprite y-sorting
                 anim.CrossFade($"Player_{animationType}_Right", 0);
                 player.LastMovementDirection = Direction.Right;
-                slipDirection.Set(1, 0);
                 // When facing right, it looks better if swing is done clockwise; angles have to be shifted and swopped
                 (angle, endingAngle) = (endingAngle + swingCircularSectorAngle, angle + swingCircularSectorAngle);
                 angleAdditionMultiplier = -1;
-                player.WeaponSR.flipX = true; // Mirroring sprite instead of editing rotation on other axis to avoid gimbal lock and raw quaternions;
+                player.WeaponSR.flipX = true; // Mirroring sprite instead of editing rotation on other axis to avoid gimbal lock and raw quaternions
                                               // Issue: this can be visible before the swing
             }
             // Left
@@ -66,7 +62,6 @@ public class PlayerAttackState : PlayerState
                 player.WeaponSR.sortingOrder = -1;
                 anim.CrossFade($"Player_{animationType}_Left", 0);
                 player.LastMovementDirection = Direction.Left;
-                slipDirection.Set(-1, 0);
             }
         }
         else {
@@ -75,19 +70,12 @@ public class PlayerAttackState : PlayerState
                 player.WeaponSR.sortingOrder = -1;
                 anim.CrossFade($"Player_{animationType}_Up", 0);
                 player.LastMovementDirection = Direction.Up;
-                slipDirection.Set(0, 1);
-                /*
-                (angle, endingAngle) = (endingAngle + swingCircularSectorAngle, angle + swingCircularSectorAngle);
-                angleAdditionMultiplier = -1;
-                player.WeaponSR.flipX = true;
-                */
             }
             // Down
             else {
                 player.WeaponSR.sortingOrder = 1;
                 anim.CrossFade($"Player_{animationType}_Down", 0);
                 player.LastMovementDirection = Direction.Down;
-                slipDirection.Set(0, -1);
             }
         }
 
@@ -100,22 +88,22 @@ public class PlayerAttackState : PlayerState
         base.Update();
 
         if (recovering) {
+            // 3. RECOVERY
+            angle += backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
+            ApplyPositionAndRotationAccordingToAngle();
             if (Time.time > recoveryStartTime + recoveryDuration) {
                 AttackEnd();
             }
-            return;
         }
-
-        if (Time.time < enterTime + backSwingDuration) {
-
+        else if (Time.time < enterTime + backSwingDuration) {
+            // 1. BACKSWING
             angle -= backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
             ApplyPositionAndRotationAccordingToAngle();
-
         }
         else { 
-
+            // 2. SWING
             // Slip
-            if (player.RB.velocity == Vector2.zero) player.RB.velocity = slipDirection * slipSpeed;
+            if (player.RB.velocity == Vector2.zero) player.RB.velocity = playerToCursorDirection * slipSpeed;
 
             // Increase the angle, recalculate position, set position and rotation:
             angle += swingSpeed * Time.deltaTime * angleAdditionMultiplier;
@@ -135,16 +123,14 @@ public class PlayerAttackState : PlayerState
                 var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius); //TODO: pøidat layermask?
                 foreach (var hit in hits) {
                     if (hit.TryGetComponent(out IDamageable hitScript)) {
-                        hitScript.ReceiveDamage();
+                        hitScript.ReceiveDamage(playerToCursorDirection);
                     }
                 }
 
-                // Recovery
+                // Transition to Recovery
                 recovering = true;
                 recoveryStartTime = Time.time;
-                
             }
-
         }
     }
 

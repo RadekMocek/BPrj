@@ -46,17 +46,19 @@ public class PlayerSneakIdleState : PlayerSneakSuperState
 
         // ChangeState logic
         if (movementInput.magnitude != 0) {
-            momentumDirection = Vector2.zero;
             player.ChangeState(player.SneakMoveState);
         }
         else if (sneakInputPressedThisFrame) {
             player.Sneaking = false;
-            momentumDirection = Vector2.zero;
             player.ChangeState(player.IdleState);
         }
-        else if (Input.GetMouseButtonDown(0) && player.WeaponEquipped) {
-            momentumDirection = Vector2.zero;
-            player.ChangeState(player.AttackState);
+        else if (player.WeaponEquipped) {
+            if (Input.GetMouseButtonDown(0)) {
+                player.ChangeState(player.AttackLightState);
+            }
+            else if (Input.GetMouseButtonDown(1)) {
+                player.ChangeState(player.AttackHeavyState);
+            }
         }
     }
 }

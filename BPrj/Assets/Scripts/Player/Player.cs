@@ -2,16 +2,19 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    // == Values set in the editor =========
+    // == Values set in the editor ==============
     [field: Header("Transforms")]
     [field: SerializeField] public Transform Core { get; private set; } // Approx. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
 
-    // == Component references =============
+    // == Component references ==================
     public Rigidbody2D RB { get; private set; }
     public PlayerInputHandler IH { get; private set; }
     public Animator Anim { get; private set; }
 
-    // == State machine ====================
+    // == Managers ==============================
+    private HUDManager HUD;
+
+    // == State machine =========================
     private PlayerState currentState;
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
@@ -30,7 +33,7 @@ public class Player : MonoBehaviour
         currentState = newState;
     }
 
-    // == Movement =========================
+    // == Movement ==============================
     private Vector2 movementInputTempVector; // Saving input to variable so we don't have to call new() every frame
     public Direction LastMovementDirection { get; set; } // Used in IdleState.Enter()/... to set correct sprite
 
@@ -40,14 +43,14 @@ public class Player : MonoBehaviour
         return (movementInputTempVector.normalized);
     }
 
-    // == Sneaking =========================
+    // == Sneaking ==============================
     public bool Sneaking { get; set; }
 
-    // == Cursor position ==================
+    // == Cursor position & coordinates =========
     private Vector3 cursorPosition;
     private Vector2 cursorCoordinates;
 
-    public void UpdateCursorPositionAndCoordinates()
+    private void UpdateCursorPositionAndCoordinates()
     {
         cursorPosition = Input.mousePosition;
         cursorPosition.z = Camera.main.nearClipPlane;
@@ -56,7 +59,28 @@ public class Player : MonoBehaviour
 
     public Vector2 GetPlayerCoreToCursorDirection() => ((cursorCoordinates - (Vector2)Core.position).normalized);
 
-    // == Weapon handling ==================
+    // == Cursor observe & interact =============
+    private RaycastHit2D cursorHit;
+    private GameObject cursorHitGO;
+    private IObservable cursorHitScriptObservable;
+    private IInteractable cursorHitScriptInteractable;
+
+    private void UpdateCursorObserveAndInteract()
+    {
+        cursorHit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
+        if (cursorHit) {
+            cursorHitGO = cursorHit.transform.gameObject;
+            if (cursorHitGO.TryGetComponent(out cursorHitScriptObservable)) {
+                HUD.PrintStr(cursorHitScriptObservable.GetName());
+                if (IH.InteractAction.WasPressedThisFrame() && cursorHitGO.TryGetComponent(out cursorHitScriptInteractable)) {
+                    cursorHitScriptInteractable.OnInteract(this);
+                }
+            }
+        }
+    }
+    
+
+    // == Weapon handling =======================
     public bool WeaponEquipped { get; private set; }
     private GameObject weaponGO;
     public Transform WeaponTransform { get; private set; }
@@ -73,13 +97,16 @@ public class Player : MonoBehaviour
         currentState.UpdateWeaponPosition();
     }
 
-    // == MonoBehaviour functions ==========
+    // == MonoBehaviour functions ===============
     private void Awake()
     {
         // Set components references
         RB = GetComponent<Rigidbody2D>();
         IH = GetComponent<PlayerInputHandler>();
         Anim = GetComponent<Animator>();
+
+        // Set managers
+        HUD = ManagerAccessor.instance.HUD;
 
         // States initialization
         IdleState = new PlayerIdleState(this);
@@ -115,24 +142,13 @@ public class Player : MonoBehaviour
 
         // Update sub-functions
         UpdateCursorPositionAndCoordinates();
-
-        // Cursor
-        // - Interact
-        if (IH.InteractAction.WasPressedThisFrame()) {
-            RaycastHit2D hit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
-            if (hit) {
-                var hitGO = hit.transform.gameObject;
-                if (hitGO.TryGetComponent(out IRightClickable hitScript)) {
-                    hitScript.OnRightClick(this);
-                }
-            }
-        }
+        UpdateCursorObserveAndInteract();
 
         // Debug
         //Debug.Log(Sneaking);
     }
 
-    // Debug
+    // == Debug =================================
     [Header("Debug")]
     public Vector2 gizmoCircleCenter;
     public float gizmoCircleRadius;

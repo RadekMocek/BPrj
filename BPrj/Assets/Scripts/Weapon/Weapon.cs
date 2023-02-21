@@ -1,10 +1,12 @@
 using UnityEngine;
 
-public class Weapon : MonoBehaviour, IRightClickable
+public class Weapon : MonoBehaviour, IInteractable
 {
     private BoxCollider2D BC;
 
-    public void OnRightClick(Player playerScript)
+    public string GetInteractActionDescription() => "Sebrat zbraò";
+
+    public void OnInteract(Player playerScript)
     {
         var distanceFromPlayer = Vector2.Distance(playerScript.transform.position, this.transform.position);
 

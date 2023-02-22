@@ -67,15 +67,38 @@ public class Player : MonoBehaviour
 
     private void UpdateCursorObserveAndInteract()
     {
+        // Ray has no direction and no length but it still detects if cursor hovers over something with a collider
         cursorHit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
         if (cursorHit) {
             cursorHitGO = cursorHit.transform.gameObject;
             if (cursorHitGO.TryGetComponent(out cursorHitScriptObservable)) {
-                HUD.PrintStr(cursorHitScriptObservable.GetName());
-                if (IH.InteractAction.WasPressedThisFrame() && cursorHitGO.TryGetComponent(out cursorHitScriptInteractable)) {
-                    cursorHitScriptInteractable.OnInteract(this);
+                
+                HUD.SetObserveNameText(cursorHitScriptObservable.GetName());
+
+                if (cursorHitGO.TryGetComponent(out cursorHitScriptInteractable)) {
+
+                    HUD.SetInteractActionText("(" + IH.InteractBinding + ") " + cursorHitScriptInteractable.GetInteractActionDescription());
+
+                    if (cursorHitScriptInteractable.CanInteract(this)) {
+
+                        HUD.SetIsInteractActionPossible(true);
+
+                        if (IH.InteractAction.WasPressedThisFrame()) {
+                            cursorHitScriptInteractable.OnInteract(this);
+                        }
+                    }
+                    else {
+                        HUD.SetIsInteractActionPossible(false);
+                    }
+                }
+                else {
+                    HUD.SetInteractActionText("");
                 }
             }
+        }
+        else {
+            HUD.SetObserveNameText("");
+            HUD.SetInteractActionText("");
         }
     }
     

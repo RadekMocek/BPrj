@@ -7,7 +7,7 @@ public class PlayerIdleState : PlayerState
         momentumDirection = Vector2.zero;
     }
 
-    private readonly int momentumSpeedDeceleration = 39;
+    private readonly int momentumSpeedDeceleration = 42;
 
     public float initialMomentumSpeed;
     public Vector2 momentumDirection;

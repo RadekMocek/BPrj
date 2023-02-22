@@ -95,6 +95,10 @@ public class PlayerMoveState : PlayerState
         else if (sneakInputPressedThisFrame) {
             player.ChangeState(player.SneakMoveState);
         }
+        else if (dashInputPressedThisFrame) {
+            player.DashState.dashDirection = movementInput;
+            player.ChangeState(player.DashState);
+        }
         else if (player.WeaponEquipped) {
             if (Input.GetMouseButtonDown(0)) {
                 player.ChangeState(player.AttackLightState);
@@ -103,9 +107,6 @@ public class PlayerMoveState : PlayerState
                 player.ChangeState(player.AttackHeavyState);
             }
         }
-        else if (dashInputPressedThisFrame) {
-            player.DashState.dashDirection = movementInput;
-            player.ChangeState(player.DashState);
-        }
+        
     }
 }

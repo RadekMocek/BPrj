@@ -20,6 +20,14 @@ public class PlayerInputHandler : MonoBehaviour
     public int MovementX { get; private set; } // -1 = left; 1 = right; 0 = both/none
     public int MovementY { get; private set; } // -1 = down; 1 = up; 0 = both/none
 
+    // Action bidning string getters
+    public string InteractBinding { get; private set; }
+
+    public void RefreshBindings()
+    {
+        InteractBinding = InteractAction.GetBindingDisplayString();
+    }
+
     // MonoBehaviour functions
     private void Awake()
     {
@@ -32,6 +40,8 @@ public class PlayerInputHandler : MonoBehaviour
         SneakAction = PI.actions["Sneak"];
         DashAction = PI.actions["Dash"];
         InteractAction = PI.actions["Interact"];
+
+        RefreshBindings();
     }
 
     private void Update()

@@ -6,14 +6,17 @@ public class Weapon : MonoBehaviour, IInteractable
 
     public string GetInteractActionDescription() => "Sebrat zbraò";
 
+    public bool CanInteract(Player playerScript)
+    {
+        return (Vector2.Distance(playerScript.transform.position, this.transform.position) <= 1.5f);
+    }
+
     public void OnInteract(Player playerScript)
     {
-        var distanceFromPlayer = Vector2.Distance(playerScript.transform.position, this.transform.position);
-
-        if (distanceFromPlayer <= 1.5f) {
-            playerScript.EquipWeapon(this.gameObject);
-            BC.enabled = false;
-        }
+        //if (!CanInteract(playerScript)) return;
+        
+        playerScript.EquipWeapon(this.gameObject);
+        BC.enabled = false;
     }
 
     private void Awake()

@@ -6,6 +6,7 @@ public class ManagerAccessor : MonoBehaviour
     public static ManagerAccessor instance = null;
 
     public HUDManager HUD { get; private set; }
+    public SceneTransitionManager SCENES { get; private set; }
 
     private void Awake()
     {
@@ -23,5 +24,6 @@ public class ManagerAccessor : MonoBehaviour
 
         // Find managers in children
         HUD = transform.Find("HUDManager").GetComponent<HUDManager>();
+        SCENES = transform.Find("SceneTransitionManager").GetComponent<SceneTransitionManager>();
     }
 }

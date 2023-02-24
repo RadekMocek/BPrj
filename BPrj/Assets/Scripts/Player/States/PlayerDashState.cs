@@ -23,8 +23,13 @@ public class PlayerDashState : PlayerState
         base.Update();
 
         if (Time.time > enterTime + dashDuration) {
-            
-            player.ChangeState(player.MoveState);
+
+            if (movementInput.magnitude != 0) {
+                player.ChangeState(player.MoveState);
+            }
+            else {
+                player.ChangeState(player.IdleState);
+            }
         }
     }
 }

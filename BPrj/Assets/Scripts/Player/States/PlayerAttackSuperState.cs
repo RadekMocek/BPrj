@@ -150,9 +150,21 @@ public class PlayerAttackSuperState : PlayerState
         player.WeaponSR.flipX = false;
 
         // ChangeState logic
-        if (!player.Sneaking)
-            player.ChangeState(player.IdleState);
-        else
-            player.ChangeState(player.SneakIdleState);
+        if (!player.Sneaking) {
+            if (movementInput.magnitude != 0) {
+                player.ChangeState(player.MoveState);
+            }
+            else {
+                player.ChangeState(player.IdleState);
+            }
+        }
+        else {
+            if (movementInput.magnitude != 0) {
+                player.ChangeState(player.SneakMoveState);
+            }
+            else {
+                player.ChangeState(player.SneakIdleState);
+            }
+        }
     }
 }

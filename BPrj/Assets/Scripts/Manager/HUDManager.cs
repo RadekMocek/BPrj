@@ -1,10 +1,17 @@
-using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using Unity.VectorGraphics;
+using UnityEngine;
 
 public class HUDManager : MonoBehaviour
 {
-    // Observe & Interact
+    // == References ============================
+    private Player playerScript;
+    public void SetPlayerScript(Player value) => playerScript = value;
+
+    // == Observe & Interact ====================
     [Header("HUD – Observe & Interact")]
     [SerializeField] private TMP_Text observeNameText;
     [SerializeField] private TMP_Text interactActionText;
@@ -13,7 +20,7 @@ public class HUDManager : MonoBehaviour
     public void SetInteractActionText(string value) => interactActionText.text = value;
     public void SetIsInteractActionPossible(bool value) => interactActionText.color = (value) ? Color.white : Color.gray;
 
-    // Inspect
+    // == Inspect ===============================
     [Header("WIN – Inspect")]
     [SerializeField] private GameObject inspectMainGO;
     [SerializeField] private SVGImage inspectSVGImage;
@@ -37,14 +44,90 @@ public class HUDManager : MonoBehaviour
         IsInspecting = false;
     }
 
-    // MonoBehaviour
+    // == Dialogue ==============================
+    [Header("WIN – Dialogue")]
+    [SerializeField] private GameObject dialogueMainGO;
+    [SerializeField] private TMP_Text dialogueText;
+
+    private bool isInDialogue;
+    private Stack<string> dialogueStack;
+    private Coroutine fillDialogueBoxCoroutine;
+    private bool isFillDialogueBoxCoroutineRunning;
+
+    public void StartDialogue(Stack<string> dialogueStack)
+    {
+        this.dialogueStack = dialogueStack;
+        fillDialogueBoxCoroutine = StartCoroutine(FillDialogueBox());
+        dialogueMainGO.SetActive(true);
+        playerScript.DialogueStart();
+        isInDialogue = true;
+
+        SetObserveNameText("");
+        SetInteractActionText("");
+    }
+
+    private void EndDialogue()
+    {
+        dialogueMainGO.SetActive(false);
+        playerScript.DialogueEnd();
+        isInDialogue = false;
+    }
+
+    private IEnumerator FillDialogueBox()
+    {
+        isFillDialogueBoxCoroutineRunning = true;
+
+        string line = dialogueStack.Peek();
+        string dialogueBoxText = "";
+
+        // Start filling dialogue box with letters
+        foreach (char ch in line) {
+            dialogueBoxText += ch;
+            dialogueText.text = dialogueBoxText;
+            yield return new WaitForSeconds(.015f);
+        }
+
+        isFillDialogueBoxCoroutineRunning = false;
+    }
+
+    // == MonoBehaviour =========================
     private void Awake()
     {
+        // Inspecting
         inspectMainGO.SetActive(false);
+        
+        // Dialogue
+        dialogueMainGO.SetActive(false);
     }
 
     private void Start()
     {
+        // Inspecting
         IsInspecting = false;
+
+        // Dialogue
+        isInDialogue = false;
+        isFillDialogueBoxCoroutineRunning = false;
+    }
+
+    private void Update()
+    {
+        // Dialogue
+        if (isInDialogue && playerScript.IH.InteractAction.WasPressedThisFrame()) {
+            if (isFillDialogueBoxCoroutineRunning) {
+                isFillDialogueBoxCoroutineRunning = false;
+                StopCoroutine(fillDialogueBoxCoroutine);
+                dialogueText.text = dialogueStack.Peek(); // Skip filling with letters
+            }
+            else {
+                dialogueStack.Pop(); // Handle the next line in stack (if there is any)
+                if (dialogueStack.Any()) {
+                    fillDialogueBoxCoroutine = StartCoroutine(FillDialogueBox());
+                }
+                else {
+                    EndDialogue();
+                }
+            }
+        }
     }
 }

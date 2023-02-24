@@ -23,7 +23,7 @@ public class Stairs : MonoBehaviour, IInteractable
 
     public void OnInteract(Player playerScript)
     {
-        throw new System.NotImplementedException();
+        
     }
 
     private void OnDrawGizmosSelected()

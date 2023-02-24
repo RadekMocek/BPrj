@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     public PlayerAttackLightState AttackLightState { get; private set; }
     public PlayerAttackHeavyState AttackHeavyState { get; private set; }
     public PlayerDashState DashState { get; private set; }
+    public PlayerDialogueState DialogueState { get; private set; }
 
     public void ChangeState(PlayerState newState)
     {
@@ -67,6 +68,8 @@ public class Player : MonoBehaviour
 
     private void UpdateCursorObserveAndInteract()
     {
+        if (currentState == DialogueState) return;
+
         if (HUD.IsInspecting) {
             if (IH.InteractAction.WasPressedThisFrame() || !HUD.InspectedObjectScript.CanInteract(this)) {
                 HUD.StopInspecting();
@@ -108,7 +111,18 @@ public class Player : MonoBehaviour
             HUD.SetInteractActionText("");
         }
     }
-    
+
+    // == Dialogue ==============================
+
+    public void DialogueStart()
+    {
+        ChangeState(DialogueState);
+    }
+
+    public void DialogueEnd()
+    {
+        ChangeState(IdleState);
+    }
 
     // == Weapon handling =======================
     public bool WeaponEquipped { get; private set; }
@@ -137,6 +151,7 @@ public class Player : MonoBehaviour
 
         // Set managers
         HUD = ManagerAccessor.instance.HUD;
+        HUD.SetPlayerScript(this);
 
         // States initialization
         IdleState = new PlayerIdleState(this);
@@ -146,6 +161,7 @@ public class Player : MonoBehaviour
         AttackLightState = new PlayerAttackLightState(this);
         AttackHeavyState = new PlayerAttackHeavyState(this);
         DashState = new PlayerDashState(this);
+        DialogueState = new PlayerDialogueState(this);
     }
 
     private void Start()

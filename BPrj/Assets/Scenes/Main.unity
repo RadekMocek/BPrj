@@ -654,7 +654,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 37591325}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 1.18, y: -6.25, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -676,6 +676,9 @@ MonoBehaviour:
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
+  dialogue:
+  - "Dve\u0159e nejdou otev\u0159\xEDt, divn\xE9..."
+  - "Na sekretari\xE1tu budou v\u011Bd\u011Bt co s t\xEDm.\nTe\u010F ale kde ho naj\xEDt."
 --- !u!1 &102190744
 GameObject:
   m_ObjectHideFlags: 0
@@ -5627,6 +5630,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2122566177}
+  - {fileID: 1167155639}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -5875,6 +5879,53 @@ SortingGroup:
   m_SortingLayerID: 1948930519
   m_SortingLayer: 4
   m_SortingOrder: 0
+--- !u!1 &1167155638
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1167155639}
+  - component: {fileID: 1167155640}
+  m_Layer: 0
+  m_Name: SceneTransitionManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1167155639
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167155638}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1035640949}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1167155640
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1167155638}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 978e39da48f5e8b449edc6d95bbe27af, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerGO: {fileID: 1078630643}
+  canvasGO: {fileID: 1440134183}
+  camerasGO: {fileID: 908531909}
 --- !u!1 &1173462898
 GameObject:
   m_ObjectHideFlags: 0
@@ -5918,7 +5969,7 @@ GameObject:
   - component: {fileID: 1282990266}
   - component: {fileID: 1282990265}
   m_Layer: 5
-  m_Name: "WIN \u2013 Dialog"
+  m_Name: "WIN \u2013 Dialogue"
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -5943,7 +5994,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: -381, y: 150}
-  m_SizeDelta: {x: -762, y: 150}
+  m_SizeDelta: {x: -762, y: 185}
   m_Pivot: {x: 1, y: 0}
 --- !u!114 &1282990265
 MonoBehaviour:
@@ -5965,7 +6016,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 34a9d87ee3739894a8aab326669e209e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 4df66d3c94569134d8793267e5668544, type: 3}
   m_Type: 1
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -5995,7 +6046,7 @@ GameObject:
   - component: {fileID: 1382224665}
   - component: {fileID: 1382224664}
   m_Layer: 5
-  m_Name: Text
+  m_Name: DialogueText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -6041,8 +6092,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Dve\u0159e nejdou otev\u0159\xEDt, divn\xE9... Na sekretari\xE1tu budou
-    v\u011Bd\u011Bt co s t\xEDm. Te\u010F ale kde ho naj\xEDt."
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 90c3cb30864f72440b9833a2ace2db17, type: 2}
   m_sharedMaterial: {fileID: -4644217388737213829, guid: 90c3cb30864f72440b9833a2ace2db17, type: 2}
@@ -6077,7 +6127,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 512
+  m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_wordSpacing: 0
@@ -8021,7 +8071,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2104669680}
   m_LocalRotation: {x: -0, y: -0, z: 0.79874045, w: 0.60167575}
-  m_LocalPosition: {x: 2.41, y: 1.71, z: 0}
+  m_LocalPosition: {x: -0.51, y: 6.28, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8127,3 +8177,5 @@ MonoBehaviour:
   interactActionText: {fileID: 1997493457}
   inspectMainGO: {fileID: 846817665}
   inspectSVGImage: {fileID: 127136578}
+  dialogueMainGO: {fileID: 1282990263}
+  dialogueText: {fileID: 1382224664}

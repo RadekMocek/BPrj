@@ -1,5 +1,14 @@
 {
   "dependencies": {
+    "ch.mariov.vectorshapes": {
+      "version": "https://github.com/anyuser/vectorshapes-unity.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.collections": "1.3.1"
+      },
+      "hash": "d978b89deced600162e84de6177210ba416e6ee2"
+    },
     "com.unity.2d.animation": {
       "version": "7.0.9",
       "depth": 1,
@@ -87,7 +96,7 @@
     },
     "com.unity.burst": {
       "version": "1.6.6",
-      "depth": 3,
+      "depth": 2,
       "source": "registry",
       "dependencies": {
         "com.unity.mathematics": "1.2.1"
@@ -109,6 +118,16 @@
       "source": "registry",
       "dependencies": {
         "com.unity.services.core": "1.0.1"
+      },
+      "url": "https://packages.unity.com"
+    },
+    "com.unity.collections": {
+      "version": "1.3.1",
+      "depth": 1,
+      "source": "registry",
+      "dependencies": {
+        "com.unity.burst": "1.6.6",
+        "com.unity.test-framework": "1.1.31"
       },
       "url": "https://packages.unity.com"
     },

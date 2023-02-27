@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     [field: SerializeField] public Transform Core { get; private set; } // Approx. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
 
     // == Component references ==================
+    public SpriteRenderer SR { get; private set; }
     public Rigidbody2D RB { get; private set; }
     public PlayerInputHandler IH { get; private set; }
     public Animator Anim { get; private set; }
@@ -46,6 +47,21 @@ public class Player : MonoBehaviour
 
     // == Sneaking ==============================
     public bool Sneaking { get; set; }
+
+    // == Dashing ===============================
+    [Header("Dashing")]
+    [SerializeField] private GameObject afterImagePrefab;
+
+    private GameObject afterImageGO;
+    private PlayerAfterImageEffect afterImageScript;
+
+    public void SpawnAfterImage()
+    {
+        afterImageGO = Instantiate(afterImagePrefab, this.transform.position, Quaternion.identity);
+        if (afterImageGO.TryGetComponent(out afterImageScript)) {
+            afterImageScript.sprite = SR.sprite;
+        }
+    }
 
     // == Cursor position & coordinates =========
     private Vector3 cursorPosition;
@@ -145,6 +161,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         // Set components references
+        SR = GetComponent<SpriteRenderer>();
         RB = GetComponent<Rigidbody2D>();
         IH = GetComponent<PlayerInputHandler>();
         Anim = GetComponent<Animator>();

@@ -98,6 +98,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sprite: {fileID: 0}
-  initialAlpha: 0.7
-  alphaDecrement: 0.025
-  alphaDecrementWaitingTime: 0.005
+  initialAlpha: 0.6
+  alphaDecrement: 0.026
+  alphaDecrementWaitingTime: 0.004

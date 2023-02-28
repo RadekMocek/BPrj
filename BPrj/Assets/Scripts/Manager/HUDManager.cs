@@ -48,6 +48,7 @@ public class HUDManager : MonoBehaviour
     [Header("WIN – Dialogue")]
     [SerializeField] private GameObject dialogueMainGO;
     [SerializeField] private TMP_Text dialogueText;
+    [SerializeField] private GameObject dialogueContinueIndicatorGO;
 
     private bool isInDialogue;
     private Stack<string> dialogueStack;
@@ -76,6 +77,7 @@ public class HUDManager : MonoBehaviour
     private IEnumerator FillDialogueBox()
     {
         isFillDialogueBoxCoroutineRunning = true;
+        dialogueContinueIndicatorGO.SetActive(false);
 
         string line = dialogueStack.Peek();
         string dialogueBoxText = "";
@@ -87,6 +89,7 @@ public class HUDManager : MonoBehaviour
             yield return new WaitForSeconds(.015f);
         }
 
+        dialogueContinueIndicatorGO.SetActive(true);
         isFillDialogueBoxCoroutineRunning = false;
     }
 
@@ -118,6 +121,7 @@ public class HUDManager : MonoBehaviour
                 isFillDialogueBoxCoroutineRunning = false;
                 StopCoroutine(fillDialogueBoxCoroutine);
                 dialogueText.text = dialogueStack.Peek(); // Skip filling with letters
+                dialogueContinueIndicatorGO.SetActive(true);
             }
             else {
                 dialogueStack.Pop(); // Handle the next line in stack (if there is any)

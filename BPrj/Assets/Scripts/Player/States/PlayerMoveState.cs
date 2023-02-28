@@ -4,6 +4,7 @@ public class PlayerMoveState : PlayerState
 {
     public PlayerMoveState(Player player) : base(player)
     {
+        isPrimaryAxisHorizontalMemory = false;
     }
 
     private readonly float maxMovementSpeed = 4.7f;
@@ -14,6 +15,7 @@ public class PlayerMoveState : PlayerState
     private float movementSpeed;
     private Vector2 momentumDirection;
     private float momentumSpeed;
+    private bool isPrimaryAxisHorizontalMemory; // Do not change animation when dashing diagonally and sprite is facing left/right
 
     public override void Enter()
     {
@@ -21,6 +23,11 @@ public class PlayerMoveState : PlayerState
 
         isPrimaryAxisVertical = (movementInput.y != 0);
         
+        if (isPrimaryAxisHorizontalMemory) {
+            isPrimaryAxisVertical = false;
+            isPrimaryAxisHorizontalMemory = false; // So it's not true when changing from some other state than DashState
+        }
+
         movementSpeed = initialMovementSpeed;
     }
 
@@ -86,6 +93,8 @@ public class PlayerMoveState : PlayerState
             player.ChangeState(player.SneakMoveState);
         }
         else if (dashInputPressedThisFrame) {
+            isPrimaryAxisHorizontalMemory = !isPrimaryAxisVertical;
+
             player.DashState.dashDirection = movementInput;
             player.ChangeState(player.DashState);
         }

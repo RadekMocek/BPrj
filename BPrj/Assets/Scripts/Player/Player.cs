@@ -55,11 +55,11 @@ public class Player : MonoBehaviour
     private GameObject afterImageGO;
     private PlayerAfterImageEffect afterImageScript;
 
-    public void SpawnAfterImage()
+    public void SpawnAfterImage(Sprite sprite)
     {
         afterImageGO = Instantiate(afterImagePrefab, this.transform.position, Quaternion.identity);
         if (afterImageGO.TryGetComponent(out afterImageScript)) {
-            afterImageScript.sprite = SR.sprite;
+            afterImageScript.sprite = sprite;
         }
     }
 

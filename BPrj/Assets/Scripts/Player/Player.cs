@@ -59,8 +59,10 @@ public class Player : MonoBehaviour
     {
         afterImageGO = Instantiate(afterImagePrefab, this.transform.position, Quaternion.identity);
         if (afterImageGO.TryGetComponent(out afterImageScript)) {
+            afterImageScript.position = this.transform.position;
             afterImageScript.sprite = sprite;
         }
+        afterImageGO.transform.parent = this.transform; // Make it Player's child so it's affected by the Player's Sorting Group component
     }
 
     // == Cursor position & coordinates =========

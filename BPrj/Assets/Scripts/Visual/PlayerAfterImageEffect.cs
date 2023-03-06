@@ -3,7 +3,9 @@ using UnityEngine;
 
 public class PlayerAfterImageEffect : MonoBehaviour
 {
-    [HideInInspector] public Sprite sprite;
+    // Variables set from elsewhere (e.g. script instantiating this object)
+    [HideInInspector] public Sprite sprite;     // Sprite to fade out
+    [HideInInspector] public Vector2 position;  // Constant position of object
 
     [Header("Fading out")]
     [SerializeField] private float initialAlpha = .8f;
@@ -13,6 +15,19 @@ public class PlayerAfterImageEffect : MonoBehaviour
     private SpriteRenderer SR;
     private Color color;
     private float alpha;
+
+    // Decrease sprite alpha value (which starts at `initialAlpha`) by `alphaDecrement` every `alphaDecrementWaitingTime` seconds
+    private IEnumerator FadeOut()
+    {
+        while (alpha > 0) {
+            alpha -= alphaDecrement;
+            color.a = alpha;
+            SR.color = color;
+            yield return new WaitForSeconds(alphaDecrementWaitingTime);
+        }
+
+        Destroy(this.gameObject);
+    }
 
     private void Awake()
     {
@@ -30,15 +45,8 @@ public class PlayerAfterImageEffect : MonoBehaviour
         StartCoroutine(FadeOut());
     }
 
-    private IEnumerator FadeOut()
+    private void Update()
     {
-        while (alpha > 0) {
-            alpha -= alphaDecrement;
-            color.a = alpha;
-            SR.color = color;
-            yield return new WaitForSeconds(alphaDecrementWaitingTime);
-        }
-
-        Destroy(this.gameObject);
+        this.transform.position = position; // Position needs to be updated so we don't move when parent transform moves
     }
 }

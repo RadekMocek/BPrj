@@ -208,9 +208,6 @@ public class Player : MonoBehaviour
         // Update sub-functions
         UpdateCursorPositionAndCoordinates();
         UpdateCursorObserveAndInteract();
-
-        // Debug
-        //Debug.Log(Sneaking);
     }
 
     // == Debug =================================

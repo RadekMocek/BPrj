@@ -3,7 +3,7 @@ using UnityEngine;
 public class Enemy1 : Enemy
 {
     // == State machine =========================
-    public Enemy1WanderState WanderState { get; private set; }
+    public Enemy1PatrolState PatrolState { get; private set; }
 
     // == Observe ===============================
     public override string GetName()
@@ -18,14 +18,19 @@ public class Enemy1 : Enemy
     }
 
     // == MonoBehaviour functions ===============
-    private void Awake()
+    protected override void Awake()
     {
+        base.Awake();
+
         // States initialization
-        WanderState = new Enemy1WanderState(this);
+        PatrolState = new Enemy1PatrolState(this);
     }
 
-    private void Start()
+    protected override void Start()
     {
-        ChangeState(WanderState);
+        base.Start();
+
+        ChangeState(PatrolState);
     }
+
 }

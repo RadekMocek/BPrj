@@ -26,27 +26,47 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         throw new System.NotImplementedException();
     }
 
+    // == Pathfinding ===========================
+    public PathGrid Pathfinder { get; private set; }
+
+    // == Patrol ================================
+    [Header("Patrol state")]
+    [SerializeField] private Vector2[] patrolPoints;
+    public Vector2[] GetPatrolPoints() => patrolPoints;
+
     // == MonoBehaviour functions ===============
-    private void Awake()
+    protected virtual void Awake()
     {
         // Component initialization
         RB = GetComponent<Rigidbody2D>();
+
+        // Services initialization
+        Pathfinder = new PathGrid();
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         
     }
 
-    private void FixedUpdate()
+    protected virtual void FixedUpdate()
     {
         // State logic
         currentState.FixedUpdate();
     }
 
-    private void Update()
+    protected virtual void Update()
     { 
         // State logic
         currentState.Update();
+    }
+
+    private void OnDrawGizmosSelected()
+    {
+        if (patrolPoints != null) {
+            foreach (var patrolPoint in patrolPoints) {
+                Gizmos.DrawWireSphere(patrolPoint, .2f);
+            }
+        }
     }
 }

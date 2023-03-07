@@ -9,17 +9,17 @@ public class EnemyState
         this.enemy = enemy;
     }
 
-    public void Enter()
+    public virtual void Enter()
     {
         Debug.Log($"{enemy.GetName()} changed state to {this.GetType().Name}.");
     }
 
-    public void FixedUpdate()
+    public virtual void FixedUpdate()
     {
 
     }
 
-    public void Update()
+    public virtual void Update()
     {
 
     }

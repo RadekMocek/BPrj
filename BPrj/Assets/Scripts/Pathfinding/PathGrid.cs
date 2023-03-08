@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class PathGrid
 {
+    // == Pathfinding ==
     // Constant prices for moving between nodes on the grid
     public static readonly int straightPathCost = 10;
     public static readonly int diagonalPathCost = 14;
@@ -19,13 +20,24 @@ public class PathGrid
     // Nodes are sorted by their Combined value: f+h = Cost of getting to the node (Dijkstra) + heuristic function (A*)
     private List<PathNode> priorityQueue;
     
-    //
+    // Temp vars
     private PathNode startingNode;
     private PathNode priorityNode;
     private PathNode neighNode;
     private Vector2Int tempVector;
     private Stack<Vector2Int> returnStack;
 
+    // == Walkable ==
+    private LayerMask unwalkableLayer;
+    private readonly Vector2 halfTileDiag = new Vector2(-.5f, .5f);
+
+    //
+    public PathGrid(LayerMask unwalkableLayer)
+    {
+        this.unwalkableLayer = unwalkableLayer;
+    }
+
+    // Pathfinding, returns Stack of coordinates that make path from `start` to `end`
     public Stack<Vector2Int> FindPath(Vector2 start, Vector2 end)
     {
         // Initialize collections
@@ -37,6 +49,11 @@ public class PathGrid
         // - Snap start and finish coordinates to the (integer) grid
         startCoordinates = Vector2Int.RoundToInt(start);
         endCoordinates = Vector2Int.RoundToInt(end);
+        // - Terminate if end unreachable
+        if (!IsWalkable(endCoordinates)) {
+            returnStack.Push(startCoordinates);
+            return returnStack;
+        }
         // - Start has Cost of 0 and should be walkable (caller is standing on it)
         startingNode = new PathNode(startCoordinates, 0, endCoordinates, true);
         nodesDatabase.Add(startCoordinates, startingNode);
@@ -62,14 +79,11 @@ public class PathGrid
 
             if (priorityNode.Coordinates == endCoordinates) {
                 // Success – (dequeued) priorityNode is the end node
-
                 PathNode pathNode = priorityNode;
-
                 while (pathNode.Precursor != null) {
                     returnStack.Push(pathNode.Coordinates);
                     pathNode = pathNode.Precursor;
                 }
-
                 return returnStack;
             }
             
@@ -84,14 +98,13 @@ public class PathGrid
             // Foreach neighbour
             for (int horizontal = -1; horizontal <= 1; horizontal++) {
                 for (int vertical = -1; vertical <= 1; vertical++) {
-
                     if (horizontal == 0 && vertical == 0) continue; // Do not check itself
 
                     tempVector.Set(x + horizontal, y + vertical); // Neighbour coordinates
 
-                    // Add neighbor to nodeDatabase or load it if it's already in nodeDatabase
+                    // Add neighbour to nodeDatabase or load it if it's already in nodeDatabase
                     if (!nodesDatabase.ContainsKey(tempVector)) {
-                        neighNode = new PathNode(tempVector, impossibleCost, endCoordinates, true); //TODO: WALKABLE
+                        neighNode = new PathNode(tempVector, impossibleCost, endCoordinates, IsWalkable(tempVector));
                         nodesDatabase.Add(tempVector, neighNode);
                     }
                     else {
@@ -106,10 +119,19 @@ public class PathGrid
                         neighNode.Precursor = priorityNode;
                         priorityQueue.Add(neighNode);
                     }
-
                 }
-            }
-
+            } // End of foreach neighbour
         } // End of while
+    } // End of method
+
+    private bool IsWalkable(Vector2Int coordinates)
+    {
+
+
+        if (Physics2D.OverlapArea(coordinates + halfTileDiag, coordinates - halfTileDiag, unwalkableLayer)) {
+            return false;
+        }
+
+        return true;
     }
 }

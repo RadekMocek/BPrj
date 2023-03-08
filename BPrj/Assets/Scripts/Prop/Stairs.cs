@@ -23,7 +23,7 @@ public class Stairs : MonoBehaviour, IInteractable
 
     public void OnInteract(Player playerScript)
     {
-        
+        //ManagerAccessor.instance.SceneManager.ChangeScene("Test");
     }
 
     private void OnDrawGizmosSelected()

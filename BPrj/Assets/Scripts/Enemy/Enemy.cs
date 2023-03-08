@@ -28,6 +28,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     // == Pathfinding ===========================
     public PathGrid Pathfinder { get; private set; }
+    [Header("Pathfinding")]
+    [SerializeField] private LayerMask unwalkableLayer;
 
     // == Patrol ================================
     [Header("Patrol state")]
@@ -41,7 +43,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         RB = GetComponent<Rigidbody2D>();
 
         // Services initialization
-        Pathfinder = new PathGrid();
+        Pathfinder = new PathGrid(unwalkableLayer);
     }
 
     protected virtual void Start()

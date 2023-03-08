@@ -22,7 +22,10 @@ public class EnemyPatrolState : EnemyState
         currentTargetPoint = patrolPoints[patrolPointIndex];
 
         pathStack = enemy.Pathfinder.FindPath(enemy.transform.position, currentTargetPoint);
-        currentTargetNode = pathStack.Pop();
+        if (pathStack.Any()) {
+            currentTargetNode = pathStack.Pop();
+        }
+
     }
 
     public override void Enter()

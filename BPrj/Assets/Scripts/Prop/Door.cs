@@ -4,7 +4,8 @@ using UnityEngine;
 
 public class Door : MonoBehaviour, IObservable, IInteractable
 {
-    [SerializeField] private SpriteRenderer[] doorPartsSR;
+    // == Component references ==================
+    private CapsuleCollider2D CC;
 
     // == Observe ===============================
     public virtual string GetName()
@@ -15,7 +16,7 @@ public class Door : MonoBehaviour, IObservable, IInteractable
     // == Interact =============================
     public string GetInteractActionDescription()
     {
-        return "Otevøít";
+        return (opened) ? "Zavøít" : "Otevøít";
     }
 
     public bool CanInteract(Player playerScript)
@@ -25,6 +26,42 @@ public class Door : MonoBehaviour, IObservable, IInteractable
 
     public void OnInteract(Player playerScript)
     {
-        throw new System.NotImplementedException();
+        opened = !opened;
+        ChangeDoorState(opened);
+    }
+
+    // == Open/close door =======================
+    [Header("Door parts")]
+    [SerializeField] private SpriteRenderer[] doorPartSRs;
+    [Header("Door sprites")]
+    [SerializeField] private Sprite sprClosed;
+    [SerializeField] private Sprite sprOpened;
+
+    private bool opened;
+
+    private void ChangeDoorState(bool opened)
+    {
+        this.opened = opened;
+
+        CC.enabled = !opened;
+
+        foreach (var doorPartSR in doorPartSRs) {
+            doorPartSR.sprite = (opened) ? sprOpened : sprClosed;
+        }
+    }
+
+    public void OpenDoor() => ChangeDoorState(true);
+
+    // == MonoBehaviour functions ===============
+    private void Awake()
+    {
+        // Set components references
+        CC = GetComponent<CapsuleCollider2D>();
+    }
+
+    private void Start()
+    {
+        opened = false;
+        ChangeDoorState(opened);
     }
 }

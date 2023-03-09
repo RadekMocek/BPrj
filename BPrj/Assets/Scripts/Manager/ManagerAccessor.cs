@@ -7,6 +7,7 @@ public class ManagerAccessor : MonoBehaviour
 
     public HUDManager HUD { get; private set; }
     public SceneTransitionManager SceneManager { get; private set; }
+    public EnemyManager EnemyManager { get; private set; }
 
     private void Awake()
     {
@@ -25,5 +26,6 @@ public class ManagerAccessor : MonoBehaviour
         // Find managers in children
         HUD = transform.Find("HUDManager").GetComponent<HUDManager>();
         SceneManager = transform.Find("SceneTransitionManager").GetComponent<SceneTransitionManager>();
+        EnemyManager = transform.Find("EnemyManager").GetComponent<EnemyManager>();
     }
 }

@@ -26,6 +26,14 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         throw new System.NotImplementedException();
     }
 
+    // == EnemyManager ==========================
+    public EnemyManager EnemyManager { get; private set; }
+
+    private void PlayerDirection()
+    {
+        Debug.Log(EnemyManager.GetPlayerPosition() - (Vector2)this.transform.position);
+    }
+
     // == Pathfinding ===========================
     public PathGrid Pathfinder { get; private set; }
     [Header("Pathfinding")]
@@ -43,6 +51,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         RB = GetComponent<Rigidbody2D>();
 
         // Services initialization
+        EnemyManager = ManagerAccessor.instance.EnemyManager;
         Pathfinder = new PathGrid(unwalkableLayer);
     }
 
@@ -61,6 +70,16 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     { 
         // State logic
         currentState.Update();
+
+        // Player spotting
+        PlayerDirection();
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.TryGetComponent(out Door collisionDoorSciprt)) {
+            collisionDoorSciprt.OpenDoor();
+        }
     }
 
     private void OnDrawGizmosSelected()

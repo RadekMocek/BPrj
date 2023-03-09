@@ -6,6 +6,7 @@ public class PlayerDashState : PlayerState
     {
     }
 
+    // == Dash ==
     private readonly int dashSpeed = 660;
     private readonly float dashDuration = .14f;
     private readonly float breatheOutDuration = .1f;
@@ -14,12 +15,20 @@ public class PlayerDashState : PlayerState
 
     private bool isBreathingOut;
     private float breatheOutStartTime;
-    private Sprite dashAfterImageSprite;
 
+    // == After image ==
+    private readonly float firstAfterImageSpawnDelay = .06f;
+    private readonly float nextAfterImageSpawnDelay = .01f;
+
+    private float lastAfterImageSpawnTime;
+    private Sprite dashAfterImageSprite;
+    
+    //
     public override void Enter()
     {
         base.Enter();
 
+        lastAfterImageSpawnTime = Time.time + firstAfterImageSpawnDelay;
         dashAfterImageSprite = player.SR.sprite;
 
         isBreathingOut = false;
@@ -36,6 +45,11 @@ public class PlayerDashState : PlayerState
             breatheOutStartTime = Time.time;
             isBreathingOut = true;
         }
+        // Spawn after image
+        else if (!isBreathingOut && Time.time > lastAfterImageSpawnTime + nextAfterImageSpawnDelay) {
+            lastAfterImageSpawnTime = Time.time;
+            player.SpawnAfterImage(dashAfterImageSprite);
+        }
         // ChangeState after breatheOutDuration elapses
         else if (isBreathingOut && Time.time > breatheOutStartTime + breatheOutDuration) {
             if (movementInput.magnitude != 0) {
@@ -45,12 +59,5 @@ public class PlayerDashState : PlayerState
                 player.ChangeState(player.IdleState);
             }
         }
-    }
-
-    public override void FixedUpdate()
-    {
-        base.FixedUpdate();
-
-        if (!isBreathingOut) player.SpawnAfterImage(dashAfterImageSprite);
     }
 }

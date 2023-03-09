@@ -131,7 +131,6 @@ public class Player : MonoBehaviour
     }
 
     // == Dialogue ==============================
-
     public void DialogueStart()
     {
         ChangeState(DialogueState);

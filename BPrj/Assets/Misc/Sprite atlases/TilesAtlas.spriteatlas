@@ -49,6 +49,7 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 4ee3f278b7dddc74189899f734a2934d, type: 3}
     - {fileID: 2800000, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
     - {fileID: 2800000, guid: 336d3ab2379c23a43bf2e7c295b3c558, type: 3}
+    - {fileID: 2800000, guid: 07f71fdebacc85840a36fa0d2ec679ac, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
@@ -108,6 +109,7 @@ SpriteAtlas:
   - {fileID: 1642351483, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 214292399, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 380498987, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
+  - {fileID: 21300000, guid: 07f71fdebacc85840a36fa0d2ec679ac, type: 3}
   m_PackedSpriteNamesToIndex:
   - Floor1_1_2_6
   - Floor1_1_2_7
@@ -163,6 +165,7 @@ SpriteAtlas:
   - Floor1_1_1_0
   - Floor1_1_1_3
   - Floor1_1_1_2
+  - Floor1_2
   m_RenderDataMap: {}
   m_Tag: TilesAtlas
   m_IsVariant: 0

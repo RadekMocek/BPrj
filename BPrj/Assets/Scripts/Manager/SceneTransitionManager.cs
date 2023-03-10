@@ -5,6 +5,7 @@ public class SceneTransitionManager : MonoBehaviour
 {
     [Header("Persistent GameObjects")]
     [SerializeField] private GameObject playerGO;
+    [SerializeField] private GameObject globalLightGO;
     [SerializeField] private GameObject canvasGO;
     [SerializeField] private GameObject camerasGO;
 
@@ -16,6 +17,7 @@ public class SceneTransitionManager : MonoBehaviour
     private void Awake()
     {
         DontDestroyOnLoad(playerGO);
+        DontDestroyOnLoad(globalLightGO);
         DontDestroyOnLoad(canvasGO);
         DontDestroyOnLoad(camerasGO);
     }

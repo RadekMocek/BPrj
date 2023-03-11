@@ -8,7 +8,7 @@ public class PlayerAfterImageEffect : MonoBehaviour
     [HideInInspector] public Vector2 position;  // Constant position of object
 
     [Header("Fading out")]
-    [SerializeField] private float initialAlpha = .7f;
+    [SerializeField] private float initialAlpha = .65f;
     [SerializeField] private float alphaDecrement = .06f;
     [SerializeField] private float alphaDecrementWaitingTime = .01f;
 

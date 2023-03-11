@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Enemy : MonoBehaviour, IObservable, IDamageable
 {
@@ -26,12 +27,70 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         throw new System.NotImplementedException();
     }
 
+    // == Direction =============================
+    private float targetFacingDirection;
+    private float actualFacingDirection;
+
+    public void ChangeFacingDiretion(Vector2 value)
+    {
+        float treshold = 0.5f;
+
+        if (value.x < treshold && value.x > -treshold) {
+            value.x = 0;
+        }
+
+        if (value.y < treshold && value.y > -treshold) {
+            value.y = 0;
+        }
+
+        if (value.x > 0) {
+            if (value.y < 0) ChangeFacingDiretion(EightDirection.SE);
+            else if (value.y > 0) ChangeFacingDiretion(EightDirection.NE);
+            else ChangeFacingDiretion(EightDirection.E);
+        }
+        else if (value.x < 0) {
+            if (value.y < 0) ChangeFacingDiretion(EightDirection.SW);
+            else if (value.y > 0) ChangeFacingDiretion(EightDirection.NW);
+            else ChangeFacingDiretion(EightDirection.W);
+        }
+        else {
+            if (value.y < 0) ChangeFacingDiretion(EightDirection.S);
+            else ChangeFacingDiretion(EightDirection.N);
+        }
+    }
+
+    public void ChangeFacingDiretion(EightDirection direction)
+    {
+        targetFacingDirection = (int)direction * 45;
+    }
+
+    private void UpdateActualFacingDirection()
+    {
+        float addition = Time.deltaTime * 480;
+
+        if (Mathf.Abs(actualFacingDirection - targetFacingDirection) <= addition) return;
+
+        int directionMultiplier = (actualFacingDirection < targetFacingDirection) ? 1 : -1;
+
+        actualFacingDirection += addition * directionMultiplier;
+    }
+
     // == EnemyManager ==========================
     public EnemyManager EnemyManager { get; private set; }
 
     private void PlayerDirection()
     {
-        Debug.Log(EnemyManager.GetPlayerPosition() - (Vector2)this.transform.position);
+        //Debug.Log(EnemyManager.GetPlayerPosition() - (Vector2)this.transform.position);
+    }
+
+    // == View Cone =============================
+    [Header("View cone")]
+    [SerializeField] private GameObject viewConeLightGO;
+    private Light2D viewConeLightScript;
+
+    private void UpdateViewCone()
+    {
+        viewConeLightGO.transform.rotation = Quaternion.Euler(0, 0, actualFacingDirection);
     }
 
     // == Pathfinding ===========================
@@ -49,6 +108,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     {
         // Component initialization
         RB = GetComponent<Rigidbody2D>();
+        viewConeLightScript = viewConeLightGO.GetComponent<Light2D>();
 
         // Services initialization
         EnemyManager = ManagerAccessor.instance.EnemyManager;
@@ -57,7 +117,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     protected virtual void Start()
     {
-        
+        // Initialize
+        ChangeFacingDiretion(EightDirection.S); // Facing down
     }
 
     protected virtual void FixedUpdate()
@@ -71,7 +132,10 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         // State logic
         currentState.Update();
 
-        // Player spotting
+        // Update sub-functions
+        UpdateActualFacingDirection();
+        UpdateViewCone();
+
         PlayerDirection();
     }
 

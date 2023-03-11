@@ -8,19 +8,24 @@ public class EnemyPatrolState : EnemyState
     {
     }
 
-    private Vector2[] patrolPoints;
-    private int nPatrolPoints;
-    private int patrolPointIndex;
-    private Vector2 currentTargetPoint;
+    private readonly float movementSpeed = 10;
 
-    private Stack<Vector2Int> pathStack;
-    private Vector2Int currentTargetNode;
+    private Vector2[] patrolPoints;     // Enemy will patrol from point to point
+    private int nPatrolPoints;          // Length of `patrolPoints`
+    private int patrolPointIndex;       // Index of the target point where enemy is currently heading
+    private Vector2 currentTargetPoint; // and coordinates of that point
 
+    private Stack<Vector2Int> pathStack;    // Stack of node coordinates that creates a path to the target point
+    private Vector2Int currentTargetNode;   // Coordinates of the target node where enemy is currently heading
+
+    // Called when enemy reaches `currentTargetPoint`; switches to the next patrol point
     private void NextPatrolPoint()
     {
-        patrolPointIndex = (patrolPointIndex == nPatrolPoints - 1) ? 0 : patrolPointIndex + 1;
+        // Choose the next target point
+        patrolPointIndex = (patrolPointIndex + 1) % nPatrolPoints;
         currentTargetPoint = patrolPoints[patrolPointIndex];
 
+        // Fill the stack and get the first target node
         pathStack = enemy.Pathfinder.FindPath(enemy.transform.position, currentTargetPoint);
         if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
@@ -49,12 +54,17 @@ public class EnemyPatrolState : EnemyState
     {
         base.Update();
 
+        // Move in the direction of the target path node until enemy is close enough
         if (Vector2.Distance(enemy.transform.position, currentTargetNode) > 0.1f) {
-            enemy.RB.velocity = (currentTargetNode - (Vector2)enemy.transform.position).normalized * 10;
+            var movementDirection = (currentTargetNode - (Vector2)enemy.transform.position).normalized;
+            enemy.ChangeFacingDiretion(movementDirection);
+            enemy.RB.velocity = movementDirection * movementSpeed;
         }
+        // Switch to next path node if enemy is close to the target path node
         else if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
         }
+        // If there are no path nodes left, enemy has reached the target patrol point
         else {
             NextPatrolPoint();
         }

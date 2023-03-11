@@ -1,11 +1,12 @@
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using System.Collections.Generic;
 
-// Edit of this script: https://stackoverflow.com/a/73169914/19136597
-
+/// <summary>
+/// This script allows you to create a ShadowCaster2D with solid border mesh around a tilemap with composite collider. Inspired by https://stackoverflow.com/a/73169914/19136597
+/// </summary>
 [RequireComponent(typeof(CompositeCollider2D))]
 public class TilemapShadowCaster2DGenerator : MonoBehaviour
 {

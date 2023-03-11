@@ -5,5 +5,5 @@ public enum Direction
 
 public enum EightDirection
 {
-    N, NE, E, SE, S, SW, W, NW
+    N, NW, W, SW, S, SE, E, NE
 }

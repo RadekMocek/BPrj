@@ -18,7 +18,7 @@ public class PlayerDashState : PlayerState
 
     // == After image ==
     private readonly float firstAfterImageSpawnDelay = .06f;
-    private readonly float nextAfterImageSpawnDelay = .01f;
+    private readonly float nextAfterImageSpawnDelay = .015f;
 
     private float lastAfterImageSpawnTime;
     private Sprite dashAfterImageSprite;

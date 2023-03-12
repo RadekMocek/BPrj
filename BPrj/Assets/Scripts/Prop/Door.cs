@@ -1,11 +1,11 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class Door : MonoBehaviour, IObservable, IInteractable
 {
     // == Component references ==================
     private CapsuleCollider2D CC;
+    private ShadowCaster2D shadowCasterScript;
 
     // == Observe ===============================
     public virtual string GetName()
@@ -16,7 +16,7 @@ public class Door : MonoBehaviour, IObservable, IInteractable
     // == Interact =============================
     public string GetInteractActionDescription()
     {
-        return (opened) ? "Zavøít" : "Otevøít";
+        return (Opened) ? "Zavøít" : "Otevøít";
     }
 
     public bool CanInteract(Player playerScript)
@@ -26,8 +26,8 @@ public class Door : MonoBehaviour, IObservable, IInteractable
 
     public void OnInteract(Player playerScript)
     {
-        opened = !opened;
-        ChangeDoorState(opened);
+        Opened = !Opened;
+        ChangeDoorState(Opened);
     }
 
     // == Open/close door =======================
@@ -37,13 +37,15 @@ public class Door : MonoBehaviour, IObservable, IInteractable
     [SerializeField] private Sprite sprClosed;
     [SerializeField] private Sprite sprOpened;
 
-    private bool opened;
+    public bool Opened { get; private set; }
 
     private void ChangeDoorState(bool opened)
     {
-        this.opened = opened;
+        this.Opened = opened;
 
         CC.enabled = !opened;
+
+        shadowCasterScript.enabled = !opened;
 
         foreach (var doorPartSR in doorPartSRs) {
             doorPartSR.sprite = (opened) ? sprOpened : sprClosed;
@@ -57,11 +59,12 @@ public class Door : MonoBehaviour, IObservable, IInteractable
     {
         // Set components references
         CC = GetComponent<CapsuleCollider2D>();
+        shadowCasterScript = GetComponent<ShadowCaster2D>();
     }
 
     private void Start()
     {
-        opened = false;
-        ChangeDoorState(opened);
+        Opened = false;
+        ChangeDoorState(Opened);
     }
 }

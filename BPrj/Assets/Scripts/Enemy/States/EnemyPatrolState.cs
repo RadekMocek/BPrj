@@ -8,7 +8,7 @@ public class EnemyPatrolState : EnemyState
     {
     }
 
-    private readonly float movementSpeed = 10;
+    private readonly float movementSpeed = 4.7f;
 
     private Vector2[] patrolPoints;     // Enemy will patrol from point to point
     private int nPatrolPoints;          // Length of `patrolPoints`
@@ -57,7 +57,7 @@ public class EnemyPatrolState : EnemyState
         // Move in the direction of the target path node until enemy is close enough
         if (Vector2.Distance(enemy.transform.position, currentTargetNode) > 0.1f) {
             var movementDirection = (currentTargetNode - (Vector2)enemy.transform.position).normalized;
-            enemy.ChangeFacingDiretion(movementDirection);
+            enemy.MovementToFacingDirectionAndAnimation(movementDirection);
             enemy.RB.velocity = movementDirection * movementSpeed;
         }
         // Switch to next path node if enemy is close to the target path node

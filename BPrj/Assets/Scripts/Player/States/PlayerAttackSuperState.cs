@@ -136,7 +136,7 @@ public class PlayerAttackSuperState : PlayerState
 
     private void ApplyPositionAndRotationAccordingToAngle()
     {
-        weaponRawPosition.Set(/*x*/Mathf.Cos(Mathf.Deg2Rad * angle), /*y*/Mathf.Sin(Mathf.Deg2Rad * angle));
+        weaponRawPosition.Set(/*x: */Mathf.Cos(Mathf.Deg2Rad * angle), /*y: */Mathf.Sin(Mathf.Deg2Rad * angle));
 
         player.WeaponTransform.SetLocalPositionAndRotation(
             (weaponRawPosition * swingDistanceFromCore + (Vector2)player.Core.localPosition),

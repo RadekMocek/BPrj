@@ -3,6 +3,7 @@ using UnityEngine;
 public class Enemy1 : Enemy
 {
     // == State machine =========================
+    public Enemy1IdleState IdleState { get; private set; }
     public Enemy1PatrolState PatrolState { get; private set; }
 
     // == Observe ===============================
@@ -23,6 +24,7 @@ public class Enemy1 : Enemy
         base.Awake();
 
         // States initialization
+        IdleState = new Enemy1IdleState(this);
         PatrolState = new Enemy1PatrolState(this);
     }
 
@@ -30,6 +32,7 @@ public class Enemy1 : Enemy
     {
         base.Start();
 
+        //ChangeState(IdleState);
         ChangeState(PatrolState);
     }
 

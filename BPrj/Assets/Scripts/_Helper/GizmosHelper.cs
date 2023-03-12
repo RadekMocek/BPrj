@@ -6,7 +6,7 @@ using UnityEngine;
 public static class GizmosHelper
 {
     /// <summary>
-    /// Draw a rectangle.
+    /// Draws a rectangle.
     /// </summary>
     /// <param name="interactZonePointA">One corner of the rectangle.</param>
     /// <param name="interactZonePointB">Diagonally opposite the point A corner of the rectangle.</param>

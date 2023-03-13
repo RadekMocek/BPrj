@@ -4,6 +4,8 @@ public class EnemyState
 {
     protected Enemy enemy;
 
+    protected float enterTime;
+
     public EnemyState(Enemy enemy)
     {
         this.enemy = enemy;
@@ -12,6 +14,8 @@ public class EnemyState
     public virtual void Enter()
     {
         Debug.Log($"{enemy.GetName()} changed state to {this.GetType().Name}.");
+
+        enterTime = Time.time;
     }
 
     public virtual void FixedUpdate()

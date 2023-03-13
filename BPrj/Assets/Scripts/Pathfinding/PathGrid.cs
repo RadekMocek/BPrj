@@ -124,14 +124,6 @@ public class PathGrid
         } // End of while
     } // End of method
 
-    private bool IsWalkable(Vector2Int coordinates)
-    {
-
-
-        if (Physics2D.OverlapArea(coordinates + halfTileDiag, coordinates - halfTileDiag, unwalkableLayer)) {
-            return false;
-        }
-
-        return true;
-    }
+    private bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + halfTileDiag, coordinates - halfTileDiag, unwalkableLayer);
+    
 }

@@ -6,6 +6,7 @@ public class EnemyPatrolState : EnemyState
 {
     public EnemyPatrolState(Enemy enemy) : base(enemy)
     {
+        patrolPointIndex = 0;
     }
 
     private readonly float movementSpeed = 4.7f;
@@ -30,12 +31,13 @@ public class EnemyPatrolState : EnemyState
         if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
         }
-
     }
 
     public override void Enter()
     {
         base.Enter();
+
+        enemy.ChangeViewConeColor(Color.green);
 
         patrolPoints = enemy.GetPatrolPoints();
         nPatrolPoints = patrolPoints.Length;
@@ -46,7 +48,7 @@ public class EnemyPatrolState : EnemyState
             return;
         }
 
-        patrolPointIndex = -1;
+        patrolPointIndex--; // So we don't skip patrol point if this state got interrupted (`NextPatrolPoint()` adds one to the `patrolPointIndex`)
         NextPatrolPoint();
     }
 
@@ -57,7 +59,7 @@ public class EnemyPatrolState : EnemyState
         // Move in the direction of the target path node until enemy is close enough
         if (Vector2.Distance(enemy.transform.position, currentTargetNode) > 0.1f) {
             var movementDirection = (currentTargetNode - (Vector2)enemy.transform.position).normalized;
-            enemy.MovementToFacingDirectionAndAnimation(movementDirection);
+            enemy.DirectionToFacingDirectionAndAnimation(movementDirection);
             enemy.RB.velocity = movementDirection * movementSpeed;
         }
         // Switch to next path node if enemy is close to the target path node
@@ -68,7 +70,6 @@ public class EnemyPatrolState : EnemyState
         else {
             NextPatrolPoint();
         }
-        
     }
 
 }

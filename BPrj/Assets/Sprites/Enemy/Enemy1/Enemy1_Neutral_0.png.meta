@@ -105,7 +105,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Enemy1_0_0
+      name: Enemy1_Neutral_0_0
       rect:
         serializedVersion: 2
         x: 0
@@ -126,7 +126,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy1_0_1
+      name: Enemy1_Neutral_0_1
       rect:
         serializedVersion: 2
         x: 16
@@ -147,7 +147,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy1_0_2
+      name: Enemy1_Neutral_0_2
       rect:
         serializedVersion: 2
         x: 0
@@ -168,7 +168,7 @@ TextureImporter:
       edges: []
       weights: []
     - serializedVersion: 2
-      name: Enemy1_0_3
+      name: Enemy1_Neutral_0_3
       rect:
         serializedVersion: 2
         x: 16
@@ -199,10 +199,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      Enemy1_0_3: -1740431627
-      Enemy1_0_2: -1056234940
-      Enemy1_0_0: -2015391090
-      Enemy1_0_1: 1339105651
+      Enemy1_Neutral_0_2: -1056234940
+      Enemy1_Neutral_0_1: 1339105651
+      Enemy1_Neutral_0_0: -2015391090
+      Enemy1_Neutral_0_3: -1740431627
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

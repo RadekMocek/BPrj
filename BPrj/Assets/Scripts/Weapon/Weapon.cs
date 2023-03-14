@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Weapon : MonoBehaviour, IInteractable
+public class Weapon : MonoBehaviour, IPlayerInteractable
 {
     private BoxCollider2D BC;
 

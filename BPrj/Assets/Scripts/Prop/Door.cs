@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class Door : MonoBehaviour, IObservable, IInteractable
+public class Door : MonoBehaviour, IObservable, IPlayerInteractable
 {
     // == Component references ==================
     private CapsuleCollider2D CC;

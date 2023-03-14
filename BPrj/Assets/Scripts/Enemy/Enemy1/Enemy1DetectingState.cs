@@ -5,7 +5,7 @@ public class Enemy1DetectingState : EnemyDetectingState
         enemy1 = enemy as Enemy1;
     }
 
-    private Enemy1 enemy1;
+    private readonly Enemy1 enemy1;
 
     public override void Update()
     {

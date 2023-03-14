@@ -22,6 +22,15 @@ public static class VectorHelper
     /// <summary>
     /// Returns this vector with every element normalized separately.
     /// </summary>
+    public static Vector2 NormalizePerPartes(this Vector2 value)
+    {
+        tempVector2.Set(value.x / Mathf.Abs(value.x), value.y / Mathf.Abs(value.y));
+        return tempVector2;
+    }
+
+    /// <summary>
+    /// Returns this vector with every element normalized separately.
+    /// </summary>
     public static Vector3 NormalizePerPartes(this Vector3 value)
     {
         tempVector3.Set(value.x / Mathf.Abs(value.x), value.y / Mathf.Abs(value.y), value.z / Mathf.Abs(value.z));

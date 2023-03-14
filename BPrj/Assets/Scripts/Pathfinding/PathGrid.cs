@@ -27,10 +27,6 @@ public class PathGrid
     private Vector2Int tempVector;
     private Stack<Vector2Int> returnStack;
 
-    // == Walkable ==
-    private LayerMask unwalkableLayer;
-    private readonly Vector2 halfTileDiag = new Vector2(-.5f, .5f);
-
     //
     public PathGrid(LayerMask unwalkableLayer)
     {
@@ -124,6 +120,35 @@ public class PathGrid
         } // End of while
     } // End of method
 
-    private bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + halfTileDiag, coordinates - halfTileDiag, unwalkableLayer);
-    
+    // == Walkable ==
+    private LayerMask unwalkableLayer;
+    private readonly Vector2 tileCheckDiagRadius = new Vector2(-.5f, .5f);
+
+    private bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagRadius, coordinates - tileCheckDiagRadius, unwalkableLayer);
+
+    // == Pathfinding with bias ==
+    private Vector2Int endCoordinatesWithBias;
+    // If end tile is unreachable then try alternative end tiles
+    public Stack<Vector2Int> FindPathWithBias(Vector2 start, Vector2 end)
+    {
+        endCoordinates = Vector2Int.RoundToInt(end);
+
+        if (IsWalkable(endCoordinates)) {
+            return FindPath(start, end);
+        }
+
+        bool isEndAboveStart = (end.y > start.y);
+
+        for (int y = (isEndAboveStart) ? -1 : 1; (isEndAboveStart && y <= 1) || (!isEndAboveStart && y >= -1); y += (isEndAboveStart) ? 1 : -1) {
+            for (int x = -1; x <= 1; x++) {
+                if (y == 0 && x == 0) continue;
+                endCoordinatesWithBias.Set(endCoordinates.x + x, endCoordinates.y + y);
+                if (IsWalkable(endCoordinatesWithBias)) {
+                    return FindPath(start, endCoordinatesWithBias);
+                }
+            }
+        }
+
+        return new Stack<Vector2Int>();
+    }
 }

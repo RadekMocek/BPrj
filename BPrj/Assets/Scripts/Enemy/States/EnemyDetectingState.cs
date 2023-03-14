@@ -12,6 +12,7 @@ public class EnemyDetectingState : EnemyState
     private readonly float detectionSpeed = 6;
 
     private float fullDetectionDuration;
+    private float enterDetectionLength;
     private float currentDetectionLength;
 
     public override void Enter()
@@ -22,13 +23,11 @@ public class EnemyDetectingState : EnemyState
         End_PlayerSpotted = false;
 
         enemy.ChangeViewConeColor(Color.yellow);
-        enemy.FaceThePlayer();
+        enemy.FaceThePlayer(true);
 
-        currentDetectionLength = 0;
+        enterDetectionLength = enemy.CurrentDetectionLength;
+        currentDetectionLength = enterDetectionLength;
         fullDetectionDuration = enemy.viewDistance / detectionSpeed;
-
-        enemy.ChangeViewConeRedRadius(0);
-        enemy.ShowViewConeRed(true);
     }
 
     public override void Update()
@@ -37,10 +36,9 @@ public class EnemyDetectingState : EnemyState
 
         enemy.RB.velocity = Vector2.zero;
 
-        enemy.FaceThePlayer();
+        enemy.FaceThePlayer(true);
 
         if (!enemy.IsPlayerVisible()) {
-            enemy.ShowViewConeRed(false);
             End_PlayerLost = true;
         }
         else if (currentDetectionLength >= enemy.GetEnemyToPlayerDistance()) {
@@ -48,7 +46,7 @@ public class EnemyDetectingState : EnemyState
             End_PlayerSpotted = true;
         }
         else if (currentDetectionLength < enemy.viewDistance) {
-            currentDetectionLength = ((Time.time - enterTime) / fullDetectionDuration) * enemy.viewDistance;
+            currentDetectionLength = (((Time.time - enterTime) / fullDetectionDuration) * enemy.viewDistance) + enterDetectionLength;
             enemy.ChangeViewConeRedRadius(currentDetectionLength);
         }
     }

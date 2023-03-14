@@ -1,4 +1,4 @@
-public interface IInteractable
+public interface IPlayerInteractable
 {
     string GetInteractActionDescription();
     bool CanInteract(Player playerScript);

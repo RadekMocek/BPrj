@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public class Stairs : MonoBehaviour, IInteractable
+public class Stairs : MonoBehaviour, IPlayerInteractable
 {
     [Header("IInteractable")]
     [SerializeField] private LayerMask playerLayer;

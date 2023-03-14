@@ -26,9 +26,9 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private SVGImage inspectSVGImage;
 
     public bool IsInspecting { get; private set; }
-    public IInteractable InspectedObjectScript { get; private set; }
+    public IPlayerInteractable InspectedObjectScript { get; private set; }
 
-    public void ShowInspectImage(Sprite sprite, IInteractable script)
+    public void ShowInspectImage(Sprite sprite, IPlayerInteractable script)
     {
         inspectSVGImage.sprite = sprite;
         inspectMainGO.SetActive(true);

@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class InspectableProp : MonoBehaviour, IInteractable
+public class InspectableProp : MonoBehaviour, IPlayerInteractable
 {
     // Inspectable prop displays a image on the HUD if inspected by the player
 

@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
-using static UnityEngine.Rendering.DebugUI;
 
 public class Enemy : MonoBehaviour, IObservable, IDamageable
 {
@@ -123,6 +122,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         }
     }
 
+    public void MovementToAnimation() => DirectionToAnimation(DirectionRound(RB.velocity));
+
     public void ChangeFacingDirection(EightDirection direction)
     {
         targetFacingDirection = (int)direction * 45;
@@ -130,7 +131,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private void UpdateActualFacingDirection()
     {
-        float addition = Time.deltaTime * 480;
+        float addition = Time.deltaTime * 480;//TODO: magic number
 
         if (Mathf.Abs(actualFacingDirection - targetFacingDirection) <= addition) return;
 
@@ -164,7 +165,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private bool CloserToZeroCounterClockwise(float angle) => (360 - angle > angle);
 
-    public bool IsPlayerVisible(/*bool debug = false*/)
+    public bool IsPlayerVisible(bool debug = false)
     {
         //playerCorePosition = EnemyManager.GetPlayerCorePosition();
         playerPosition = EnemyManager.GetPlayerPosition();
@@ -173,6 +174,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
         // Is player in view distance ?
         if (enemyToPlayerVector.magnitude > viewDistance) {
+            if (debug) print("Player too far away");
             return false;
         }
 
@@ -199,29 +201,36 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         }
 
         if (!isPlayerInFieldOfView) {
+            if (debug) print("Player not in the FOV");
             return false;
         }
 
         // Is there a clear vision of the player ? (nothing obstructing the way)
-        if (!Physics2D.Linecast(/*this.transform.position*/Core.position, playerPosition, opaqueLayer)) {
+        if (!Physics2D.Linecast(this.transform.position, playerPosition, opaqueLayer)) {
             // Are there any closed doors in the way ?
-            var doors = Physics2D.LinecastAll(/*this.transform.position*/Core.position, playerPosition, doorLayer);
+            Physics2D.queriesHitTriggers = false; // Ignore trigger colliders (door has big trigger collider for cursor)
+            var doors = Physics2D.LinecastAll(this.transform.position, playerPosition, doorLayer);
+            Physics2D.queriesHitTriggers = true; // Stop ignoring trigger colliders
             foreach (var door in doors) {
                 if (door.transform.TryGetComponent(out Door doorScript)) {
                     if (!doorScript.Opened) {
+                        if (debug) print("No clear vision of the player – closed door");
                         return false;
                     }
                 }
             }
             return true;
         }
-        else return false;
+        else {
+            if (debug) print("No clear vision of the player – opaqueLayer");
+            return false;
+        }
     }
 
-    public void FaceThePlayer()
+    public void FaceThePlayer(bool changeAnimation)
     {
         targetFacingDirection = enemyToPlayerAngle;
-        DirectionToAnimation(DirectionRound(enemyToPlayerVector));
+        if (changeAnimation) DirectionToAnimation(DirectionRound(enemyToPlayerVector));
     }
 
     public float GetEnemyToPlayerDistance() => enemyToPlayerVector.magnitude;
@@ -234,6 +243,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     [Header("View cone – Red")]
     [SerializeField] private GameObject viewConeRedLightGO;
     private Light2D viewConeRedLightScript;
+    public float CurrentDetectionLength { get; private set; }
 
     private void StartViewCone()
     {
@@ -256,8 +266,22 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         viewConeLightScript.color = color;
     }
 
-    public void ShowViewConeRed(bool value) => viewConeRedLightGO.SetActive(value);
-    public void ChangeViewConeRedRadius(float value) => viewConeRedLightScript.pointLightOuterRadius = value;
+    public void ChangeViewConeRedRadius(float value)
+    {
+        CurrentDetectionLength = value;
+        viewConeRedLightScript.pointLightOuterRadius = CurrentDetectionLength;
+    }
+
+    public void UpdateDecreaseViewConeRedRadius()
+    {
+        if (CurrentDetectionLength == 0) return;
+
+        CurrentDetectionLength -= Time.deltaTime * 6;//TODO: magic number
+
+        if (CurrentDetectionLength < 0) CurrentDetectionLength = 0;
+
+        viewConeRedLightScript.pointLightOuterRadius = CurrentDetectionLength;
+    }
 
     // == Pathfinding ===========================
     public PathGrid Pathfinder { get; private set; }
@@ -289,7 +313,10 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         // Initialize
         ChangeFacingDirection(EightDirection.S); // Facing down
         StartViewCone();
-        viewConeRedLightGO.SetActive(false);
+
+        // - View cone
+        CurrentDetectionLength = 0;
+        ChangeViewConeRedRadius(CurrentDetectionLength);
     }
 
     protected virtual void FixedUpdate()
@@ -310,8 +337,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.transform.TryGetComponent(out Door collisionDoorSciprt)) {
-            collisionDoorSciprt.OpenDoor();
+        if (collision.transform.TryGetComponent(out Door collisionDoorScript)) {
+            collisionDoorScript.OpenDoor();
         }
     }
 

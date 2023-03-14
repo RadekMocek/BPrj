@@ -71,7 +71,7 @@ public class TilemapShadowCaster2DGenerator : MonoBehaviour
         // Combine inner and outer paths
         finalPath = innerPath.Concat(outerPath.Reverse()).ToArray();
 
-        // System.Reflection magic
+        // System.Reflection
         shapePathField.SetValue(shadowCasterScript, finalPath);
         meshField.SetValue(shadowCasterScript, new Mesh());
         generateShadowMeshMethod.Invoke(shadowCasterScript, new object[] { meshField.GetValue(shadowCasterScript), shapePathField.GetValue(shadowCasterScript) });

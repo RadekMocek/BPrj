@@ -81,7 +81,7 @@ public class Player : MonoBehaviour
     private RaycastHit2D cursorHit;
     private GameObject cursorHitGO;
     private IObservable cursorHitScriptObservable;
-    private IInteractable cursorHitScriptInteractable;
+    private IPlayerInteractable cursorHitScriptInteractable;
 
     private void UpdateCursorObserveAndInteract()
     {

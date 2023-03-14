@@ -56,6 +56,9 @@ public class EnemyPatrolState : EnemyState
     {
         base.Update();
 
+        // Decrease red cone radius over time
+        enemy.UpdateDecreaseViewConeRedRadius();
+
         // Move in the direction of the target path node until enemy is close enough
         if (Vector2.Distance(enemy.transform.position, currentTargetNode) > 0.1f) {
             var movementDirection = (currentTargetNode - (Vector2)enemy.transform.position).normalized;

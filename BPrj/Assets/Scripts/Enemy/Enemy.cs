@@ -8,7 +8,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     // == Component references ==================
     public Rigidbody2D RB { get; private set; }
-    private Animator Anim { get; /*private*/ set; }
+    private Animator Anim { get; set; }
 
     // == State machine =========================
     private EnemyState currentState;
@@ -137,7 +137,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
         int directionMultiplier = (actualFacingDirection < targetFacingDirection) ? 1 : -1;
 
-        // Check if it is "cheaper" to cross the 0/360 point (go opposite direciton)
+        // Check if it is "cheaper" to cross the 0/360 point (rotate in opposite direciton)
         float angle1 = (actualFacingDirection < targetFacingDirection) ? actualFacingDirection : targetFacingDirection;
         float angle2 = (actualFacingDirection > targetFacingDirection) ? actualFacingDirection : targetFacingDirection;
         if ((angle1 + (360 - angle2)) < (angle2 - angle1)) directionMultiplier *= -1;
@@ -162,6 +162,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     //private Vector2 playerCorePosition;
     private Vector2 enemyToPlayerVector;
     private float enemyToPlayerAngle;
+
+    [HideInInspector] public Vector2 lastKnownPlayerPosition;
 
     private bool CloserToZeroCounterClockwise(float angle) => (360 - angle > angle);
 

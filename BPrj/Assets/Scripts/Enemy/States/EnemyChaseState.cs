@@ -20,9 +20,6 @@ public class EnemyChaseState : EnemyState
 
     private void RefreshPath(Vector2 target)
     {
-        // We want path lead to the tile a little in front of the target to prevent target tile being out of bounds
-        //Vector2 end = currentPlayerPosition + 1.2f * ((Vector2)enemy.transform.position - target).normalized;
-
         // Fill the stack and get the first target node
         pathStack = enemy.Pathfinder.FindPathWithBias(enemy.transform.position, target);
         if (pathStack.Any()) {
@@ -60,6 +57,7 @@ public class EnemyChaseState : EnemyState
             }
         }
         else {
+            enemy.lastKnownPlayerPosition = currentPlayerPosition;
             End_PlayerLost = true;
         }
 

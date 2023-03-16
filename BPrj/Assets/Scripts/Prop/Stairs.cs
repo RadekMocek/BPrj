@@ -23,7 +23,8 @@ public class Stairs : MonoBehaviour, IPlayerInteractable
 
     public void OnInteract(Player playerScript)
     {
-        //ManagerAccessor.instance.SceneManager.ChangeScene("Test");
+        var sceneManager = ManagerAccessor.instance.SceneManager;
+        sceneManager.ChangeScene((sceneManager.GetCurrentSceneName() == "Main") ? "Test" : "Main");
     }
 
     private void OnDrawGizmosSelected()

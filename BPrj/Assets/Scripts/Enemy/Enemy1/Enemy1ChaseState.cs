@@ -12,7 +12,7 @@ public class Enemy1ChaseState : EnemyChaseState
         base.Update();
 
         if (End_PlayerLost) {
-            enemy1.ChangeState(enemy1.PatrolState);
+            enemy1.ChangeState(enemy1.InvestigateAwareState);
         }
     }
 }

@@ -6,7 +6,9 @@ public class Enemy1 : Enemy
     public Enemy1PatrolState PatrolState { get; private set; }
     public Enemy1DetectingState DetectingState { get; private set; }
     public Enemy1ChaseState ChaseState { get; private set; }
-    public Enemy1InvestigateState InvestigateState { get; private set; }
+    public Enemy1InvestigateSuspiciousState InvestigateSuspiciousState { get; private set; }
+    public Enemy1InvestigateAwareState InvestigateAwareState { get; private set; }
+    public Enemy1LookAroundState LookAroundState { get; private set; }
 
     // == Observe ===============================
     public override string GetName()
@@ -29,7 +31,9 @@ public class Enemy1 : Enemy
         PatrolState = new Enemy1PatrolState(this);
         DetectingState = new Enemy1DetectingState(this);
         ChaseState = new Enemy1ChaseState(this);
-        InvestigateState = new Enemy1InvestigateState(this);
+        InvestigateSuspiciousState = new Enemy1InvestigateSuspiciousState(this);
+        InvestigateAwareState = new Enemy1InvestigateAwareState(this);
+        LookAroundState = new Enemy1LookAroundState(this);
     }
 
     protected override void Start()

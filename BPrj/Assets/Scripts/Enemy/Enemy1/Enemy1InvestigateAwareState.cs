@@ -1,7 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
 public class Enemy1InvestigateAwareState : EnemyInvestigateAwareState
 {
     public Enemy1InvestigateAwareState(Enemy enemy) : base(enemy)

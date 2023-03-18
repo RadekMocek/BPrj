@@ -6,4 +6,16 @@ public class Enemy1InvestigateSuspiciousState : EnemyInvestigateSuspiciousState
     }
 
     private readonly Enemy1 enemy1;
+
+    public override void Update()
+    {
+        base.Update();
+
+        if (End_PlayerFound) {
+            enemy1.ChangeState(enemy1.DetectingState);
+        }
+        else if (End_TargetReached) {
+            enemy1.ChangeState(enemy1.LookAroundState);
+        }
+    }
 }

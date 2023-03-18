@@ -14,8 +14,13 @@ public class EnemyInvestigateSuperState : EnemyState
     private readonly float movementSpeed = 4.7f;
 
     private Stack<Vector2Int> pathStack;
-    private Vector2 lastKnownPlayerPosition;
     private Vector2Int currentTargetNode;
+
+    protected void RefreshPath()
+    {
+        pathStack = enemy.Pathfinder.FindPathWithBias(enemy.transform.position, enemy.lastKnownPlayerPosition);
+        if (pathStack.Any()) currentTargetNode = pathStack.Pop();
+    }
 
     public override void Enter()
     {
@@ -24,10 +29,7 @@ public class EnemyInvestigateSuperState : EnemyState
         End_TargetReached = false;
         End_PlayerFound = false;
 
-        lastKnownPlayerPosition = enemy.lastKnownPlayerPosition;
-
-        pathStack = enemy.Pathfinder.FindPathWithBias(enemy.transform.position, lastKnownPlayerPosition);
-        if (pathStack.Any()) currentTargetNode = pathStack.Pop();
+        RefreshPath();
     }
 
     public override void Update()
@@ -52,6 +54,7 @@ public class EnemyInvestigateSuperState : EnemyState
 
         // Switch to a different state immediately if the player is spotted
         if (enemy.IsPlayerVisible()) {
+            enemy.suspiciousDetection = true;
             End_PlayerFound = true;
         }
     }

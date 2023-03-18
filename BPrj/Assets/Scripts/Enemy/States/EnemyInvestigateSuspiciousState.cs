@@ -6,5 +6,12 @@ public class EnemyInvestigateSuspiciousState : EnemyInvestigateSuperState
     {
     }
 
-    
+    public override void Update()
+    {
+        // Decrease red cone radius over time
+        enemy.UpdateDecreaseViewConeRedRadius();
+
+        // Super state logic
+        base.Update();
+    }
 }

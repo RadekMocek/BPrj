@@ -9,6 +9,8 @@ public class EnemyDetectingState : EnemyState
     protected bool End_PlayerLost { get; private set; }
     protected bool End_PlayerSpotted { get; private set; }
 
+    protected float DetectionLengthWhenPlayerLost { get; private set; }
+
     private readonly float detectionSpeed = 6;
 
     private float fullDetectionDuration;
@@ -39,6 +41,8 @@ public class EnemyDetectingState : EnemyState
         enemy.FaceThePlayer(true);
 
         if (!enemy.IsPlayerVisible()) {
+            DetectionLengthWhenPlayerLost = currentDetectionLength;
+            enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
             End_PlayerLost = true;
         }
         else if (currentDetectionLength >= enemy.GetEnemyToPlayerDistance()) {

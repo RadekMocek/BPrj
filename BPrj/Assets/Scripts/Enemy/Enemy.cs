@@ -164,6 +164,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     private float enemyToPlayerAngle;
 
     [HideInInspector] public Vector2 lastKnownPlayerPosition;
+    [HideInInspector] public bool suspiciousDetection; // When true, enemy will always transition to the InvestigateSuspicious (or Chase) state after Detecting state
 
     private bool CloserToZeroCounterClockwise(float angle) => (360 - angle > angle);
 
@@ -314,9 +315,11 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     {
         // Initialize
         ChangeFacingDirection(EightDirection.S); // Facing down
-        StartViewCone();
+
+        suspiciousDetection = false;
 
         // - View cone
+        StartViewCone();
         CurrentDetectionLength = 0;
         ChangeViewConeRedRadius(CurrentDetectionLength);
     }
@@ -339,6 +342,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
+        // Open door
         if (collision.transform.TryGetComponent(out Door collisionDoorScript)) {
             collisionDoorScript.OpenDoor();
         }

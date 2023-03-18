@@ -37,6 +37,8 @@ public class EnemyPatrolState : EnemyState
     {
         base.Enter();
 
+        enemy.suspiciousDetection = false;
+
         enemy.ChangeViewConeColor(Color.green);
 
         patrolPoints = enemy.GetPatrolPoints();

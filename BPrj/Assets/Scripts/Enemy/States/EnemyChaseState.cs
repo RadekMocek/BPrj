@@ -46,7 +46,7 @@ public class EnemyChaseState : EnemyState
         enemy.FaceThePlayer(false);
         enemy.MovementToAnimation();
 
-        bool isPlayerVisible = enemy.IsPlayerVisible(true);
+        bool isPlayerVisible = enemy.IsPlayerVisible();
 
         if (isPlayerVisible) {
             currentPlayerPosition = enemy.EnemyManager.GetPlayerPosition();

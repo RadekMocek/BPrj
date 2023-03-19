@@ -32,8 +32,10 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     }
 
     // == Direction =============================
-    private float targetFacingDirection;
+    public float TargetFacingDirection { get; private set; }
     private float actualFacingDirection;
+
+    private readonly int facingDirectionSpeed = 480;
 
     private Vector2 DirectionRound(Vector2 value)
     {
@@ -124,22 +126,23 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     public void MovementToAnimation() => DirectionToAnimation(DirectionRound(RB.velocity));
 
-    public void ChangeFacingDirection(EightDirection direction)
-    {
-        targetFacingDirection = (int)direction * 45;
-    }
+    public void ChangeFacingDirection(EightDirection direction) => TargetFacingDirection = (int)direction * 45;
+    
+    public Vector2 FacingDirectionToDirection(float angle) => new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle));
 
     private void UpdateActualFacingDirection()
     {
-        float addition = Time.deltaTime * 480;//TODO: magic number
+        float addition = Time.deltaTime * facingDirectionSpeed;
 
-        if (Mathf.Abs(actualFacingDirection - targetFacingDirection) <= addition) return;
+        if (Mathf.Abs(actualFacingDirection - TargetFacingDirection) <= addition) {
+            return;
+        }
 
-        int directionMultiplier = (actualFacingDirection < targetFacingDirection) ? 1 : -1;
+        int directionMultiplier = (actualFacingDirection < TargetFacingDirection) ? 1 : -1;
 
         // Check if it is "cheaper" to cross the 0/360 point (rotate in opposite direciton)
-        float angle1 = (actualFacingDirection < targetFacingDirection) ? actualFacingDirection : targetFacingDirection;
-        float angle2 = (actualFacingDirection > targetFacingDirection) ? actualFacingDirection : targetFacingDirection;
+        float angle1 = (actualFacingDirection < TargetFacingDirection) ? actualFacingDirection : TargetFacingDirection;
+        float angle2 = (actualFacingDirection > TargetFacingDirection) ? actualFacingDirection : TargetFacingDirection;
         if ((angle1 + (360 - angle2)) < (angle2 - angle1)) directionMultiplier *= -1;
 
         actualFacingDirection += addition * directionMultiplier;
@@ -232,7 +235,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     public void FaceThePlayer(bool changeAnimation)
     {
-        targetFacingDirection = enemyToPlayerAngle;
+        TargetFacingDirection = enemyToPlayerAngle;
         if (changeAnimation) DirectionToAnimation(DirectionRound(enemyToPlayerVector));
     }
 
@@ -247,6 +250,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     [SerializeField] private GameObject viewConeRedLightGO;
     private Light2D viewConeRedLightScript;
     public float CurrentDetectionLength { get; private set; }
+
+    private readonly int decreaseViewConeRedRadiusSpeed = 6;
 
     private void StartViewCone()
     {
@@ -279,7 +284,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     {
         if (CurrentDetectionLength == 0) return;
 
-        CurrentDetectionLength -= Time.deltaTime * 6;//TODO: magic number
+        CurrentDetectionLength -= Time.deltaTime * decreaseViewConeRedRadiusSpeed;
 
         if (CurrentDetectionLength < 0) CurrentDetectionLength = 0;
 

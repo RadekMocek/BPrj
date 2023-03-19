@@ -40,7 +40,8 @@ public class Enemy1 : Enemy
     {
         base.Start();
 
-        ChangeState(PatrolState);
+        //ChangeState(PatrolState);
+        ChangeState(LookAroundState);
     }
 
 }

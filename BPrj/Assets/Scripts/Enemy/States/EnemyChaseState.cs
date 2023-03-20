@@ -9,6 +9,7 @@ public class EnemyChaseState : EnemyState
     }
 
     protected bool End_PlayerLost { get; private set; }
+    protected bool End_PlayerClose { get; private set; }
 
     private readonly float movementSpeed = 4.7f;
 
@@ -32,6 +33,7 @@ public class EnemyChaseState : EnemyState
         base.Enter();
 
         End_PlayerLost = false;
+        End_PlayerClose = false;
 
         currentPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
         previousPlayerPosition = currentPlayerPosition;
@@ -43,12 +45,20 @@ public class EnemyChaseState : EnemyState
     {
         base.Update();
 
+        // Update weapon position
+        UpdateWeaponPosition();
+
+        // Look directly at the player but change animation according to movement (RB velocity)
         enemy.FaceThePlayer(false);
         enemy.MovementToAnimation();
 
-        bool isPlayerVisible = enemy.IsPlayerVisible();
+        // Close attack
+        if (enemy.IsPlayerVisibleClose()) {
+            End_PlayerClose = true;
+        }
 
-        if (isPlayerVisible) {
+        // Follow player (if visible) or transition to another state
+        if (enemy.IsPlayerVisible()) {
             currentPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
 
             if (currentPlayerPosition != previousPlayerPosition) {

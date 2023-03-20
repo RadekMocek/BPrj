@@ -32,11 +32,11 @@ public class PlayerSneakMoveState : PlayerSneakSuperState
         if (isPrimaryAxisVertical) {
             if (movementInput.y > 0) {
                 anim.CrossFade("Player_Sneak_Walk_Up", 0);
-                player.LastMovementDirection = Direction.Up;
+                player.LastMovementDirection = Direction.N;
             }
             else if (movementInput.y < 0) {
                 anim.CrossFade("Player_Sneak_Walk_Down", 0);
-                player.LastMovementDirection = Direction.Down;
+                player.LastMovementDirection = Direction.S;
             }
             else {
                 isPrimaryAxisVertical = false;
@@ -45,11 +45,11 @@ public class PlayerSneakMoveState : PlayerSneakSuperState
         else {
             if (movementInput.x < 0) {
                 anim.CrossFade("Player_Sneak_Walk_Left", 0);
-                player.LastMovementDirection = Direction.Left;
+                player.LastMovementDirection = Direction.W;
             }
             else if (movementInput.x > 0) {
                 anim.CrossFade("Player_Sneak_Walk_Right", 0);
-                player.LastMovementDirection = Direction.Right;
+                player.LastMovementDirection = Direction.E;
             }
             else {
                 isPrimaryAxisVertical = true;

@@ -18,10 +18,10 @@ public class PlayerSneakIdleState : PlayerSneakSuperState
         base.Enter();
 
         // Choose correct animation
-        if (player.LastMovementDirection == Direction.Up) anim.CrossFade("Player_Sneak_Idle_Up", 0);
-        else if (player.LastMovementDirection == Direction.Right) anim.CrossFade("Player_Sneak_Idle_Right", 0);
-        else if (player.LastMovementDirection == Direction.Down) anim.CrossFade("Player_Sneak_Idle_Down", 0);
-        else if (player.LastMovementDirection == Direction.Left) anim.CrossFade("Player_Sneak_Idle_Left", 0);
+        if (player.LastMovementDirection == Direction.N) anim.CrossFade("Player_Sneak_Idle_Up", 0);
+        else if (player.LastMovementDirection == Direction.E) anim.CrossFade("Player_Sneak_Idle_Right", 0);
+        else if (player.LastMovementDirection == Direction.S) anim.CrossFade("Player_Sneak_Idle_Down", 0);
+        else if (player.LastMovementDirection == Direction.W) anim.CrossFade("Player_Sneak_Idle_Left", 0);
 
         // Choose correct weapon position
         UpdateWeaponPosition();

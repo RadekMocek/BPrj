@@ -36,19 +36,27 @@ public class EnemyDetectingState : EnemyState
     {
         base.Update();
 
+        // Update weapon position
+        UpdateWeaponPosition();
+
+        // Halt
         enemy.RB.velocity = Vector2.zero;
 
+        // Look directly at the player and change animation accordingly
         enemy.FaceThePlayer(true);
 
+        // Transition to a another state if we lose the sight of the player
         if (!enemy.IsPlayerVisible()) {
             DetectionLengthWhenPlayerLost = currentDetectionLength;
             enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
             End_PlayerLost = true;
         }
+        // Player is spotted if red view cone "touches" them
         else if (currentDetectionLength >= enemy.GetEnemyToPlayerDistance()) {
             enemy.ChangeViewConeRedRadius(enemy.viewDistance);
             End_PlayerSpotted = true;
         }
+        // Increase red view cone radius over time
         else if (currentDetectionLength < enemy.viewDistance) {
             currentDetectionLength = (((Time.time - enterTime) / fullDetectionDuration) * enemy.viewDistance) + enterDetectionLength;
             enemy.ChangeViewConeRedRadius(currentDetectionLength);

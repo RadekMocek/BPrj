@@ -27,4 +27,12 @@ public class EnemyState
     {
 
     }
+
+    // Update equipped weapon position, rotation, order in layer
+    public virtual void UpdateWeaponPosition()
+    {
+        var pos = Weapon.GetCorrectWeaponPosition(enemy.CurrentFacingDirectionAnimation);
+        enemy.WeaponSR.sortingOrder = pos.Item3;
+        enemy.WeaponTransform.SetLocalPositionAndRotation(pos.Item1, pos.Item2);
+    }
 }

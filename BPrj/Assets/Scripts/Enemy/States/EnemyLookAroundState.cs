@@ -1,4 +1,3 @@
-using Unity.VisualScripting.FullSerializer;
 using UnityEngine;
 
 public class EnemyLookAroundState : EnemyState
@@ -10,8 +9,8 @@ public class EnemyLookAroundState : EnemyState
     protected bool End_PlayerLost { get; private set; }
     protected bool End_PlayerSpotted { get; private set; }
 
-    private readonly float rotationPauseDuration = 1;
-    private readonly int[] rotations = new int[] { 90, -90, -90, 90 };
+    private readonly float rotationPauseDuration = .75f;
+    private readonly int[] rotations = new int[] { 60, -60, -60, 60 };
 
     private int nRotations;
     private int rotationsIndex;
@@ -35,32 +34,36 @@ public class EnemyLookAroundState : EnemyState
     {
         base.Update();
 
+        // Update weapon position
+        UpdateWeaponPosition();
+
+        // Halt
         enemy.RB.velocity = Vector2.zero;
 
+        // Transition to another state if we spot the player
         if (enemy.IsPlayerVisible()) {
             End_PlayerSpotted = true;
         }
 
         //enemy.UpdateDecreaseViewConeRedRadius();
 
+        // Rotate according to angles stored in `rotations` everytime `rotationPauseDuration` passes
         if (Time.time > lastRotationTime + rotationPauseDuration) {
             lastRotationTime = Time.time;
 
-            rotationsIndex++;
-
-            if (true && rotationsIndex < nRotations) {
+            if (rotationsIndex < nRotations) {
                 targetRotation += rotations[rotationsIndex];
-                //targetRotation += 90;
 
                 if (targetRotation > 360) targetRotation -= 360;
                 if (targetRotation < 0) targetRotation += 360;
 
-                enemy.DirectionToFacingDirectionAndAnimation(enemy.FacingDirectionToDirection(targetRotation));
+                enemy.TargetFacingDirection = targetRotation;
+                enemy.DirectionToAnimation(enemy.FacingDirectionToDirectionRound(targetRotation));
+
+                rotationsIndex++;
             }
             else {
-                //End_PlayerLost = true;
-                rotationsIndex = 0;
-                Debug.Log("done");
+                End_PlayerLost = true;
             }
             
         }

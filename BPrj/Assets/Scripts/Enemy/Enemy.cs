@@ -32,8 +32,9 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     }
 
     // == Direction =============================
-    public float TargetFacingDirection { get; private set; }
+    public float TargetFacingDirection { get; set; }
     private float actualFacingDirection;
+    public Direction CurrentFacingDirectionAnimation { get; private set; }
 
     private readonly int facingDirectionSpeed = 480;
 
@@ -60,75 +61,83 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
         if (value.x > 0) {
             if (value.y < 0) { 
-                ChangeFacingDirection(EightDirection.SE);
+                ChangeFacingDirection(Direction.SE);
             }
             else if (value.y > 0) { 
-                ChangeFacingDirection(EightDirection.NE);
+                ChangeFacingDirection(Direction.NE);
             }
             else { 
-                ChangeFacingDirection(EightDirection.E);
+                ChangeFacingDirection(Direction.E);
             }
         }
         else if (value.x < 0) {
             if (value.y < 0) {
-                ChangeFacingDirection(EightDirection.SW);
+                ChangeFacingDirection(Direction.SW);
             }
             else if (value.y > 0) {
-                ChangeFacingDirection(EightDirection.NW);
+                ChangeFacingDirection(Direction.NW);
             }
             else {
-                ChangeFacingDirection(EightDirection.W);
+                ChangeFacingDirection(Direction.W);
             }
         }
         else {
             if (value.y < 0) {
-                ChangeFacingDirection(EightDirection.S);
+                ChangeFacingDirection(Direction.S);
             }
             else {
-                ChangeFacingDirection(EightDirection.N);
+                ChangeFacingDirection(Direction.N);
             }
         }
     }
 
-    private void DirectionToAnimation(Vector2 value)
+    public void DirectionToAnimation(Vector2 value)
     {
         if (value.x > 0) {
             if (value.y < 0) {
                 Anim.CrossFade("EnemyDownRight", 0);
+                CurrentFacingDirectionAnimation = Direction.SE;
             }
             else if (value.y > 0) {
                 Anim.CrossFade("EnemyUpRight", 0);
+                CurrentFacingDirectionAnimation = Direction.NE;
             }
             else {
                 Anim.CrossFade("EnemyRight", 0);
+                CurrentFacingDirectionAnimation = Direction.E;
             }
         }
         else if (value.x < 0) {
             if (value.y < 0) {
                 Anim.CrossFade("EnemyDownLeft", 0);
+                CurrentFacingDirectionAnimation = Direction.SW;
             }
             else if (value.y > 0) {
                 Anim.CrossFade("EnemyUpLeft", 0);
+                CurrentFacingDirectionAnimation = Direction.NW;
             }
             else {
                 Anim.CrossFade("EnemyLeft", 0);
+                CurrentFacingDirectionAnimation = Direction.W;
             }
         }
         else {
             if (value.y < 0) {
                 Anim.CrossFade("EnemyDown", 0);
+                CurrentFacingDirectionAnimation = Direction.S;
             }
             else {
                 Anim.CrossFade("EnemyUp", 0);
+                CurrentFacingDirectionAnimation = Direction.N;
             }
         }
     }
 
     public void MovementToAnimation() => DirectionToAnimation(DirectionRound(RB.velocity));
 
-    public void ChangeFacingDirection(EightDirection direction) => TargetFacingDirection = (int)direction * 45;
-    
-    public Vector2 FacingDirectionToDirection(float angle) => new Vector2(Mathf.Cos(Mathf.Deg2Rad * angle), Mathf.Sin(Mathf.Deg2Rad * angle));
+    public void ChangeFacingDirection(Direction direction) => TargetFacingDirection = (int)direction * 45;
+
+    public Vector2 FacingDirectionToDirectionRound(float angle) => DirectionRound(new(Mathf.Cos(Mathf.Deg2Rad * (angle + 90)), Mathf.Sin(Mathf.Deg2Rad * (angle + 90))));
 
     private void UpdateActualFacingDirection()
     {
@@ -157,12 +166,12 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     [Header("Spotting the player")]
     [SerializeField] private LayerMask opaqueLayer;
     [SerializeField] private LayerMask doorLayer;
+    [SerializeField] private LayerMask playerLayer;
 
     private readonly int fieldOfView = 100;
     public readonly float viewDistance = 8;
 
     private Vector2 playerPosition;
-    //private Vector2 playerCorePosition;
     private Vector2 enemyToPlayerVector;
     private float enemyToPlayerAngle;
 
@@ -173,7 +182,6 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     public bool IsPlayerVisible(bool debug = false)
     {
-        //playerCorePosition = EnemyManager.GetPlayerCorePosition();
         playerPosition = EnemyManager.GetPlayerPosition();
 
         enemyToPlayerVector = playerPosition - (Vector2)this.transform.position;
@@ -241,6 +249,18 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     public float GetEnemyToPlayerDistance() => enemyToPlayerVector.magnitude;
 
+    // == Spotting the player: Close ============
+    private readonly float playerCheckCloseRadius = 0.8f;
+    private readonly Vector2 realBottom = new(0, 0.41f);
+
+    private Vector2 playerCheckClose;
+
+    public bool IsPlayerVisibleClose()
+    {
+        playerCheckClose = (Vector2)this.transform.position + realBottom + (playerCheckCloseRadius * FacingDirectionToDirectionRound(TargetFacingDirection));
+        return Physics2D.OverlapCircle(playerCheckClose, playerCheckCloseRadius, playerLayer);
+    }
+
     // == View Cone =============================
     [Header("View cone")]
     [SerializeField] private GameObject viewConeLightGO;
@@ -301,6 +321,24 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     [SerializeField] private Vector2[] patrolPoints;
     public Vector2[] GetPatrolPoints() => patrolPoints;
 
+    // == Weapon handling =======================
+    [Header("Weapon")]
+    [SerializeField] private GameObject weaponPrefab;
+    private GameObject weaponGO;
+    public Transform WeaponTransform { get; private set; }
+    private BoxCollider2D weaponBC;
+    public SpriteRenderer WeaponSR { get; private set; }
+
+    public void StartWeapon()
+    {
+        weaponGO = Instantiate(weaponPrefab, this.transform);
+        WeaponTransform = weaponGO.transform;
+        weaponBC = weaponGO.GetComponent<BoxCollider2D>();
+        weaponBC.enabled = false;
+        WeaponSR = weaponGO.GetComponent<SpriteRenderer>();
+        WeaponSR.sortingLayerName = "Player";
+    }
+
     // == MonoBehaviour functions ===============
     protected virtual void Awake()
     {
@@ -319,14 +357,16 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     protected virtual void Start()
     {
         // Initialize
-        ChangeFacingDirection(EightDirection.S); // Facing down
-
+        ChangeFacingDirection(Direction.S); // Facing down
         suspiciousDetection = false;
 
-        // - View cone
+        // View cone
         StartViewCone();
         CurrentDetectionLength = 0;
         ChangeViewConeRedRadius(CurrentDetectionLength);
+
+        // Weapon
+        StartWeapon();
     }
 
     protected virtual void FixedUpdate()
@@ -364,6 +404,9 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private void OnDrawGizmos()
     {
+        /*
         Gizmos.DrawRay(this.transform.position, enemyToPlayerVector);
+        Gizmos.DrawWireSphere((Vector2)this.transform.position + realBottom + (playerCheckCloseRadius * FacingDirectionToDirectionRound(TargetFacingDirection)), playerCheckCloseRadius);
+        /**/
     }
 }

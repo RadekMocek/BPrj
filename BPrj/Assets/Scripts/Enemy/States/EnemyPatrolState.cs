@@ -58,6 +58,9 @@ public class EnemyPatrolState : EnemyState
     {
         base.Update();
 
+        // Update weapon position
+        UpdateWeaponPosition();
+
         // Decrease red cone radius over time
         enemy.UpdateDecreaseViewConeRedRadius();
 

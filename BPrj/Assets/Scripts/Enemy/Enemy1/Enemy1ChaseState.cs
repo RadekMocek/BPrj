@@ -11,7 +11,10 @@ public class Enemy1ChaseState : EnemyChaseState
     {
         base.Update();
 
-        if (End_PlayerLost) {
+        if (End_PlayerClose) {
+            enemy1.ChangeState(enemy1.AttackState);
+        }
+        else if (End_PlayerLost) {
             enemy1.ChangeState(enemy1.InvestigateAwareState);
         }
     }

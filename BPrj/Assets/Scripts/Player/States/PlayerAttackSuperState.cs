@@ -50,7 +50,7 @@ public class PlayerAttackSuperState : PlayerState
             if (playerToCursorDirection.x > 0) {
                 player.WeaponSR.sortingOrder = 1; // Sprite y-sorting
                 anim.CrossFade($"Player_{animationType}_Right", 0);
-                player.LastMovementDirection = Direction.Right;
+                player.LastMovementDirection = Direction.E;
                 // When facing right, it looks better if swing is done clockwise; angles have to be shifted and swopped
                 (angle, endingAngle) = (endingAngle + swingCircularSectorAngle, angle + swingCircularSectorAngle);
                 angleAdditionMultiplier = -1;
@@ -61,7 +61,7 @@ public class PlayerAttackSuperState : PlayerState
             else {
                 player.WeaponSR.sortingOrder = -1;
                 anim.CrossFade($"Player_{animationType}_Left", 0);
-                player.LastMovementDirection = Direction.Left;
+                player.LastMovementDirection = Direction.W;
             }
         }
         else {
@@ -69,13 +69,13 @@ public class PlayerAttackSuperState : PlayerState
             if (playerToCursorDirection.y > 0) {
                 player.WeaponSR.sortingOrder = -1;
                 anim.CrossFade($"Player_{animationType}_Up", 0);
-                player.LastMovementDirection = Direction.Up;
+                player.LastMovementDirection = Direction.N;
             }
             // Down
             else {
                 player.WeaponSR.sortingOrder = 1;
                 anim.CrossFade($"Player_{animationType}_Down", 0);
-                player.LastMovementDirection = Direction.Down;
+                player.LastMovementDirection = Direction.S;
             }
         }
 
@@ -114,10 +114,10 @@ public class PlayerAttackSuperState : PlayerState
                 // Disable slip
                 player.RB.velocity = Vector2.zero;
 
-                // TEMP
-                //player.gizmoCircleCenter = (Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition);
-                //player.gizmoCircleRadius = damageRadius;
-                // ----
+                ///* TEMP gizmos
+                player.gizmoCircleCenter = (Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition);
+                player.gizmoCircleRadius = damageRadius;
+                /**/
 
                 // Deal damage to IDamageable
                 var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius); //TODO: pøidat layermask?

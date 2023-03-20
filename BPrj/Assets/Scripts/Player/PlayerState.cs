@@ -61,27 +61,8 @@ public abstract class PlayerState
 
     protected virtual void UpdateWeaponPositionInner()
     {
-        if (player.LastMovementDirection == Direction.Up) { // Up
-            tempWeaponPosition.Set(.55f, .70f);
-            tempWeaponRotation = Quaternion.Euler(-180, 75, -90);
-            player.WeaponSR.sortingOrder = -1;
-        }
-        else if (player.LastMovementDirection == Direction.Right) { // Right
-            tempWeaponPosition.Set(.27f, .62f);
-            tempWeaponRotation = Quaternion.Euler(180, 0, -90);
-            player.WeaponSR.sortingOrder = 1;
-        }
-        else if (player.LastMovementDirection == Direction.Down) { // Down
-            tempWeaponPosition.Set(-.45f, .62f);
-            tempWeaponRotation = Quaternion.Euler(-180, -110, -90);
-            player.WeaponSR.sortingOrder = 1;
-        }
-        else if (player.LastMovementDirection == Direction.Left) { // Left
-            tempWeaponPosition.Set(-.50f, .72f);
-            tempWeaponRotation = Quaternion.Euler(0, 0, 90);
-            player.WeaponSR.sortingOrder = -1;
-        }
-
-        player.WeaponTransform.SetLocalPositionAndRotation(tempWeaponPosition, tempWeaponRotation);
+        var pos = Weapon.GetCorrectWeaponPosition(player.LastMovementDirection);
+        player.WeaponSR.sortingOrder = pos.Item3;
+        player.WeaponTransform.SetLocalPositionAndRotation(pos.Item1, pos.Item2);
     }
 }

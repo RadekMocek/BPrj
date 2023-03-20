@@ -148,6 +148,8 @@ public class Player : MonoBehaviour
 
     public void EquipWeapon(GameObject newWeapon)
     {
+        if (WeaponEquipped) return; //TODO: Temporary?, two equipped weapons prevention
+
         weaponGO = newWeapon;
         WeaponTransform = weaponGO.transform;
         WeaponTransform.SetParent(this.transform);
@@ -183,7 +185,7 @@ public class Player : MonoBehaviour
 
     private void Start()
     {
-        LastMovementDirection = Direction.Down;
+        LastMovementDirection = Direction.S;
 
         Sneaking = false;
 

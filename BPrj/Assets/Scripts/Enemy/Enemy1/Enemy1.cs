@@ -9,11 +9,12 @@ public class Enemy1 : Enemy
     public Enemy1InvestigateSuspiciousState InvestigateSuspiciousState { get; private set; }
     public Enemy1InvestigateAwareState InvestigateAwareState { get; private set; }
     public Enemy1LookAroundState LookAroundState { get; private set; }
+    public Enemy1AttackState AttackState { get; private set; }
 
     // == Observe ===============================
     public override string GetName()
     {
-        return "Enemy1";
+        return "Pepper";
     }
 
     // == Receive damage ========================
@@ -34,14 +35,16 @@ public class Enemy1 : Enemy
         InvestigateSuspiciousState = new Enemy1InvestigateSuspiciousState(this);
         InvestigateAwareState = new Enemy1InvestigateAwareState(this);
         LookAroundState = new Enemy1LookAroundState(this);
+        AttackState = new Enemy1AttackState(this);
     }
 
     protected override void Start()
     {
         base.Start();
 
-        //ChangeState(PatrolState);
-        ChangeState(LookAroundState);
+        ChangeState(PatrolState);
+
+        ChangeState(AttackState);//temp
     }
 
 }

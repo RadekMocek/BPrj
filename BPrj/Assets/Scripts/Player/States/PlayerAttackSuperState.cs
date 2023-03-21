@@ -103,7 +103,7 @@ public class PlayerAttackSuperState : PlayerState
         else { 
             // 2. SWING
             // Slip
-            if (player.RB.velocity == Vector2.zero) player.RB.velocity = playerToCursorDirection * slipSpeed;
+            player.RB.velocity = playerToCursorDirection * slipSpeed;
 
             // Increase the angle, recalculate position, set position and rotation:
             angle += swingSpeed * Time.deltaTime * angleAdditionMultiplier;
@@ -120,9 +120,9 @@ public class PlayerAttackSuperState : PlayerState
                 /**/
 
                 // Deal damage to IDamageable
-                var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius); //TODO: pøidat layermask?
+                var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius);
                 foreach (var hit in hits) {
-                    if (hit.TryGetComponent(out IDamageable hitScript)) {
+                    if (hit.gameObject != player.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
                         hitScript.ReceiveDamage(playerToCursorDirection);
                     }
                 }
@@ -146,7 +146,7 @@ public class PlayerAttackSuperState : PlayerState
 
     private void AttackEnd()
     {
-        // Unmirror the sprite in case attack direction was right or up
+        // Unmirror the sprite in case attack direction was Right
         player.WeaponSR.flipX = false;
 
         // ChangeState logic

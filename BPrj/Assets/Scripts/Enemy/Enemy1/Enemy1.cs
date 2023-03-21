@@ -43,8 +43,6 @@ public class Enemy1 : Enemy
         base.Start();
 
         ChangeState(PatrolState);
-
-        ChangeState(AttackState);//temp
     }
 
 }

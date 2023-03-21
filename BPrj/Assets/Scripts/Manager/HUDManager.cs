@@ -4,6 +4,7 @@ using System.Linq;
 using TMPro;
 using Unity.VectorGraphics;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
@@ -19,6 +20,10 @@ public class HUDManager : MonoBehaviour
     public void SetObserveNameText(string value) => observeNameText.text = value;
     public void SetInteractActionText(string value) => interactActionText.text = value;
     public void SetIsInteractActionPossible(bool value) => interactActionText.color = (value) ? Color.white : Color.gray;
+
+    // == HealthBar =============================
+    [Header("HUD – HealthBar")]
+    [SerializeField] private Slider healthBarSlider;
 
     // == Inspect ===============================
     [Header("WIN – Inspect")]

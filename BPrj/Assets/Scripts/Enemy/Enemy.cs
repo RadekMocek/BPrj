@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private Vector2 DirectionRound(Vector2 value)
     {
-        float treshold = 0.5f;
+        float treshold = 0.25f;
 
         if (value.x < treshold && value.x > -treshold) {
             value.x = 0;
@@ -122,13 +122,13 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
             }
         }
         else {
-            if (value.y < 0) {
-                Anim.CrossFade("EnemyDown", 0);
-                CurrentFacingDirectionAnimation = Direction.S;
-            }
-            else {
+            if (value.y > 0) {
                 Anim.CrossFade("EnemyUp", 0);
                 CurrentFacingDirectionAnimation = Direction.N;
+            }
+            else {
+                Anim.CrossFade("EnemyDown", 0);
+                CurrentFacingDirectionAnimation = Direction.S;
             }
         }
     }
@@ -168,33 +168,35 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] private LayerMask playerLayer;
 
-    private readonly int fieldOfView = 100;
-    public readonly float viewDistance = 8;
+    private readonly int fieldOfView = 105;
+    public readonly float viewDistance = 8.2f;
 
     private Vector2 playerPosition;
-    private Vector2 enemyToPlayerVector;
-    private float enemyToPlayerAngle;
+    public Vector2 EnemyToPlayerVector { get; private set; }
+    public float EnemyToPlayerAngle { get; private set; }
 
     [HideInInspector] public Vector2 lastKnownPlayerPosition;
     [HideInInspector] public bool suspiciousDetection; // When true, enemy will always transition to the InvestigateSuspicious (or Chase) state after Detecting state
 
-    private bool CloserToZeroCounterClockwise(float angle) => (360 - angle > angle);
+    public void UpdatePlayerPositionInfo()
+    {
+        playerPosition = EnemyManager.GetPlayerPosition();
+        EnemyToPlayerVector = playerPosition - (Vector2)this.transform.position;
+        EnemyToPlayerAngle = ((Mathf.Rad2Deg * Mathf.Atan2(EnemyToPlayerVector.y, EnemyToPlayerVector.x)) + 270) % 360;
+    }
 
     public bool IsPlayerVisible(bool debug = false)
     {
-        playerPosition = EnemyManager.GetPlayerPosition();
-
-        enemyToPlayerVector = playerPosition - (Vector2)this.transform.position;
+        UpdatePlayerPositionInfo();
 
         // Is player in view distance ?
-        if (enemyToPlayerVector.magnitude > viewDistance) {
+        if (EnemyToPlayerVector.magnitude > viewDistance) {
             if (debug) print("Player too far away");
             return false;
         }
 
         // Is player inside the field of view cone ?
         bool isPlayerInFieldOfView;
-        enemyToPlayerAngle = ((Mathf.Rad2Deg * Mathf.Atan2(enemyToPlayerVector.y, enemyToPlayerVector.x)) + 270) % 360;
         
         int angleBound1 = (int)actualFacingDirection - fieldOfView / 2;
         int angleBound2 = (int)actualFacingDirection + fieldOfView / 2;
@@ -203,15 +205,15 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         if (angleBound2 > 360) angleBound2 -= 360;
 
         if (angleBound1 > angleBound2) {
-            if (CloserToZeroCounterClockwise(enemyToPlayerAngle)) {
-                isPlayerInFieldOfView = (enemyToPlayerAngle < angleBound2);
+            if (360 - EnemyToPlayerAngle > EnemyToPlayerAngle) { // If the player is in the 0–something part of the circle
+                isPlayerInFieldOfView = (EnemyToPlayerAngle < angleBound2);
             }
-            else {
-                isPlayerInFieldOfView = (enemyToPlayerAngle > angleBound1);
+            else {                                              // If the player is in the something–360 part of the circle
+                isPlayerInFieldOfView = (EnemyToPlayerAngle > angleBound1);
             }
         }
         else {
-            isPlayerInFieldOfView = (enemyToPlayerAngle > angleBound1 && enemyToPlayerAngle < angleBound2);
+            isPlayerInFieldOfView = (EnemyToPlayerAngle > angleBound1 && EnemyToPlayerAngle < angleBound2);
         }
 
         if (!isPlayerInFieldOfView) {
@@ -243,11 +245,12 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     public void FaceThePlayer(bool changeAnimation)
     {
-        TargetFacingDirection = enemyToPlayerAngle;
-        if (changeAnimation) DirectionToAnimation(DirectionRound(enemyToPlayerVector));
+        UpdatePlayerPositionInfo();
+        TargetFacingDirection = EnemyToPlayerAngle;
+        if (changeAnimation) DirectionToAnimation(DirectionRound(EnemyToPlayerVector));
     }
 
-    public float GetEnemyToPlayerDistance() => enemyToPlayerVector.magnitude;
+    public float GetEnemyToPlayerDistance() => EnemyToPlayerVector.magnitude;
 
     // == Spotting the player: Close ============
     private readonly float playerCheckCloseRadius = 0.8f;
@@ -271,7 +274,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     private Light2D viewConeRedLightScript;
     public float CurrentDetectionLength { get; private set; }
 
-    private readonly int decreaseViewConeRedRadiusSpeed = 6;
+    private readonly int decreaseViewConeRedRadiusSpeed = 3;
 
     private void StartViewCone()
     {
@@ -402,10 +405,13 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         }
     }
 
+    [HideInInspector] public Vector2 gizmoCircleCenter;
+    [HideInInspector] public float gizmoCircleRadius;
     private void OnDrawGizmos()
     {
         /*
-        Gizmos.DrawRay(this.transform.position, enemyToPlayerVector);
+        Gizmos.DrawWireSphere(gizmoCircleCenter, gizmoCircleRadius);
+        Gizmos.DrawRay(this.transform.position, EnemyToPlayerVector);
         Gizmos.DrawWireSphere((Vector2)this.transform.position + realBottom + (playerCheckCloseRadius * FacingDirectionToDirectionRound(TargetFacingDirection)), playerCheckCloseRadius);
         /**/
     }

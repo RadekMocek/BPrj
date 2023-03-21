@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageable
 {
     [field: Header("Transforms")]
     [field: SerializeField] public Transform Core { get; private set; } // Approx. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
@@ -32,6 +32,12 @@ public class Player : MonoBehaviour
 
         newState.Enter();
         currentState = newState;
+    }
+
+    // == Receive damage ========================
+    public virtual void ReceiveDamage(Vector2 direction)
+    {
+        print("Player received damage");
     }
 
     // == Movement ==============================

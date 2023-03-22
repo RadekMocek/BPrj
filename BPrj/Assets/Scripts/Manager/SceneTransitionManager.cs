@@ -32,7 +32,7 @@ public class SceneTransitionManager : MonoBehaviour
     //TODO: For testing purposes, delete me in release
     private void Update()
     {
-        if (Application.isEditor && Input.GetKeyDown(KeyCode.R)) {
+        if (/*Application.isEditor && */Input.GetKeyDown(KeyCode.R)) {
             ChangeScene("Main");
         }
     }

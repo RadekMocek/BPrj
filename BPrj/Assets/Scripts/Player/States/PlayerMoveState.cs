@@ -92,7 +92,7 @@ public class PlayerMoveState : PlayerState
         else if (sneakInputPressedThisFrame) {
             player.ChangeState(player.SneakMoveState);
         }
-        else if (dashInputPressedThisFrame) {
+        else if (dashInputPressedThisFrame && player.CanDash()) {
             isPrimaryAxisHorizontalMemory = !isPrimaryAxisVertical;
 
             player.DashState.dashDirection = movementInput;

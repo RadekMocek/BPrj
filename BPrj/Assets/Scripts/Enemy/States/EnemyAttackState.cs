@@ -10,23 +10,42 @@ public class EnemyAttackState : EnemyState
     protected bool End_PlayerVisible { get; private set; }
     protected bool End_PlayerLost { get; private set; }
 
-    private readonly float backSwingDuration = 0.3f;
+    private readonly float backSwingDuration = 0.5f;
     private readonly int backSwingSpeed = 80;
     private readonly int swingCircularSectorAngle = 80;
-    private readonly int swingSpeed = 1000;
+    private readonly int swingSpeed = 1200;
     private readonly float swingDistanceFromCore = 0.8f;
     private readonly float damageDistanceFromCore = 1.0f;
-    private readonly float damageRadius = 0.6f;
+    private readonly float damageRadius = 0.5f;
     private readonly float slipSpeed = 1.0f;
-    private readonly float recoveryDuration = .15f;
+    private readonly float recoveryDuration = .25f;
 
+    private bool backswinging;
     private Vector2 enemyToPlayerVector;
     private float angle;
+    private float angleDiff;
+    private float startingAngle;
     private float endingAngle;
-    private int angleAdditionMultiplier;
     private Vector2 weaponRawPosition;
     private bool recovering;
     private float recoveryStartTime;
+
+    private void InitializeSwing()
+    {
+        enemy.UpdatePlayerPositionInfo();
+
+        enemyToPlayerVector = enemy.EnemyToPlayerVector.normalized;
+
+        endingAngle = enemy.EnemyToPlayerAngle - 270;
+        if (endingAngle < 0) endingAngle += 360;
+
+        startingAngle = endingAngle - swingCircularSectorAngle;
+
+        Direction facingDirection = enemy.CurrentFacingDirectionAnimation;
+
+        // Show weapon behind enemy for N/NW/W/SW directions
+        enemy.WeaponSR.sortingOrder = (facingDirection <= Direction.SW) ? -1 : 1;
+    }
 
     public override void Enter()
     {
@@ -37,33 +56,19 @@ public class EnemyAttackState : EnemyState
         End_PlayerLost = false;
 
         // Init
+        backswinging = true;
         recovering = false;
+        angleDiff = 0;
+
+        // Halt
         enemy.RB.velocity = Vector2.zero;
 
-        enemy.UpdatePlayerPositionInfo();
-
-        enemyToPlayerVector = enemy.EnemyToPlayerVector.normalized;
-
-        endingAngle = enemy.EnemyToPlayerAngle - 270;
-        if (endingAngle < 0) endingAngle += 360;
-
-        angle = endingAngle - swingCircularSectorAngle;
-
+        // Rotate to player
         enemy.FaceThePlayer(true);
 
-        Direction facingDirection = enemy.CurrentFacingDirectionAnimation;
-
-        enemy.WeaponSR.sortingOrder = (facingDirection <= Direction.SW) ? -1 : 1;
-
-        if (facingDirection >= Direction.SE) {
-            (angle, endingAngle) = (endingAngle + swingCircularSectorAngle, angle + swingCircularSectorAngle);
-            angleAdditionMultiplier = -1;
-            enemy.WeaponSR.flipX = true;
-        }
-        else {
-            angleAdditionMultiplier = 1;
-        }
-
+        // Initialize swing – get player position, set angles, animation
+        InitializeSwing();
+        angle = startingAngle;
         ApplyPositionAndRotationAccordingToAngle();
     }
 
@@ -71,12 +76,13 @@ public class EnemyAttackState : EnemyState
     {
         base.Update();
 
-        enemy.FaceThePlayer(false);
+        enemy.FaceThePlayer(backswinging);
         enemy.RB.velocity = Vector2.zero;
 
         if (recovering) {
             // 3. RECOVERY
-            angle += backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
+            angleDiff += backSwingSpeed * Time.deltaTime;
+            angle = startingAngle + angleDiff;
             ApplyPositionAndRotationAccordingToAngle();
             if (Time.time > recoveryStartTime + recoveryDuration) {
                 AttackEnd();
@@ -84,20 +90,26 @@ public class EnemyAttackState : EnemyState
         }
         else if (Time.time < enterTime + backSwingDuration) {
             // 1. BACKSWING
-            angle -= backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
+            angleDiff -= backSwingSpeed * Time.deltaTime;
+            InitializeSwing();
+            angle = startingAngle + angleDiff;
             ApplyPositionAndRotationAccordingToAngle();
         }
         else {
+            if (backswinging) {
+                backswinging = false;
+            }
             // 2. SWING
             // Slip
             enemy.RB.velocity = enemyToPlayerVector * slipSpeed;
 
             // Increase the angle, recalculate position, set position and rotation:
-            angle += swingSpeed * Time.deltaTime * angleAdditionMultiplier;
+            angleDiff += swingSpeed * Time.deltaTime;
+            angle = startingAngle + angleDiff;
             ApplyPositionAndRotationAccordingToAngle();
 
             // When we reach the endingAngle:
-            if (angleAdditionMultiplier == 1 && angle >= endingAngle || angleAdditionMultiplier == -1 && angle <= endingAngle) {
+            if (angle >= endingAngle) {
                 ///* TEMP gizmos
                 enemy.gizmoCircleCenter = (Vector2)enemy.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)enemy.Core.localPosition);
                 enemy.gizmoCircleRadius = damageRadius;
@@ -107,7 +119,7 @@ public class EnemyAttackState : EnemyState
                 var hits = Physics2D.OverlapCircleAll((Vector2)enemy.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)enemy.Core.localPosition), damageRadius);
                 foreach (var hit in hits) {
                     if (hit.gameObject != enemy.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
-                        hitScript.ReceiveDamage(enemyToPlayerVector);
+                        hitScript.ReceiveDamage(enemyToPlayerVector, 10);
                     }
                 }
 
@@ -130,8 +142,6 @@ public class EnemyAttackState : EnemyState
 
     private void AttackEnd()
     {
-        enemy.WeaponSR.flipX = false;
-
         enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
 
         // ChangeState logic

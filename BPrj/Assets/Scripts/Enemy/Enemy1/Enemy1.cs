@@ -18,10 +18,12 @@ public class Enemy1 : Enemy
     }
 
     // == Receive damage ========================
-    public override void ReceiveDamage(Vector2 direction)
+    /*
+    public override void ReceiveDamage(Vector2 direction, int amount)
     {
-        Debug.Log("Received damage");
+        base.ReceiveDamage(direction, amount);
     }
+    /**/
 
     // == MonoBehaviour functions ===============
     protected override void Awake()

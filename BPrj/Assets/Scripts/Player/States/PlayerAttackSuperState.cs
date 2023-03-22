@@ -123,7 +123,7 @@ public class PlayerAttackSuperState : PlayerState
                 var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius);
                 foreach (var hit in hits) {
                     if (hit.gameObject != player.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
-                        hitScript.ReceiveDamage(playerToCursorDirection);
+                        hitScript.ReceiveDamage(playerToCursorDirection, 10);
                     }
                 }
 
@@ -146,9 +146,6 @@ public class PlayerAttackSuperState : PlayerState
 
     private void AttackEnd()
     {
-        // Unmirror the sprite in case attack direction was Right
-        player.WeaponSR.flipX = false;
-
         // ChangeState logic
         if (!player.Sneaking) {
             if (movementInput.magnitude != 0) {
@@ -166,5 +163,13 @@ public class PlayerAttackSuperState : PlayerState
                 player.ChangeState(player.SneakIdleState);
             }
         }
+    }
+
+    public override void Exit()
+    {
+        base.Exit();
+
+        // Unmirror the sprite in case attack direction was Right
+        player.WeaponSR.flipX = false;
     }
 }

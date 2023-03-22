@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
@@ -24,20 +25,77 @@ public class Player : MonoBehaviour, IDamageable
     public PlayerAttackHeavyState AttackHeavyState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     public PlayerDialogueState DialogueState { get; private set; }
+    public PlayerKnockbackState KnockbackState { get; private set; }
 
     public void ChangeState(PlayerState newState)
     {
         if (currentState == IdleState) IdleState.momentumDirection = Vector2.zero;
         else if (currentState == SneakIdleState) SneakIdleState.momentumDirection = Vector2.zero;
 
+        currentState?.Exit();
         newState.Enter();
         currentState = newState;
     }
 
-    // == Receive damage ========================
-    public virtual void ReceiveDamage(Vector2 direction)
+    // == Health, Receive damage, Knockback =====
+    private readonly int maxHealth = 100;
+    private int health;
+    public Vector2 KnockbackDirection { get; private set; }
+
+    public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
-        print("Player received damage");
+        if (currentState == DashState) return;
+
+        health -= amount;
+
+        if (health <= 0) {
+            health = 0;
+        }
+
+        HUD.SetHealth(health);
+
+        KnockbackDirection = direction;
+        ChangeState(KnockbackState);
+    }
+
+    // == Stamina ===============================
+    private readonly int maxStamina = 100;
+    private int stamina;
+
+    public bool CanDash() => (stamina >= PlayerStaticValues.dash_staminaCost);
+
+    public void DecreaseStamina(int amount)
+    {
+        stamina -= amount;
+        if (stamina < 0) stamina = 0;
+        HUD.SetStamina(stamina);
+
+        if (isStaminaRegenerationCoroutineRunning) StopCoroutine(staminaRegenerationCoroutine);
+        staminaRegenerationCoroutine = StartCoroutine(StaminaRegeneration());
+    }
+
+    private void IncreaseStamina(int amount)
+    {
+        stamina += amount;
+        if (stamina > maxStamina) stamina = maxStamina;
+        HUD.SetStamina(stamina);
+    }
+
+    // Stamina regen
+    private Coroutine staminaRegenerationCoroutine;
+    private bool isStaminaRegenerationCoroutineRunning;
+
+    private readonly int staminaRegenerationSpeed = 2;
+
+    private IEnumerator StaminaRegeneration()
+    {
+        isStaminaRegenerationCoroutineRunning = true;
+        yield return new WaitForSeconds(1.0f);
+        while (stamina < maxStamina) {
+            IncreaseStamina(staminaRegenerationSpeed);
+            yield return new WaitForSeconds(0.1f);
+        }
+        isStaminaRegenerationCoroutineRunning = false;
     }
 
     // == Movement ==============================
@@ -105,11 +163,11 @@ public class Player : MonoBehaviour, IDamageable
         if (cursorHit) {
             cursorHitGO = cursorHit.transform.gameObject;
             if (cursorHitGO.TryGetComponent(out cursorHitScriptObservable)) {
-                
+
                 HUD.SetObserveNameText(cursorHitScriptObservable.GetName());
 
                 if (cursorHitGO.TryGetComponent(out cursorHitScriptInteractable)) {
-
+                    HUD.HideObserveHealthBar();
                     HUD.SetInteractActionText("(" + IH.InteractBinding + ") " + cursorHitScriptInteractable.GetInteractActionDescription());
 
                     if (cursorHitScriptInteractable.CanInteract(this)) {
@@ -124,12 +182,23 @@ public class Player : MonoBehaviour, IDamageable
                         HUD.SetIsInteractActionPossible(false);
                     }
                 }
+                else if (cursorHitScriptObservable is IObservableHealth) {
+                    HUD.ShowObserveHealthBar(cursorHitScriptObservable as IObservableHealth);
+                    HUD.SetInteractActionText("");
+                }
                 else {
+                    HUD.HideObserveHealthBar();
                     HUD.SetInteractActionText("");
                 }
             }
+            else {
+                HUD.HideObserveHealthBar();
+                HUD.SetObserveNameText("");
+                HUD.SetInteractActionText("");
+            }
         }
         else {
+            HUD.HideObserveHealthBar();
             HUD.SetObserveNameText("");
             HUD.SetInteractActionText("");
         }
@@ -187,16 +256,28 @@ public class Player : MonoBehaviour, IDamageable
         AttackHeavyState = new PlayerAttackHeavyState(this);
         DashState = new PlayerDashState(this);
         DialogueState = new PlayerDialogueState(this);
+        KnockbackState = new PlayerKnockbackState(this);
     }
 
     private void Start()
     {
+        // Init
         LastMovementDirection = Direction.S;
-
         Sneaking = false;
-
         WeaponEquipped = false;
-        
+
+        // Health
+        health = maxHealth;
+        HUD.SetMaxHealth(maxHealth);
+        HUD.SetHealth(health);
+
+        // Stamina
+        stamina = maxStamina;
+        HUD.SetMaxStamina(maxStamina);
+        HUD.SetStamina(stamina);
+        isStaminaRegenerationCoroutineRunning = false;
+
+        // Start state logic
         ChangeState(IdleState);
     }
 

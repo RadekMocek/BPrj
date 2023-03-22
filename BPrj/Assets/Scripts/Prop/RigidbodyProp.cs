@@ -7,7 +7,7 @@ public class RigidbodyProp : MonoBehaviour, IDamageable
 
     private Rigidbody2D RB;
 
-    public void ReceiveDamage(Vector2 direction)
+    public void ReceiveDamage(Vector2 direction, int amount)
     {
         RB.AddForce(1000 * direction);
     }

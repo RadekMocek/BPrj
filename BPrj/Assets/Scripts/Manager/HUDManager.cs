@@ -16,14 +16,46 @@ public class HUDManager : MonoBehaviour
     [Header("HUD – Observe & Interact")]
     [SerializeField] private TMP_Text observeNameText;
     [SerializeField] private TMP_Text interactActionText;
+    [SerializeField] private GameObject observeHealthBarGO;
+
+    private Slider observeHealthBarSlider;
 
     public void SetObserveNameText(string value) => observeNameText.text = value;
     public void SetInteractActionText(string value) => interactActionText.text = value;
     public void SetIsInteractActionPossible(bool value) => interactActionText.color = (value) ? Color.white : Color.gray;
 
+    public void ShowObserveHealthBar(IObservableHealth enemy)
+    {
+        var healthInfo = enemy.GetHealthInfo();
+        observeHealthBarSlider.maxValue = healthInfo.Item2;
+        observeHealthBarSlider.value = healthInfo.Item1;
+        observeHealthBarGO.SetActive(true);
+    }
+
+    public void HideObserveHealthBar() => observeHealthBarGO.SetActive(false);
+
     // == HealthBar =============================
-    [Header("HUD – HealthBar")]
+    [Header("HUD – Health bar")]
     [SerializeField] private Slider healthBarSlider;
+
+    public void SetMaxHealth(int max) => healthBarSlider.maxValue = max;
+    public void SetHealth(int value) => healthBarSlider.value = value;
+
+    // == StaminaBar ============================
+    [Header("HUD – Stamina bar")]
+    [SerializeField] private Slider staminaBarSlider;
+    [SerializeField] private Image staminaBarImage;
+
+    private readonly Color staminaBarEnoughColor = new(0.72f, 0.76f, 0.16f);
+    private readonly Color staminaBarNotEnoughColor = new(0.76f, 0.62f, 0.16f);
+
+    public void SetMaxStamina(int max) => staminaBarSlider.maxValue = max;
+
+    public void SetStamina(int value)
+    {
+        staminaBarSlider.value = value;
+        staminaBarImage.color = (value >= PlayerStaticValues.dash_staminaCost) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
+    }
 
     // == Inspect ===============================
     [Header("WIN – Inspect")]
@@ -101,6 +133,10 @@ public class HUDManager : MonoBehaviour
     // == MonoBehaviour =========================
     private void Awake()
     {
+        // Observe & interact
+        observeHealthBarGO.SetActive(false);
+        observeHealthBarSlider = observeHealthBarGO.GetComponent<Slider>();
+
         // Inspecting
         inspectMainGO.SetActive(false);
         

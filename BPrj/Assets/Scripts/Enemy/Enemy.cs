@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
-public class Enemy : MonoBehaviour, IObservable, IDamageable
+public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 {
     [field: Header("Transforms")]
     [field: SerializeField] public Transform Core { get; private set; }
@@ -25,10 +25,17 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         throw new System.NotImplementedException();
     }
 
-    // == Receive damage ========================
-    public virtual void ReceiveDamage(Vector2 direction)
+    // Observe health
+    public (int, int) GetHealthInfo() => (health, maxHealth);
+
+    // == Health, Receive damage ================
+    private readonly int maxHealth = 100;
+    private int health;
+
+    public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
-        throw new System.NotImplementedException();
+        health -= amount;
+        if (health < 0) health = 0;
     }
 
     // == Direction =============================
@@ -38,10 +45,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
 
     private readonly int facingDirectionSpeed = 480;
 
-    private Vector2 DirectionRound(Vector2 value)
+    private Vector2 DirectionRound(Vector2 value, float treshold = 0.5f)
     {
-        float treshold = 0.25f;
-
         if (value.x < treshold && value.x > -treshold) {
             value.x = 0;
         }
@@ -253,14 +258,15 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     public float GetEnemyToPlayerDistance() => EnemyToPlayerVector.magnitude;
 
     // == Spotting the player: Close ============
-    private readonly float playerCheckCloseRadius = 0.8f;
+    private readonly float playerCheckCloseRadius = 0.7f;
+    private readonly float playerCheckCloseDistance = 0.35f;
     private readonly Vector2 realBottom = new(0, 0.41f);
 
     private Vector2 playerCheckClose;
 
     public bool IsPlayerVisibleClose()
     {
-        playerCheckClose = (Vector2)this.transform.position + realBottom + (playerCheckCloseRadius * FacingDirectionToDirectionRound(TargetFacingDirection));
+        playerCheckClose = (Vector2)this.transform.position + realBottom + (playerCheckCloseDistance * FacingDirectionToDirectionRound(TargetFacingDirection));
         return Physics2D.OverlapCircle(playerCheckClose, playerCheckCloseRadius, playerLayer);
     }
 
@@ -363,6 +369,9 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
         ChangeFacingDirection(Direction.S); // Facing down
         suspiciousDetection = false;
 
+        // Health
+        health = maxHealth;
+
         // View cone
         StartViewCone();
         CurrentDetectionLength = 0;
@@ -409,10 +418,10 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable
     [HideInInspector] public float gizmoCircleRadius;
     private void OnDrawGizmos()
     {
-        /*
+        ///*
         Gizmos.DrawWireSphere(gizmoCircleCenter, gizmoCircleRadius);
-        Gizmos.DrawRay(this.transform.position, EnemyToPlayerVector);
-        Gizmos.DrawWireSphere((Vector2)this.transform.position + realBottom + (playerCheckCloseRadius * FacingDirectionToDirectionRound(TargetFacingDirection)), playerCheckCloseRadius);
+        //Gizmos.DrawRay(this.transform.position, EnemyToPlayerVector);
+        Gizmos.DrawWireSphere((Vector2)this.transform.position + realBottom + (playerCheckCloseDistance * FacingDirectionToDirectionRound(TargetFacingDirection)), playerCheckCloseRadius);
         /**/
     }
 }

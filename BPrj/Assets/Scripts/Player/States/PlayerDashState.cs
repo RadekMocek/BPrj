@@ -34,6 +34,8 @@ public class PlayerDashState : PlayerState
         isBreathingOut = false;
 
         player.RB.AddForce(dashSpeed * dashDirection);
+
+        player.DecreaseStamina(PlayerStaticValues.dash_staminaCost);
     }
 
     public override void Update()

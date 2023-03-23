@@ -29,16 +29,32 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     public (int, int) GetHealthInfo() => (health, maxHealth);
 
     // == Health, Receive damage, Knockback =====
+    [Header("Receive damage")]
+    [SerializeField] private GameObject hitParticlePrefab;
+    [SerializeField] private GameObject deadParticlePrefab;
+
     private readonly int maxHealth = 100;
     private int health;
+    private bool dead;
     public Vector2 KnockbackDirection { get; private set; }
 
     public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
         health -= amount;
-        if (health <= 0) {
-            //TODO: enemy die
-            Destroy(this.gameObject);
+        
+        if (health <= 0 && !dead) {
+            // Die():
+            Instantiate(deadParticlePrefab, this.Core.position, Quaternion.identity);
+            CameraShake.Instance.ShakeCamera(6);
+
+            RB.mass = 35;
+            RB.drag = 35;
+
+            dead = true;
+        }
+        else {
+            Instantiate(hitParticlePrefab, this.Core.position, Quaternion.identity);
+            CameraShake.Instance.ShakeCamera();
         }
         KnockbackDirection = direction;
     }
@@ -374,6 +390,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
         // Health
         health = maxHealth;
+        dead = false;
 
         // View cone
         StartViewCone();
@@ -391,7 +408,19 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     }
 
     protected virtual void Update()
-    { 
+    {
+        // Dead logic
+        if (dead) {
+            RB.velocity = Vector2.zero;
+            viewConeLightGO.SetActive(false);
+            UpdateDecreaseViewConeRedRadius();
+            if (CurrentDetectionLength == 0) {
+                this.enabled = false;
+            }
+
+            return;
+        }
+
         // State logic
         currentState.Update();
 

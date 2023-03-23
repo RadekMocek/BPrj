@@ -116,7 +116,7 @@ public class PathGrid
 
     // == Walkable ==
     public static LayerMask unwalkableLayer;
-    private static readonly Vector2 tileCheckDiagRadius = new Vector2(-.5f, .5f);
+    private static readonly Vector2 tileCheckDiagRadius = new(-.5f, .5f);
 
     public static bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagRadius, coordinates - tileCheckDiagRadius, unwalkableLayer);
 

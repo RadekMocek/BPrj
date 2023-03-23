@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class PlayerAfterImageEffect : MonoBehaviour
+public class AfterImageEffect : MonoBehaviour
 {
     // Variables set from elsewhere (e.g. script instantiating this object)
     [HideInInspector] public Sprite sprite;     // Sprite to fade out

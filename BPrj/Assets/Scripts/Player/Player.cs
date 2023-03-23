@@ -38,6 +38,9 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // == Health, Receive damage, Knockback =====
+    [Header("Receive damage")]
+    [SerializeField] private GameObject hitBloodParticlePrefab;
+    
     private readonly int maxHealth = 100;
     private int health;
     public Vector2 KnockbackDirection { get; private set; }
@@ -47,6 +50,9 @@ public class Player : MonoBehaviour, IDamageable
         if (currentState == DashState) return;
 
         health -= amount;
+
+        Instantiate(hitBloodParticlePrefab, this.Core.position, Quaternion.identity);
+        CameraShake.Instance.ShakeCamera();
 
         if (health <= 0) {
             health = 0;
@@ -107,7 +113,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateCooldownBar()
     {
-        HUD.ShowCooldownBar(lastAttackTime, attackCooldownDuration);
+        if (WeaponEquipped) HUD.ShowCooldownBar(lastAttackTime, attackCooldownDuration);
     }
 
     // == Movement ==============================
@@ -128,7 +134,7 @@ public class Player : MonoBehaviour, IDamageable
     [SerializeField] private GameObject afterImagePrefab;
 
     private GameObject afterImageGO;
-    private PlayerAfterImageEffect afterImageScript;
+    private AfterImageEffect afterImageScript;
 
     public void SpawnAfterImage(Sprite sprite)
     {

@@ -13,7 +13,7 @@ public class EnemyState
 
     public virtual void Enter()
     {
-        //Debug.Log($"{enemy.GetName()} changed state to {this.GetType().Name}.");
+        Debug.Log($"{enemy.GetName()} changed state to {this.GetType().Name}.");
 
         enterTime = Time.time;
     }

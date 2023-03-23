@@ -39,6 +39,9 @@ public class EnemyChaseState : EnemyState
         previousPlayerPosition = currentPlayerPosition;
 
         RefreshPath(currentPlayerPosition);
+
+        // In case we transition from different state then DetectingState
+        enemy.ChangeViewConeRedRadius(enemy.viewDistance);
     }
 
     public override void Update()

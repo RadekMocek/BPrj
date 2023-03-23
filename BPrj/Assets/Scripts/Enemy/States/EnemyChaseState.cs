@@ -67,7 +67,8 @@ public class EnemyChaseState : EnemyState
             }
         }
         else {
-            enemy.lastKnownPlayerPosition = currentPlayerPosition;
+            //enemy.lastKnownPlayerPosition = currentPlayerPosition;
+            enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPositionWalkable();
             End_PlayerLost = true;
         }
 

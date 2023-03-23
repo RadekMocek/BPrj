@@ -9,15 +9,11 @@ public class PlayerKnockbackState : PlayerState
     private readonly float knockbackDuration = 0.1f;
     private readonly float knockbackSpeed = 10;
 
-    private Vector2 direction;
-
     public override void Enter()
     {
         base.Enter();
 
-        direction = player.KnockbackDirection;
-
-        player.RB.velocity = knockbackSpeed * direction;
+        player.RB.velocity = knockbackSpeed * player.KnockbackDirection;
     }
 
     public override void Update()

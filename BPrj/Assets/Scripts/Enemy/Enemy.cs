@@ -28,14 +28,19 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     // Observe health
     public (int, int) GetHealthInfo() => (health, maxHealth);
 
-    // == Health, Receive damage ================
+    // == Health, Receive damage, Knockback =====
     private readonly int maxHealth = 100;
     private int health;
+    public Vector2 KnockbackDirection { get; private set; }
 
     public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
         health -= amount;
-        if (health < 0) health = 0;
+        if (health <= 0) {
+            //TODO: enemy die
+            Destroy(this.gameObject);
+        }
+        KnockbackDirection = direction;
     }
 
     // == Direction =============================
@@ -45,7 +50,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     private readonly int facingDirectionSpeed = 480;
 
-    private Vector2 DirectionRound(Vector2 value, float treshold = 0.5f)
+    private Vector2 DirectionRound(Vector2 value, float treshold = 0.6f)
     {
         if (value.x < treshold && value.x > -treshold) {
             value.x = 0;
@@ -252,7 +257,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     {
         UpdatePlayerPositionInfo();
         TargetFacingDirection = EnemyToPlayerAngle;
-        if (changeAnimation) DirectionToAnimation(DirectionRound(EnemyToPlayerVector));
+        if (changeAnimation) DirectionToAnimation(DirectionRound(EnemyToPlayerVector, 0.25f));
     }
 
     public float GetEnemyToPlayerDistance() => EnemyToPlayerVector.magnitude;
@@ -260,7 +265,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     // == Spotting the player: Close ============
     private readonly float playerCheckCloseRadius = 0.7f;
     private readonly float playerCheckCloseDistance = 0.35f;
-    private readonly Vector2 realBottom = new(0, 0.41f);
+    private readonly Vector2 realBottom = new(0, 0.41f); // Center of gravity
 
     private Vector2 playerCheckClose;
 
@@ -322,8 +327,6 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     // == Pathfinding ===========================
     public PathGrid Pathfinder { get; private set; }
-    [Header("Pathfinding")]
-    [SerializeField] private LayerMask unwalkableLayer;
 
     // == Patrol ================================
     [Header("Patrol state")]
@@ -360,7 +363,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
         // Services initialization
         EnemyManager = ManagerAccessor.instance.EnemyManager;
-        Pathfinder = new PathGrid(unwalkableLayer);
+        Pathfinder = new PathGrid();
     }
 
     protected virtual void Start()
@@ -418,7 +421,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [HideInInspector] public float gizmoCircleRadius;
     private void OnDrawGizmos()
     {
-        ///*
+        /*
         Gizmos.DrawWireSphere(gizmoCircleCenter, gizmoCircleRadius);
         //Gizmos.DrawRay(this.transform.position, EnemyToPlayerVector);
         Gizmos.DrawWireSphere((Vector2)this.transform.position + realBottom + (playerCheckCloseDistance * FacingDirectionToDirectionRound(TargetFacingDirection)), playerCheckCloseRadius);

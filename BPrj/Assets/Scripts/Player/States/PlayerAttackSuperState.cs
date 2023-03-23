@@ -19,14 +19,13 @@ public class PlayerAttackSuperState : PlayerState
     protected float damageDistanceFromCore = 1.0f;   // Distance between Player.Core and center of damage dealing area
     protected float damageRadius = 0.6f;
     protected float slipSpeed = 1.0f;
-
     protected float recoveryDuration = .15f;
 
+    private bool backswinging;
     private float angle;
     private float endingAngle;
     private int angleAdditionMultiplier;
     private Vector2 weaponRawPosition;
-
     private bool recovering;
     private float recoveryStartTime;
 
@@ -81,6 +80,8 @@ public class PlayerAttackSuperState : PlayerState
 
         // Initial position
         ApplyPositionAndRotationAccordingToAngle();
+
+        backswinging = true;
     }
 
     public override void Update()
@@ -92,6 +93,7 @@ public class PlayerAttackSuperState : PlayerState
             angle += backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
             ApplyPositionAndRotationAccordingToAngle();
             if (Time.time > recoveryStartTime + recoveryDuration) {
+                // Change state
                 AttackEnd();
             }
         }
@@ -100,7 +102,12 @@ public class PlayerAttackSuperState : PlayerState
             angle -= backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
             ApplyPositionAndRotationAccordingToAngle();
         }
-        else { 
+        else {
+            if (backswinging) {
+                // Set lastAttackTime for attack cooldown
+                player.lastAttackTime = Time.time;
+                backswinging = false;
+            }
             // 2. SWING
             // Slip
             player.RB.velocity = playerToCursorDirection * slipSpeed;

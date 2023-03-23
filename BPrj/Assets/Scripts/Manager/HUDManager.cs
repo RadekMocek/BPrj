@@ -57,6 +57,32 @@ public class HUDManager : MonoBehaviour
         staminaBarImage.color = (value >= PlayerStaticValues.dash_staminaCost) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
     }
 
+    // == Attack cooldown =======================
+    [Header("HUD – Cooldown bar")]
+    [SerializeField] private GameObject cooldownBarGO;
+    [SerializeField] private RectTransform cooldownBarGreenAreaRT;
+    [SerializeField] private Image cooldownBarHandleImage;
+
+    private Slider cooldownBarSlider;
+    private RectTransform cooldownBarRT;
+
+    private readonly int cooldownBarWidth = 300;
+    private readonly float cooldownBarGreenAreaPercentage = 15;
+
+    public void ShowCooldownBar(float start, float duration)
+    {
+        float barDuration = (100 * duration) / (100 - cooldownBarGreenAreaPercentage); 
+
+        cooldownBarGO.SetActive(true);
+        cooldownBarSlider.minValue = start;
+        cooldownBarSlider.value = Time.time;
+        cooldownBarSlider.maxValue = start + barDuration;
+
+        cooldownBarHandleImage.color = (Time.time >= start + duration) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
+    }
+
+    public void HideCoolDownBar() => cooldownBarGO.SetActive(false);
+
     // == Inspect ===============================
     [Header("WIN – Inspect")]
     [SerializeField] private GameObject inspectMainGO;
@@ -137,6 +163,11 @@ public class HUDManager : MonoBehaviour
         observeHealthBarGO.SetActive(false);
         observeHealthBarSlider = observeHealthBarGO.GetComponent<Slider>();
 
+        // Cooldown bar
+        cooldownBarGO.SetActive(false);
+        cooldownBarSlider = cooldownBarGO.GetComponent<Slider>();
+        cooldownBarRT = cooldownBarGO.GetComponent<RectTransform>();
+
         // Inspecting
         inspectMainGO.SetActive(false);
         
@@ -146,6 +177,10 @@ public class HUDManager : MonoBehaviour
 
     private void Start()
     {
+        // Cooldown bar
+        cooldownBarRT.sizeDelta = new(cooldownBarWidth, 20);
+        cooldownBarGreenAreaRT.sizeDelta = new((cooldownBarWidth / 100 * cooldownBarGreenAreaPercentage) - 24, 10); // substracting constant so clicking just before green area counts
+
         // Inspecting
         IsInspecting = false;
 

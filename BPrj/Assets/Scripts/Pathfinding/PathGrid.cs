@@ -27,12 +27,6 @@ public class PathGrid
     private Vector2Int tempVector;
     private Stack<Vector2Int> returnStack;
 
-    //
-    public PathGrid(LayerMask unwalkableLayer)
-    {
-        this.unwalkableLayer = unwalkableLayer;
-    }
-
     // Pathfinding, returns Stack of coordinates that make path from `start` to `end`
     public Stack<Vector2Int> FindPath(Vector2 start, Vector2 end)
     {
@@ -121,10 +115,10 @@ public class PathGrid
     } // End of method
 
     // == Walkable ==
-    private LayerMask unwalkableLayer;
-    private readonly Vector2 tileCheckDiagRadius = new Vector2(-.5f, .5f);
+    public static LayerMask unwalkableLayer;
+    private static readonly Vector2 tileCheckDiagRadius = new Vector2(-.5f, .5f);
 
-    private bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagRadius, coordinates - tileCheckDiagRadius, unwalkableLayer);
+    public static bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagRadius, coordinates - tileCheckDiagRadius, unwalkableLayer);
 
     // == Pathfinding with bias ==
     private Vector2Int endCoordinatesWithBias;

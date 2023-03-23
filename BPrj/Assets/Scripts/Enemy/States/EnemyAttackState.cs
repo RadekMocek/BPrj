@@ -14,14 +14,17 @@ public class EnemyAttackState : EnemyState
     private readonly int backSwingSpeed = 80;
     private readonly int swingCircularSectorAngle = 80;
     private readonly int swingSpeed = 1200;
-    private readonly float swingDistanceFromCore = 0.8f;
-    private readonly float damageDistanceFromCore = 1.0f;
+    private readonly float swingDistanceFromCore = 1.0f;
+    private readonly float damageDistanceFromCore = 0.9f;
     private readonly float damageRadius = 0.5f;
     private readonly float slipSpeed = 1.0f;
     private readonly float recoveryDuration = .25f;
 
+    private readonly float movementSpeed = 3.0f;
+
     private bool backswinging;
     private Vector2 enemyToPlayerVector;
+    private Vector2 enemyToPlayerVectorNormalized;
     private float angle;
     private float angleDiff;
     private float startingAngle;
@@ -34,7 +37,8 @@ public class EnemyAttackState : EnemyState
     {
         enemy.UpdatePlayerPositionInfo();
 
-        enemyToPlayerVector = enemy.EnemyToPlayerVector.normalized;
+        enemyToPlayerVector = enemy.EnemyToPlayerVector;
+        enemyToPlayerVectorNormalized = enemyToPlayerVector.normalized;
 
         endingAngle = enemy.EnemyToPlayerAngle - 270;
         if (endingAngle < 0) endingAngle += 360;
@@ -77,10 +81,10 @@ public class EnemyAttackState : EnemyState
         base.Update();
 
         enemy.FaceThePlayer(backswinging);
-        enemy.RB.velocity = Vector2.zero;
 
         if (recovering) {
             // 3. RECOVERY
+            enemy.RB.velocity = Vector2.zero;
             angleDiff += backSwingSpeed * Time.deltaTime;
             angle = startingAngle + angleDiff;
             ApplyPositionAndRotationAccordingToAngle();
@@ -94,6 +98,13 @@ public class EnemyAttackState : EnemyState
             InitializeSwing();
             angle = startingAngle + angleDiff;
             ApplyPositionAndRotationAccordingToAngle();
+
+            if (enemyToPlayerVector.magnitude > 1.5f) {
+                enemy.RB.velocity = movementSpeed * enemyToPlayerVectorNormalized;
+            }
+            else {
+                enemy.RB.velocity = Vector2.zero;
+            }
         }
         else {
             if (backswinging) {
@@ -101,7 +112,7 @@ public class EnemyAttackState : EnemyState
             }
             // 2. SWING
             // Slip
-            enemy.RB.velocity = enemyToPlayerVector * slipSpeed;
+            enemy.RB.velocity = enemyToPlayerVectorNormalized * slipSpeed;
 
             // Increase the angle, recalculate position, set position and rotation:
             angleDiff += swingSpeed * Time.deltaTime;
@@ -119,7 +130,7 @@ public class EnemyAttackState : EnemyState
                 var hits = Physics2D.OverlapCircleAll((Vector2)enemy.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)enemy.Core.localPosition), damageRadius);
                 foreach (var hit in hits) {
                     if (hit.gameObject != enemy.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
-                        hitScript.ReceiveDamage(enemyToPlayerVector, 10);
+                        hitScript.ReceiveDamage(enemyToPlayerVectorNormalized, 10);
                     }
                 }
 

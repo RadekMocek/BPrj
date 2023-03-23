@@ -87,10 +87,10 @@ public class PlayerSneakMoveState : PlayerSneakSuperState
             player.ChangeState(player.MoveState);
         }
         else if (player.WeaponEquipped) {
-            if (Input.GetMouseButtonDown(0)) {
+            if (Input.GetMouseButtonDown(0) && player.CanAttack()) {
                 player.ChangeState(player.AttackLightState);
             }
-            else if (Input.GetMouseButtonDown(1)) {
+            else if (Input.GetMouseButtonDown(1) && player.CanAttack()) {
                 player.ChangeState(player.AttackHeavyState);
             }
         }

@@ -98,6 +98,18 @@ public class Player : MonoBehaviour, IDamageable
         isStaminaRegenerationCoroutineRunning = false;
     }
 
+    // == Attack cooldown =======================
+    private readonly float attackCooldownDuration = 0.8f;
+
+    [HideInInspector] public float lastAttackTime;
+
+    public bool CanAttack() => (Time.time > lastAttackTime + attackCooldownDuration);
+
+    private void UpdateCooldownBar()
+    {
+        HUD.ShowCooldownBar(lastAttackTime, attackCooldownDuration);
+    }
+
     // == Movement ==============================
     private Vector2 movementInputTempVector; // Saving input to variable so we don't have to call new() every frame
     public Direction LastMovementDirection { get; set; } // Used in IdleState.Enter()/... to set correct sprite
@@ -142,7 +154,10 @@ public class Player : MonoBehaviour, IDamageable
     public Vector2 GetPlayerCoreToCursorDirection() => ((cursorCoordinates - (Vector2)Core.position).normalized);
 
     // == Cursor observe & interact =============
-    private RaycastHit2D cursorHit;
+    [Header("Observe and interact")]
+    [SerializeField] private LayerMask observableLayer;
+
+    private Collider2D cursorHit;
     private GameObject cursorHitGO;
     private IObservable cursorHitScriptObservable;
     private IPlayerInteractable cursorHitScriptInteractable;
@@ -159,38 +174,41 @@ public class Player : MonoBehaviour, IDamageable
         }
 
         // Ray has no direction and no length but it still detects if cursor hovers over something with a collider
-        cursorHit = Physics2D.Raycast(cursorCoordinates, Vector2.zero, 0);
+        cursorHit = Physics2D.OverlapCircle(cursorCoordinates, 0.25f, observableLayer);
         if (cursorHit) {
             cursorHitGO = cursorHit.transform.gameObject;
+            // Is cursorHit observable ?
             if (cursorHitGO.TryGetComponent(out cursorHitScriptObservable)) {
-
                 HUD.SetObserveNameText(cursorHitScriptObservable.GetName());
-
+                // Is cursorHit interactable ?
                 if (cursorHitGO.TryGetComponent(out cursorHitScriptInteractable)) {
                     HUD.HideObserveHealthBar();
                     HUD.SetInteractActionText("(" + IH.InteractBinding + ") " + cursorHitScriptInteractable.GetInteractActionDescription());
-
+                    // Can player interact with cursorHit ?
                     if (cursorHitScriptInteractable.CanInteract(this)) {
-
                         HUD.SetIsInteractActionPossible(true);
-
+                        // Interaction:
                         if (IH.InteractAction.WasPressedThisFrame()) {
                             cursorHitScriptInteractable.OnInteract(this);
                         }
                     }
+                    // player cannot interact:
                     else {
                         HUD.SetIsInteractActionPossible(false);
                     }
                 }
+                // has cursorHit observable health ?
                 else if (cursorHitScriptObservable is IObservableHealth) {
                     HUD.ShowObserveHealthBar(cursorHitScriptObservable as IObservableHealth);
                     HUD.SetInteractActionText("");
                 }
+                // not interactable or observable health:
                 else {
                     HUD.HideObserveHealthBar();
                     HUD.SetInteractActionText("");
                 }
             }
+            // not observable:
             else {
                 HUD.HideObserveHealthBar();
                 HUD.SetObserveNameText("");
@@ -277,6 +295,9 @@ public class Player : MonoBehaviour, IDamageable
         HUD.SetStamina(stamina);
         isStaminaRegenerationCoroutineRunning = false;
 
+        // Attack cooldown
+        lastAttackTime = 0;
+
         // Start state logic
         ChangeState(IdleState);
     }
@@ -293,6 +314,7 @@ public class Player : MonoBehaviour, IDamageable
         currentState.Update();
 
         // Update sub-functions
+        UpdateCooldownBar();
         UpdateCursorPositionAndCoordinates();
         UpdateCursorObserveAndInteract();
     }

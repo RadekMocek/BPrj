@@ -10,6 +10,7 @@ public class Enemy1 : Enemy
     public Enemy1InvestigateAwareState InvestigateAwareState { get; private set; }
     public Enemy1LookAroundState LookAroundState { get; private set; }
     public Enemy1AttackState AttackState { get; private set; }
+    public Enemy1KnockbackState KnockbackState { get; private set; }
 
     // == Observe ===============================
     public override string GetName()
@@ -18,12 +19,13 @@ public class Enemy1 : Enemy
     }
 
     // == Receive damage ========================
-    /*
     public override void ReceiveDamage(Vector2 direction, int amount)
     {
         base.ReceiveDamage(direction, amount);
+
+        ChangeState(KnockbackState);
     }
-    /**/
+    
 
     // == MonoBehaviour functions ===============
     protected override void Awake()
@@ -38,6 +40,7 @@ public class Enemy1 : Enemy
         InvestigateAwareState = new Enemy1InvestigateAwareState(this);
         LookAroundState = new Enemy1LookAroundState(this);
         AttackState = new Enemy1AttackState(this);
+        KnockbackState = new Enemy1KnockbackState(this);
     }
 
     protected override void Start()

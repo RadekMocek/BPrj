@@ -71,14 +71,17 @@ public class HUDManager : MonoBehaviour
 
     public void ShowCooldownBar(float start, float duration)
     {
-        float barDuration = (100 * duration) / (100 - cooldownBarGreenAreaPercentage); 
+        float barDuration = (100 * duration) / (100 - cooldownBarGreenAreaPercentage);
+        var maxValue = start + barDuration;
 
         cooldownBarGO.SetActive(true);
         cooldownBarSlider.minValue = start;
         cooldownBarSlider.value = Time.time;
-        cooldownBarSlider.maxValue = start + barDuration;
+        cooldownBarSlider.maxValue = maxValue;
 
         cooldownBarHandleImage.color = (Time.time >= start + duration) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
+
+        if (Time.time >= maxValue) HideCoolDownBar();
     }
 
     public void HideCoolDownBar() => cooldownBarGO.SetActive(false);

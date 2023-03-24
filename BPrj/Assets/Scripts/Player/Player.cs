@@ -4,7 +4,7 @@ using UnityEngine;
 public class Player : MonoBehaviour, IDamageable
 {
     [field: Header("Transforms")]
-    [field: SerializeField] public Transform Core { get; private set; } // Approx. center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
+    [field: SerializeField] public Transform Core { get; private set; } // Approximate center of the character's sprite, pivot has to be at the sprite's feet for y-sorting to work    
 
     // == Component references ==================
     public SpriteRenderer SR { get; private set; }
@@ -105,7 +105,7 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // == Attack cooldown =======================
-    private readonly float attackCooldownDuration = 0.8f;
+    private readonly float attackCooldownDuration = 0.7f;
 
     [HideInInspector] public float lastAttackTime;
 

@@ -53,7 +53,6 @@ public class EnemyDetectingState : EnemyState
         }
         // Player is spotted if red view cone "touches" them
         else if (currentDetectionLength >= enemy.GetEnemyToPlayerDistance()) {
-            enemy.ChangeViewConeRedRadius(enemy.viewDistance);
             End_PlayerSpotted = true;
         }
         // Increase red view cone radius over time

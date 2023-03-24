@@ -17,7 +17,7 @@ public static class VectorHelper
         tempVector2.Set(Mathf.Round(vector.x), Mathf.Round(vector.y));
         return tempVector2;
     }
-    */
+    /**/
 
     /// <summary>
     /// Returns this vector with every element normalized separately.

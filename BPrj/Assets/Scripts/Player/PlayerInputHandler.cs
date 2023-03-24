@@ -20,7 +20,7 @@ public class PlayerInputHandler : MonoBehaviour
     public int MovementX { get; private set; } // -1 = left; 1 = right; 0 = both/none
     public int MovementY { get; private set; } // -1 = down; 1 = up; 0 = both/none
 
-    // Action bidning string getters
+    // Action binding string getters
     public string InteractBinding { get; private set; }
 
     public void RefreshBindings()

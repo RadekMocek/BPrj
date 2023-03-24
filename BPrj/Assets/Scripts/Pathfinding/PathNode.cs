@@ -6,7 +6,7 @@ public class PathNode
 
     public int Cost { get; private set; } // Price of getting to this node from start
 
-    private readonly int heuristic; // Value of heuristic function (euclidean distance * diagonal path cost)
+    private readonly int heuristic; // Value of heuristic function (Euclidean distance * diagonal path cost)
 
     public int Combined { get; private set; } // Cost + heuristic
 

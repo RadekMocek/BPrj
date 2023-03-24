@@ -2,8 +2,13 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour, IPlayerInteractable
 {
+    // == Components ============================
     private BoxCollider2D BC;
 
+    // == Equipped ==============================
+    [HideInInspector] public bool equipped;
+
+    // == IPlayerInteractable ===================
     public string GetInteractActionDescription() => "Sebrat zbraò";
 
     public bool CanInteract(Player playerScript)
@@ -13,17 +18,24 @@ public class Weapon : MonoBehaviour, IPlayerInteractable
 
     public void OnInteract(Player playerScript)
     {
-        //if (!CanInteract(playerScript)) return;
-        
         playerScript.EquipWeapon(this.gameObject);
         BC.enabled = false;
+        equipped = true;
     }
-
+ 
+    // == MonoBehaviour functions ===============
     private void Awake()
     {
         BC = GetComponent<BoxCollider2D>();
     }
 
+    private void Start()
+    {
+        equipped = false;
+    }
+
+    // == Static ================================
+    // Weapon position and rotation for every facing direction
     private static Vector2 tempWeaponPosition;
     private static Quaternion tempWeaponRotation;
     public static (Vector2, Quaternion, int) GetCorrectWeaponPosition(Direction direction)

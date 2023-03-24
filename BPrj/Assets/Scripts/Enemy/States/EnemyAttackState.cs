@@ -70,6 +70,9 @@ public class EnemyAttackState : EnemyState
         // Rotate to player
         enemy.FaceThePlayer(true);
 
+        // Full red view cone
+        enemy.ChangeViewConeRedRadius(enemy.viewDistance);
+
         // Initialize swing – get player position, set angles, animation
         InitializeSwing();
         angle = startingAngle;

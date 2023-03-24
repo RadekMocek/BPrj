@@ -67,7 +67,7 @@ public class HUDManager : MonoBehaviour
     private RectTransform cooldownBarRT;
 
     private readonly int cooldownBarWidth = 300;
-    private readonly float cooldownBarGreenAreaPercentage = 15;
+    private readonly float cooldownBarGreenAreaPercentage = 20;
 
     public void ShowCooldownBar(float start, float duration)
     {
@@ -79,7 +79,7 @@ public class HUDManager : MonoBehaviour
         cooldownBarSlider.value = Time.time;
         cooldownBarSlider.maxValue = maxValue;
 
-        cooldownBarHandleImage.color = (Time.time >= start + duration) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
+        cooldownBarHandleImage.color = (Time.time >= start + duration + .04f) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
 
         if (Time.time >= maxValue) HideCoolDownBar();
     }
@@ -182,7 +182,7 @@ public class HUDManager : MonoBehaviour
     {
         // Cooldown bar
         cooldownBarRT.sizeDelta = new(cooldownBarWidth, 20);
-        cooldownBarGreenAreaRT.sizeDelta = new((cooldownBarWidth / 100 * cooldownBarGreenAreaPercentage) - 24, 10); // substracting constant so clicking just before green area counts
+        cooldownBarGreenAreaRT.sizeDelta = new((cooldownBarWidth / 100 * cooldownBarGreenAreaPercentage) - 30, 10); // subtracting constant so clicking just before green area counts
 
         // Inspecting
         IsInspecting = false;

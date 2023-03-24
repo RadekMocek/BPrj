@@ -78,7 +78,7 @@ public class PathGrid
             }
             
             priorityQueue.Remove(priorityNode);
-            priorityNode.Stable = true; // Mark priorityNode as stable so we dont't enqueue it again later (avoid going in cirles)
+            priorityNode.Stable = true; // Mark priorityNode as stable so we don't enqueue it again later (avoid going in circles)
 
             // Get values from priorityNode
             int x = priorityNode.Coordinates.x;
@@ -103,7 +103,7 @@ public class PathGrid
 
                     int pathCost = ((horizontal == vertical || horizontal == -vertical) && horizontal != 0) ? diagonalPathCost : straightPathCost;
 
-                    // Update neigbour's Cost, Precursor, and add it to priorityQueue if it's unstable, walkable, and its current Cost is more expensive than going from the priorityNode
+                    // Update neighbours Cost, Precursor, and add it to priorityQueue if it's unstable, walkable, and its current Cost is more expensive than going from the priorityNode
                     if (!neighNode.Stable && neighNode.Walkable && cost + pathCost < neighNode.Cost) {
                         neighNode.SetCost(cost + pathCost);
                         neighNode.Precursor = priorityNode;
@@ -116,9 +116,9 @@ public class PathGrid
 
     // == Walkable ==
     public static LayerMask unwalkableLayer;
-    private static readonly Vector2 tileCheckDiagRadius = new(-.5f, .5f);
+    private static readonly Vector2 tileCheckDiagonalRadius = new(-.45f, .45f);
 
-    public static bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagRadius, coordinates - tileCheckDiagRadius, unwalkableLayer);
+    public static bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
 
     // == Pathfinding with bias ==
     private Vector2Int endCoordinatesWithBias;
@@ -134,10 +134,11 @@ public class PathGrid
         bool isEndAboveStart = (end.y > start.y);
 
         for (int y = (isEndAboveStart) ? -1 : 1; (isEndAboveStart && y <= 1) || (!isEndAboveStart && y >= -1); y += (isEndAboveStart) ? 1 : -1) {
+        //for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 if (y == 0 && x == 0) continue;
                 endCoordinatesWithBias.Set(endCoordinates.x + x, endCoordinates.y + y);
-                if (IsWalkable(endCoordinatesWithBias)) {
+                if (IsWalkable(endCoordinatesWithBias) && !Physics2D.Linecast(endCoordinates, endCoordinatesWithBias, unwalkableLayer)) {
                     return FindPath(start, endCoordinatesWithBias);
                 }
             }

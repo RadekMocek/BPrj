@@ -23,6 +23,7 @@ public class EnemyChaseState : EnemyState
     {
         // Fill the stack and get the first target node
         pathStack = enemy.Pathfinder.FindPathWithBias(enemy.transform.position, target);
+        
         if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
         }
@@ -37,10 +38,10 @@ public class EnemyChaseState : EnemyState
 
         currentPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
         previousPlayerPosition = currentPlayerPosition;
-
+        
         RefreshPath(currentPlayerPosition);
 
-        // In case we transition from different state then DetectingState
+        // Full red view cone
         enemy.ChangeViewConeRedRadius(enemy.viewDistance);
     }
 
@@ -69,8 +70,8 @@ public class EnemyChaseState : EnemyState
                 RefreshPath(currentPlayerPosition);
             }
         }
-        else {
-            //enemy.lastKnownPlayerPosition = currentPlayerPosition;
+        else if (!pathStack.Any()) {
+            //enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
             enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPositionWalkable();
             End_PlayerLost = true;
         }
@@ -83,6 +84,9 @@ public class EnemyChaseState : EnemyState
         // Switch to next path node if enemy is close to the target path node
         else if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
+        }
+        else {
+            RefreshPath(currentPlayerPosition);
         }
     }
 }

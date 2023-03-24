@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [field: SerializeField] public Transform Core { get; private set; }
 
     // == Component references ==================
+    private SpriteRenderer SR { get; set; }
     public Rigidbody2D RB { get; private set; }
     private Animator Anim { get; set; }
 
@@ -32,31 +33,49 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [Header("Receive damage")]
     [SerializeField] private GameObject hitParticlePrefab;
     [SerializeField] private GameObject deadParticlePrefab;
+    [SerializeField] private Sprite[] deadSprites;
 
-    private readonly int maxHealth = 100;
+    private readonly int maxHealth = 50;
+    
     private int health;
-    private bool dead;
+    public bool IsDead { get; private set; }
+    
     public Vector2 KnockbackDirection { get; private set; }
 
     public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
         health -= amount;
         
-        if (health <= 0 && !dead) {
-            // Die():
-            Instantiate(deadParticlePrefab, this.Core.position, Quaternion.identity);
-            CameraShake.Instance.ShakeCamera(6);
-
-            RB.mass = 35;
-            RB.drag = 35;
-
-            dead = true;
+        if (health <= 0 && !IsDead) {
+            Die();
         }
         else {
             Instantiate(hitParticlePrefab, this.Core.position, Quaternion.identity);
             CameraShake.Instance.ShakeCamera();
         }
         KnockbackDirection = direction;
+    }
+
+    private void Die()
+    {
+        // Change sprite
+        Anim.enabled = false;
+        SR.sprite = deadSprites[(int)CurrentFacingDirectionAnimation];
+        // Particles + camera shake
+        Instantiate(deadParticlePrefab, this.Core.position, Quaternion.identity);
+        CameraShake.Instance.ShakeCamera(6);
+        // Add some weight to the object
+        RB.mass = 35;
+        RB.drag = 35;
+        // Drop weapon
+        Vector3 dropDirection = new(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
+        WeaponSR.sortingLayerName = "Floor_Items";
+        weaponBC.enabled = true;
+        WeaponTransform.SetParent(null);
+        WeaponTransform.SetPositionAndRotation(this.transform.position + dropDirection, Quaternion.Euler(0, 0, Random.Range(0, 360)));
+        weaponScript.equipped = false;
+        // Decrease red view cone over time and then disable this script
+        IsDead = true;
     }
 
     // == Direction =============================
@@ -66,13 +85,13 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     private readonly int facingDirectionSpeed = 480;
 
-    private Vector2 DirectionRound(Vector2 value, float treshold = 0.6f)
+    private Vector2 DirectionRound(Vector2 value, float threshold = 0.6f)
     {
-        if (value.x < treshold && value.x > -treshold) {
+        if (value.x < threshold && value.x > -threshold) {
             value.x = 0;
         }
 
-        if (value.y < treshold && value.y > -treshold) {
+        if (value.y < threshold && value.y > -threshold) {
             value.y = 0;
         }
 
@@ -175,7 +194,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
         int directionMultiplier = (actualFacingDirection < TargetFacingDirection) ? 1 : -1;
 
-        // Check if it is "cheaper" to cross the 0/360 point (rotate in opposite direciton)
+        // Check if it is "cheaper" to cross the 0/360 point (rotate in opposite direction)
         float angle1 = (actualFacingDirection < TargetFacingDirection) ? actualFacingDirection : TargetFacingDirection;
         float angle2 = (actualFacingDirection > TargetFacingDirection) ? actualFacingDirection : TargetFacingDirection;
         if ((angle1 + (360 - angle2)) < (angle2 - angle1)) directionMultiplier *= -1;
@@ -356,14 +375,22 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     public Transform WeaponTransform { get; private set; }
     private BoxCollider2D weaponBC;
     public SpriteRenderer WeaponSR { get; private set; }
+    private Weapon weaponScript;
 
     public void StartWeapon()
     {
         weaponGO = Instantiate(weaponPrefab, this.transform);
+
         WeaponTransform = weaponGO.transform;
+
         weaponBC = weaponGO.GetComponent<BoxCollider2D>();
         weaponBC.enabled = false;
+
         WeaponSR = weaponGO.GetComponent<SpriteRenderer>();
+
+        weaponScript = weaponGO.GetComponent<Weapon>();
+        weaponScript.equipped = true;
+
         WeaponSR.sortingLayerName = "Player";
     }
 
@@ -371,6 +398,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     protected virtual void Awake()
     {
         // Component initialization
+        SR = GetComponent<SpriteRenderer>();
         RB = GetComponent<Rigidbody2D>();
         Anim = GetComponent<Animator>();
         // - View cone
@@ -390,7 +418,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
         // Health
         health = maxHealth;
-        dead = false;
+        IsDead = false;
 
         // View cone
         StartViewCone();
@@ -410,7 +438,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     protected virtual void Update()
     {
         // Dead logic
-        if (dead) {
+        if (IsDead) {
             RB.velocity = Vector2.zero;
             viewConeLightGO.SetActive(false);
             UpdateDecreaseViewConeRedRadius();

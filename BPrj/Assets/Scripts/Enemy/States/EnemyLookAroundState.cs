@@ -47,7 +47,7 @@ public class EnemyLookAroundState : EnemyState
 
         //enemy.UpdateDecreaseViewConeRedRadius();
 
-        // Rotate according to angles stored in `rotations` everytime `rotationPauseDuration` passes
+        // Rotate according to angles stored in `rotations` every time `rotationPauseDuration` passes
         if (Time.time > lastRotationTime + rotationPauseDuration) {
             lastRotationTime = Time.time;
 

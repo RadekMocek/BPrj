@@ -44,7 +44,7 @@ public abstract class PlayerState
         UpdatePlayerData();        
     }
 
-    // Called before changing to another state (cleanup)
+    // Called before changing to another state (clean-up)
     public virtual void Exit()
     {
 

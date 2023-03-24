@@ -36,7 +36,7 @@ public class TilemapShadowCaster2DGenerator : MonoBehaviour
     [ContextMenu("Generate ShadowCaster mesh shape")]
     public void Generate()
     {
-        // Initialization, cleanup
+        // Initialization, clean-up
         compositeCollider = GetComponent<CompositeCollider2D>();
         colliderPoints.Clear();
         var child = this.transform.Find(childName);

@@ -20,7 +20,9 @@ public class EnemyKnockbackState : EnemyState
         End_PlayerClose = false;
         End_PlayerVisible = false;
         End_PlayerLost = false;
-        
+
+        if (!enemy.IsDead) enemy.ChangeViewConeRedRadius(enemy.viewDistance);
+
         enemy.RB.velocity = knockbackSpeed * enemy.KnockbackDirection;
     }
 

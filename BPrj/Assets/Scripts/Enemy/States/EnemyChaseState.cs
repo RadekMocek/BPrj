@@ -85,8 +85,10 @@ public class EnemyChaseState : EnemyState
         else if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
         }
+        /*
         else {
             RefreshPath(currentPlayerPosition);
         }
+        */
     }
 }

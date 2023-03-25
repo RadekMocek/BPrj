@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 public class PathGrid
 {
@@ -116,9 +117,17 @@ public class PathGrid
 
     // == Walkable ==
     public static LayerMask unwalkableLayer;
-    private static readonly Vector2 tileCheckDiagonalRadius = new(-.45f, .45f);
+    public static Tilemap floorTilemap;
 
-    public static bool IsWalkable(Vector2Int coordinates) => !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
+    private static readonly Vector2 tileCheckDiagonalRadius = new(-0.5f, 0.5f);
+
+    public static bool IsWalkable(Vector2Int coordinates)
+    {
+        bool tilemapOk = floorTilemap.HasTile((Vector3Int)coordinates);
+        bool objectsOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
+
+        return tilemapOk && objectsOk;
+    }
 
     // == Pathfinding with bias ==
     private Vector2Int endCoordinatesWithBias;
@@ -131,14 +140,15 @@ public class PathGrid
             return FindPath(start, end);
         }
 
+        ///*
         bool isEndAboveStart = (end.y > start.y);
-
         for (int y = (isEndAboveStart) ? -1 : 1; (isEndAboveStart && y <= 1) || (!isEndAboveStart && y >= -1); y += (isEndAboveStart) ? 1 : -1) {
+        /**/
         //for (int y = -1; y <= 1; y++) {
             for (int x = -1; x <= 1; x++) {
                 if (y == 0 && x == 0) continue;
                 endCoordinatesWithBias.Set(endCoordinates.x + x, endCoordinates.y + y);
-                if (IsWalkable(endCoordinatesWithBias) && !Physics2D.Linecast(endCoordinates, endCoordinatesWithBias, unwalkableLayer)) {
+                if (IsWalkable(endCoordinatesWithBias)) {
                     return FindPath(start, endCoordinatesWithBias);
                 }
             }

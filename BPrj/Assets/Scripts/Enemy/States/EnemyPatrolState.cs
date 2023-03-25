@@ -6,8 +6,11 @@ public class EnemyPatrolState : EnemyState
 {
     public EnemyPatrolState(Enemy enemy) : base(enemy)
     {
-        patrolPointIndex = 0;
+        patrolPointIndex = -1; // (`NextPatrolPoint()` adds one to the `patrolPointIndex`)
     }
+
+    protected bool End_PlayerVisible { get; private set; }
+    protected bool End_PatrolPointReached { get; private set; }
 
     private readonly float movementSpeed = 4.7f;
 
@@ -37,6 +40,9 @@ public class EnemyPatrolState : EnemyState
     {
         base.Enter();
 
+        End_PlayerVisible = false;
+        End_PatrolPointReached = false;
+
         enemy.suspiciousDetection = false;
 
         enemy.ChangeViewConeColor(Color.green);
@@ -50,7 +56,6 @@ public class EnemyPatrolState : EnemyState
             return;
         }
 
-        patrolPointIndex--; // So we don't skip patrol point if this state got interrupted (`NextPatrolPoint()` adds one to the `patrolPointIndex`)
         NextPatrolPoint();
     }
 
@@ -64,6 +69,12 @@ public class EnemyPatrolState : EnemyState
         // Decrease red cone radius over time
         enemy.UpdateDecreaseViewConeRedRadius();
 
+        //
+        if (enemy.IsPlayerVisible()) {
+            patrolPointIndex--;
+            End_PlayerVisible = true;
+        }
+
         // Move in the direction of the target path node until enemy is close enough
         if (Vector2.Distance(enemy.transform.position, currentTargetNode) > 0.1f) {
             var movementDirection = (currentTargetNode - (Vector2)enemy.transform.position).normalized;
@@ -76,7 +87,7 @@ public class EnemyPatrolState : EnemyState
         }
         // If there are no path nodes left, enemy has reached the target patrol point
         else {
-            NextPatrolPoint();
+            End_PatrolPointReached = true;
         }
     }
 

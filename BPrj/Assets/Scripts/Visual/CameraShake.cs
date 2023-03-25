@@ -9,7 +9,7 @@ public class CameraShake : MonoBehaviour
     private CinemachineBasicMultiChannelPerlin cameraNoise;
     private float shakeStartTime;
 
-    private readonly float shakeDuration = .1f;
+    private readonly float shakeDuration = .2f;
 
     private void Awake()
     {

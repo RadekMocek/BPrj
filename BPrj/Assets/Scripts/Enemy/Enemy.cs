@@ -1,8 +1,14 @@
+using System.Data.Common;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
 public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 {
+    // == Scriptable object data ================
+    [field: Header("Data")]
+    [field: SerializeField] public EnemyDataSO Data { get; private set; }
+
+    // == Transform references ==================
     [field: Header("Transforms")]
     [field: SerializeField] public Transform Core { get; private set; }
 
@@ -35,8 +41,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [SerializeField] private GameObject deadParticlePrefab;
     [SerializeField] private Sprite[] deadSprites;
 
-    private readonly int maxHealth = 50;
-    
+    private int maxHealth; // SO value
     private int health;
     public bool IsDead { get; private set; }
     
@@ -63,7 +68,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         SR.sprite = deadSprites[(int)CurrentFacingDirectionAnimation];
         // Particles + camera shake
         Instantiate(deadParticlePrefab, this.Core.position, Quaternion.identity);
-        CameraShake.Instance.ShakeCamera(6);
+        CameraShake.Instance.ShakeCamera(10);
         // Add some weight to the object
         RB.mass = 35;
         RB.drag = 35;
@@ -74,6 +79,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         WeaponTransform.SetParent(null);
         WeaponTransform.SetPositionAndRotation(this.transform.position + dropDirection, Quaternion.Euler(0, 0, Random.Range(0, 360)));
         weaponScript.equipped = false;
+        // Make unobservable
+        this.gameObject.layer = LayerMask.NameToLayer("Default");
         // Decrease red view cone over time and then disable this script
         IsDead = true;
     }
@@ -213,8 +220,9 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] private LayerMask playerLayer;
 
-    private readonly int fieldOfView = 105;
-    public readonly float viewDistance = 8.2f;
+    // SO values
+    private int fieldOfView;
+    public float ViewDistance { get; private set; }
 
     private Vector2 playerPosition;
     public Vector2 EnemyToPlayerVector { get; private set; }
@@ -235,7 +243,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         UpdatePlayerPositionInfo();
 
         // Is player in view distance ?
-        if (EnemyToPlayerVector.magnitude > viewDistance) {
+        if (EnemyToPlayerVector.magnitude > ViewDistance) {
             if (debug) print("Player too far away");
             return false;
         }
@@ -325,7 +333,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     private void StartViewCone()
     {
         viewConeLightScript.pointLightOuterAngle = fieldOfView;
-        viewConeLightScript.pointLightOuterRadius = viewDistance;
+        viewConeLightScript.pointLightOuterRadius = ViewDistance;
         ChangeViewConeColor(Color.green);
 
         viewConeRedLightScript.pointLightOuterAngle = fieldOfView;
@@ -349,11 +357,11 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         viewConeRedLightScript.pointLightOuterRadius = CurrentDetectionLength;
     }
 
-    public void UpdateDecreaseViewConeRedRadius()
+    public void UpdateDecreaseViewConeRedRadius(int speedMultiplier = 1)
     {
         if (CurrentDetectionLength == 0) return;
 
-        CurrentDetectionLength -= Time.deltaTime * decreaseViewConeRedRadiusSpeed;
+        CurrentDetectionLength -= Time.deltaTime * decreaseViewConeRedRadiusSpeed * speedMultiplier;
 
         if (CurrentDetectionLength < 0) CurrentDetectionLength = 0;
 
@@ -412,6 +420,11 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     protected virtual void Start()
     {
+        // Get data from ScriptableObject
+        maxHealth = Data.MaxHealth;
+        fieldOfView = Data.FieldOfView;
+        ViewDistance = Data.ViewDistance;
+
         // Initialize
         ChangeFacingDirection(Direction.S); // Facing down
         suspiciousDetection = false;
@@ -440,8 +453,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         // Dead logic
         if (IsDead) {
             RB.velocity = Vector2.zero;
-            viewConeLightGO.SetActive(false);
-            UpdateDecreaseViewConeRedRadius();
+            UpdateDecreaseViewConeRedRadius(2);
+            viewConeLightScript.pointLightOuterRadius = viewConeRedLightScript.pointLightOuterRadius;
             if (CurrentDetectionLength == 0) {
                 this.enabled = false;
             }

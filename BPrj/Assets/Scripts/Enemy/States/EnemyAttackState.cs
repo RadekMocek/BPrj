@@ -71,7 +71,8 @@ public class EnemyAttackState : EnemyState
         enemy.FaceThePlayer(true);
 
         // Full red view cone
-        enemy.ChangeViewConeRedRadius(enemy.viewDistance);
+        enemy.ChangeViewConeColor(Color.yellow);
+        enemy.ChangeViewConeRedRadius(enemy.ViewDistance);
 
         // Initialize swing – get player position, set angles, animation
         InitializeSwing();
@@ -112,6 +113,7 @@ public class EnemyAttackState : EnemyState
         else {
             if (backswinging) {
                 backswinging = false;
+                //TODO: Telegraph enemy attack here (?)
             }
             // 2. SWING
             // Slip

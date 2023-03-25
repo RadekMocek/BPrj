@@ -2,6 +2,8 @@ public class PlayerAttackHeavyState : PlayerAttackSuperState
 {
     public PlayerAttackHeavyState(Player player) : base(player)
     {
+        movementSpeed = 0.5f;
+
         backSwingDuration = 0.5f;
         backSwingSpeed = 60;
 

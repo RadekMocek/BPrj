@@ -2,6 +2,8 @@ public class PlayerAttackLightState : PlayerAttackSuperState
 {
     public PlayerAttackLightState(Player player) : base(player)
     {
+        movementSpeed = 1.5f;
+
         backSwingDuration = 0.15f;
         backSwingSpeed = 85;
 

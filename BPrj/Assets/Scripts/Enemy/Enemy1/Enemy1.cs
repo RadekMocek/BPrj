@@ -45,8 +45,10 @@ public class Enemy1 : Enemy
 
     protected override void Start()
     {
+        // Parent Start()
         base.Start();
 
+        // Initial state
         ChangeState(PatrolState);
     }
 

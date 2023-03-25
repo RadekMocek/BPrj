@@ -124,9 +124,9 @@ public class PathGrid
     public static bool IsWalkable(Vector2Int coordinates)
     {
         bool tilemapOk = floorTilemap.HasTile((Vector3Int)coordinates);
-        bool objectsOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
+        bool layerOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
 
-        return tilemapOk && objectsOk;
+        return tilemapOk && layerOk;
     }
 
     // == Pathfinding with bias ==

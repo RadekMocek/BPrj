@@ -29,7 +29,7 @@ public class EnemyDetectingState : EnemyState
 
         enterDetectionLength = enemy.CurrentDetectionLength;
         currentDetectionLength = enterDetectionLength;
-        fullDetectionDuration = enemy.viewDistance / detectionSpeed;
+        fullDetectionDuration = enemy.ViewDistance / detectionSpeed;
     }
 
     public override void Update()
@@ -56,8 +56,8 @@ public class EnemyDetectingState : EnemyState
             End_PlayerSpotted = true;
         }
         // Increase red view cone radius over time
-        else if (currentDetectionLength < enemy.viewDistance) {
-            currentDetectionLength = (((Time.time - enterTime) / fullDetectionDuration) * enemy.viewDistance) + enterDetectionLength;
+        else if (currentDetectionLength < enemy.ViewDistance) {
+            currentDetectionLength = (((Time.time - enterTime) / fullDetectionDuration) * enemy.ViewDistance) + enterDetectionLength;
             enemy.ChangeViewConeRedRadius(currentDetectionLength);
         }
     }

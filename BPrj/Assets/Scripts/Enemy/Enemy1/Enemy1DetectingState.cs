@@ -12,7 +12,7 @@ public class Enemy1DetectingState : EnemyDetectingState
         base.Update();
 
         if (End_PlayerLost) {
-            if (enemy.suspiciousDetection || DetectionLengthWhenPlayerLost >= enemy1.viewDistance / 2) {
+            if (enemy.suspiciousDetection || DetectionLengthWhenPlayerLost >= enemy1.ViewDistance / 2) {
                 enemy1.ChangeState(enemy1.InvestigateSuspiciousState);
             }
             else {

@@ -10,16 +10,19 @@ public class PlayerAttackSuperState : PlayerState
     // Player is also being pushed a little in the attack's direction ("slip").
     // There is a slow little anticipation ("backSwing") prior to swinging and delay after the swing ("recovery")
 
-    protected float backSwingDuration = 0.3f;
-    protected int backSwingSpeed = 80;
+    // Protected values set in SubStates
+    protected float movementSpeed;
 
-    protected int swingCircularSectorAngle = 80;
-    protected int swingSpeed = 1000;
-    protected float swingDistanceFromCore = 0.8f;    // Weapon distance from Player.Core while swinging
-    protected float damageDistanceFromCore = 1.0f;   // Distance between Player.Core and center of damage dealing area
-    protected float damageRadius = 0.6f;
-    protected float slipSpeed = 1.0f;
-    protected float recoveryDuration = .15f;
+    protected float backSwingDuration;
+    protected int backSwingSpeed;
+
+    protected int swingCircularSectorAngle;
+    protected int swingSpeed;
+    protected float swingDistanceFromCore;    // Weapon distance from Player.Core while swinging
+    protected float damageDistanceFromCore;   // Distance between Player.Core and center of damage dealing area
+    protected float damageRadius;
+    protected float slipSpeed;
+    protected float recoveryDuration;
 
     private bool backswinging;
     private float angle;
@@ -35,6 +38,8 @@ public class PlayerAttackSuperState : PlayerState
 
         // Init
         recovering = false;
+
+        // Halt
         player.RB.velocity = Vector2.zero;
 
         // Calculate angle from player to cursor (this is also a z-rotation angle of the weapon)
@@ -99,6 +104,8 @@ public class PlayerAttackSuperState : PlayerState
         }
         else if (Time.time < enterTime + backSwingDuration) {
             // 1. BACKSWING
+            player.RB.velocity = movementSpeed * movementInput;
+
             angle -= backSwingSpeed * Time.deltaTime * angleAdditionMultiplier;
             ApplyPositionAndRotationAccordingToAngle();
         }

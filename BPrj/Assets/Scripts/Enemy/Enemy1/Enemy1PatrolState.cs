@@ -11,8 +11,11 @@ public class Enemy1PatrolState : EnemyPatrolState
     {
         base.Update();
 
-        if (enemy1.IsPlayerVisible()) {
+        if (End_PlayerVisible) {
             enemy1.ChangeState(enemy1.DetectingState);
+        }
+        else if (End_PatrolPointReached) {
+            enemy1.ChangeState(enemy1.LookAroundState);
         }
     }
 }

@@ -42,7 +42,8 @@ public class EnemyChaseState : EnemyState
         RefreshPath(currentPlayerPosition);
 
         // Full red view cone
-        enemy.ChangeViewConeRedRadius(enemy.viewDistance);
+        enemy.ChangeViewConeColor(Color.yellow);
+        enemy.ChangeViewConeRedRadius(enemy.ViewDistance);
     }
 
     public override void Update()

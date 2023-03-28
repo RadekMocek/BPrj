@@ -47,9 +47,6 @@ TagManager:
   - name: Floor_Items
     uniqueID: 1712119175
     locked: 0
-  - name: Walls_Side
-    uniqueID: 4124121215
-    locked: 0
   - name: Player
     uniqueID: 1948930519
     locked: 0

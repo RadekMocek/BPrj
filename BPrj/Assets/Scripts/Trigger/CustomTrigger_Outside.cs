@@ -50,6 +50,6 @@ public class CustomTrigger_Outside : Trigger
         yield return new WaitForSeconds(1.5f);
         playerScript.DialogueEnd();
         playerSR.enabled = true;
-        ManagerAccessor.instance.SceneManager.ChangeScene("Floor1");
+        ManagerAccessor.instance.SceneManager.ChangeScene("Floor1", 1.6f, -7.5f);
     }
 }

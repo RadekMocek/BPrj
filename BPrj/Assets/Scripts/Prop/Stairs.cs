@@ -8,6 +8,11 @@ public class Stairs : MonoBehaviour, IPlayerInteractable
     [SerializeField] Vector2 interactZonePointA;
     [SerializeField] Vector2 interactZonePointB;
 
+    [Header("Stairs")]
+    [SerializeField] private string sceneName;
+    [SerializeField] private float playerX;
+    [SerializeField] private float playerY;
+
     private Vector2 tempVector;
 
     public bool CanInteract(Player playerScript)
@@ -23,8 +28,7 @@ public class Stairs : MonoBehaviour, IPlayerInteractable
 
     public void OnInteract(Player playerScript)
     {
-        var sceneManager = ManagerAccessor.instance.SceneManager;
-        sceneManager.ChangeScene((sceneManager.GetCurrentSceneName() == "Floor1") ? "Test" : "Floor1");
+        ManagerAccessor.instance.SceneManager.ChangeScene(sceneName, playerX, playerY);
     }
 
     private void OnDrawGizmosSelected()

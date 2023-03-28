@@ -30,6 +30,10 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
         ChangeDoorState(Opened);
     }
 
+    // == Config ================================
+    [Header("Settings")]
+    [SerializeField] private bool openedDoorUnwalkable;
+
     // == Open/close door =======================
     [Header("Door parts")]
     [SerializeField] private SpriteRenderer[] doorPartSRs;
@@ -43,7 +47,22 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
     {
         this.Opened = opened;
 
-        CC.enabled = !opened;
+        if (!openedDoorUnwalkable) {
+            CC.enabled = !opened;
+        }
+        else {
+            CC.enabled = true;
+            if (Opened) {
+                CC.direction = CapsuleDirection2D.Vertical;
+                CC.offset = new(0.87f, -0.25f);
+                CC.size = new(0.17f, 1.47f);
+            }
+            else {
+                CC.direction = CapsuleDirection2D.Horizontal;
+                CC.offset = new(0, 0.06f);
+                CC.size = new(2, 0.1f);
+            }
+        }
 
         shadowCasterScript.enabled = !opened;
 

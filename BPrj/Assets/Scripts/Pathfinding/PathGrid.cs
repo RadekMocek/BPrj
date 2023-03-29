@@ -123,6 +123,8 @@ public class PathGrid
 
     public static bool IsWalkable(Vector2Int coordinates)
     {
+        if (floorTilemap == null) return false;
+
         bool tilemapOk = floorTilemap.HasTile((Vector3Int)coordinates);
         bool layerOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
 

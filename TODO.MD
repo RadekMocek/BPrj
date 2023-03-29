@@ -8,6 +8,7 @@
 * ~~Improve enemy pathfindingWithBias~~
 * ~~Enemy death – decrease view cone over time~~
 * ~~Enemy death – drop weapon~~
+* Enemy death – drop weapon better animation
 * ~~Enemy death – corpse sprites~~
 * Enemy attack – better telegraph
 * ~~Enemy wait at patrol points~~

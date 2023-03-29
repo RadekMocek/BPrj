@@ -159,6 +159,9 @@ public class HUDManager : MonoBehaviour
         isFillDialogueBoxCoroutineRunning = false;
     }
 
+    private bool DialogueContinuePressed() =>
+        playerScript.IH.InteractAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0);
+
     // == MonoBehaviour =========================
     private void Awake()
     {
@@ -195,7 +198,7 @@ public class HUDManager : MonoBehaviour
     private void Update()
     {
         // Dialogue
-        if (isInDialogue && playerScript.IH.InteractAction.WasPressedThisFrame()) {
+        if (isInDialogue && DialogueContinuePressed()) {
             if (isFillDialogueBoxCoroutineRunning) {
                 isFillDialogueBoxCoroutineRunning = false;
                 StopCoroutine(fillDialogueBoxCoroutine);

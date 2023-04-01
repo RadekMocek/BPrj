@@ -44,6 +44,7 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
+    - {fileID: 2800000, guid: 16970c9090e27434795c1e087f6b1566, type: 3}
     - {fileID: 2800000, guid: 390aade91d261444f9dc327e680e2939, type: 3}
     - {fileID: 2800000, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
     - {fileID: 2800000, guid: ffd182c3c5f11204d9d594f52ba5dc83, type: 3}
@@ -52,11 +53,16 @@ SpriteAtlas:
     - {fileID: 2800000, guid: 336d3ab2379c23a43bf2e7c295b3c558, type: 3}
     - {fileID: 2800000, guid: 07f71fdebacc85840a36fa0d2ec679ac, type: 3}
     - {fileID: 2800000, guid: f5903f79945efc043badfa6fcdebf6bd, type: 3}
+    - {fileID: 2800000, guid: 5f75cf920e80bed409255f2104c572c6, type: 3}
+    - {fileID: 2800000, guid: dc845b3fb301f1b4996944fc3dcf4772, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
+  - {fileID: -746220183, guid: 16970c9090e27434795c1e087f6b1566, type: 3}
+  - {fileID: 584080325, guid: 16970c9090e27434795c1e087f6b1566, type: 3}
+  - {fileID: 21300000, guid: 5f75cf920e80bed409255f2104c572c6, type: 3}
   - {fileID: 475074172, guid: 336d3ab2379c23a43bf2e7c295b3c558, type: 3}
   - {fileID: 1674067769, guid: 336d3ab2379c23a43bf2e7c295b3c558, type: 3}
   - {fileID: -354775411, guid: 336d3ab2379c23a43bf2e7c295b3c558, type: 3}
@@ -123,7 +129,11 @@ SpriteAtlas:
   - {fileID: 214292399, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 380498987, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 21300000, guid: 07f71fdebacc85840a36fa0d2ec679ac, type: 3}
+  - {fileID: 21300000, guid: dc845b3fb301f1b4996944fc3dcf4772, type: 3}
   m_PackedSpriteNamesToIndex:
+  - Stairs_Floor_0_0
+  - Stairs_Floor_0_1
+  - Floor_4_0
   - Floor1_1_2_6
   - Floor1_1_2_7
   - Floor1_1_2_4
@@ -190,6 +200,7 @@ SpriteAtlas:
   - Floor1_1_1_3
   - Floor1_1_1_2
   - Floor_2_0
+  - Floor_5_0
   m_RenderDataMap: {}
   m_Tag: TilesAtlas
   m_IsVariant: 0

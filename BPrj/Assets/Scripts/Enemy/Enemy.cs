@@ -80,7 +80,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         WeaponTransform.SetPositionAndRotation(this.transform.position + dropDirection, Quaternion.Euler(0, 0, Random.Range(0, 360)));
         weaponScript.equipped = false;
         // Make unobservable
-        this.gameObject.layer = LayerMask.NameToLayer("Default");
+        this.gameObject.layer = LayerMask.NameToLayer("Enemy_Dead");
         // Decrease red view cone over time and then disable this script
         IsDead = true;
     }
@@ -217,6 +217,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     [Header("Spotting the player")]
     [SerializeField] private LayerMask opaqueLayer;
+    [SerializeField] private LayerMask objectLayer;
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] private LayerMask playerLayer;
 
@@ -276,10 +277,20 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
         // Is there a clear vision of the player ? (nothing obstructing the way)
         if (!Physics2D.Linecast(this.transform.position, playerPosition, opaqueLayer)) {
+            // Ignore trigger colliders
+            Physics2D.queriesHitTriggers = false;
             // Are there any closed doors in the way ?
-            Physics2D.queriesHitTriggers = false; // Ignore trigger colliders (door has big trigger collider for cursor)
             var doors = Physics2D.LinecastAll(this.transform.position, playerPosition, doorLayer);
-            Physics2D.queriesHitTriggers = true; // Stop ignoring trigger colliders
+            // Are there any objects in the way ?
+            var objectHit = Physics2D.Linecast(this.transform.position, playerPosition, objectLayer);
+            // Stop ignoring trigger colliders
+            Physics2D.queriesHitTriggers = true;
+            // Objects check
+            if (objectHit && EnemyManager.IsPlayerSneaking()) {
+                if (debug) print("Player sneaking behind object");
+                return false;
+            }
+            // Door check
             foreach (var door in doors) {
                 if (door.transform.TryGetComponent(out Door doorScript)) {
                     if (!doorScript.Opened) {

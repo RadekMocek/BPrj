@@ -8,6 +8,7 @@ public class CustomTrigger_Outside : Trigger
     [SerializeField] private GameObject FM_Door_TopGO;
     [SerializeField] private GameObject FM_Door_AnimMovingGO;
     [SerializeField] private Sprite FM_Door_AnimTopSprite;
+    [SerializeField] private SpriteRenderer FM_Door_BottomSR;
 
     private Player playerScript;
     private SpriteRenderer playerSR;
@@ -46,6 +47,8 @@ public class CustomTrigger_Outside : Trigger
         }
         FM_Door_AnimMovingSR.sortingLayerName = "Player";
         FM_Door_AnimMovingSR.sortingOrder = 100;
+        FM_Door_BottomSR.sortingLayerName = "Player";
+        FM_Door_BottomSR.sortingOrder = 90;
         CameraShake.Instance.ShakeCamera();
         yield return new WaitForSeconds(1.5f);
         playerScript.DialogueEnd();

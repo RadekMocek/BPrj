@@ -7,13 +7,15 @@ public class EnemyManager : MonoBehaviour
     [SerializeField] private LayerMask unwalkableLayer;
 
     [Header("Player transform")]
-    [SerializeField] private Transform player;
-    
+    [SerializeField] private Transform playerTransform;
+
+    private Player playerScript;
     private Vector2 playerPositionWalkable;
     private Tilemap floorTilemap;
 
-    public Vector2 GetPlayerPosition() => player.position;
+    public Vector2 GetPlayerPosition() => playerTransform.position;
     public Vector2 GetPlayerPositionWalkable() => playerPositionWalkable;
+    public bool IsPlayerSneaking() => playerScript.Sneaking;
 
     public void UpdatePathfindingFloorTilemap()
     {
@@ -23,6 +25,7 @@ public class EnemyManager : MonoBehaviour
 
     private void Awake()
     {
+        playerScript = playerTransform.gameObject.GetComponent<Player>();
         PathGrid.unwalkableLayer = unwalkableLayer;
         UpdatePathfindingFloorTilemap();
     }
@@ -32,8 +35,8 @@ public class EnemyManager : MonoBehaviour
         if (floorTilemap == null) {
             UpdatePathfindingFloorTilemap();
         }
-        if (PathGrid.IsWalkable(Vector2Int.RoundToInt(player.position))) {
-            playerPositionWalkable = player.position;
+        if (PathGrid.IsWalkable(Vector2Int.RoundToInt(playerTransform.position))) {
+            playerPositionWalkable = playerTransform.position;
         }
     }
 }

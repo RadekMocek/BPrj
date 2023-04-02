@@ -126,7 +126,11 @@ public class PathGrid
         if (floorTilemap == null) return false;
 
         bool tilemapOk = floorTilemap.HasTile((Vector3Int)coordinates);
-        bool layerOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
+
+        Physics2D.queriesHitTriggers = false;
+        //bool layerOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
+        bool layerOk = !Physics2D.OverlapCircle(coordinates, 0.5f, unwalkableLayer);
+        Physics2D.queriesHitTriggers = true;
 
         return tilemapOk && layerOk;
     }

@@ -13,8 +13,8 @@ public class EnemyInvestigateSuperState : EnemyState
 
     private readonly float movementSpeed = 4.7f;
 
-    private Stack<Vector2Int> pathStack;
-    private Vector2Int currentTargetNode;
+    private Stack<Vector2> pathStack;
+    private Vector2 currentTargetNode;
 
     protected void RefreshPath()
     {

@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 5745585080134453224}
   - component: {fileID: 4617212166027067093}
   - component: {fileID: 5543003517766421654}
+  - component: {fileID: 8649471291955674997}
+  - component: {fileID: 4502083937487104300}
   m_Layer: 8
   m_Name: Table_PC
   m_TagString: Untagged
@@ -161,3 +163,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 50
+--- !u!114 &8649471291955674997
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779886693613746150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000ffb246ed49bb038387dd0c66d7512a743da29ff2
+  m_ShapePath:
+  - {x: -0.4364338, y: 0.015891552, z: 0}
+  - {x: -0.4470272, y: 2.1429124, z: 0}
+  - {x: 0.46821594, y: 2.1482096, z: 0}
+  - {x: 0.4470272, y: 0.021189213, z: 0}
+  m_ShapePathHash: -815825219
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -89542
+--- !u!114 &4502083937487104300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1779886693613746150}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02dd73ba3d30c664cb40923127e6d4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

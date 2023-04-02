@@ -19,8 +19,8 @@ public class EnemyPatrolState : EnemyState
     private int patrolPointIndex;       // Index of the target point where enemy is currently heading
     private Vector2 currentTargetPoint; // and coordinates of that point
 
-    private Stack<Vector2Int> pathStack;    // Stack of node coordinates that creates a path to the target point
-    private Vector2Int currentTargetNode;   // Coordinates of the target node where enemy is currently heading
+    private Stack<Vector2> pathStack;    // Stack of node coordinates that creates a path to the target point
+    private Vector2 currentTargetNode;   // Coordinates of the target node where enemy is currently heading
 
     // Called when enemy reaches `currentTargetPoint`; switches to the next patrol point
     private void NextPatrolPoint()

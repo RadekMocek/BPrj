@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 4901862598727285842}
   - component: {fileID: 4901862598727285841}
   - component: {fileID: 4901862598727285840}
+  - component: {fileID: 5195173897247428722}
+  - component: {fileID: 7206195494500103477}
   m_Layer: 8
   m_Name: Sink
   m_TagString: Untagged
@@ -152,3 +154,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propName: Umyvadlo
+--- !u!114 &5195173897247428722
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4901862598727285846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000ffb246ed49bb038387dd0c66d7512a743da29ff2
+  m_ShapePath:
+  - {x: -0.47373837, y: -0.8647449, z: 0}
+  - {x: -0.48832813, y: 0.033126533, z: 0}
+  - {x: 0.25489146, y: 0.038962424, z: 0}
+  - {x: 0.2548914, y: -0.87641674, z: 0}
+  m_ShapePathHash: 523053644
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 135360
+--- !u!114 &7206195494500103477
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4901862598727285846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02dd73ba3d30c664cb40923127e6d4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

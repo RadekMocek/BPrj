@@ -26,23 +26,23 @@ public class PathGrid
     private PathNode priorityNode;
     private PathNode neighNode;
     private Vector2Int tempVector;
-    private Stack<Vector2Int> returnStack;
+    private Stack<Vector2> returnStack;
 
     // Pathfinding, returns Stack of coordinates that make path from `start` to `end`
-    public Stack<Vector2Int> FindPath(Vector2 start, Vector2 end)
+    public Stack<Vector2> FindPath(Vector2 start, Vector2 end)
     {
         // Initialize collections
-        returnStack = new Stack<Vector2Int>();
+        returnStack = new Stack<Vector2>();
         priorityQueue = new List<PathNode>();
         nodesDatabase = new Dictionary<Vector2Int, PathNode>();
 
         // Create starting node, add it to nodeDatabase and priorityQueue
         // - Snap start and finish coordinates to the (integer) grid
-        startCoordinates = Vector2Int.RoundToInt(start);
-        endCoordinates = Vector2Int.RoundToInt(end);
+        startCoordinates = Vector2Int.FloorToInt(start);
+        endCoordinates = Vector2Int.FloorToInt(end);
         // - Terminate if end unreachable
         if (!IsWalkable(endCoordinates)) {
-            returnStack.Push(startCoordinates);
+            returnStack.Push(startCoordinates + tileCenterAddition);
             return returnStack;
         }
         // - Start has Cost of 0 and should be walkable (caller is standing on it)
@@ -58,7 +58,7 @@ public class PathGrid
             
             if (!priorityQueue.Any()) {
                 // Failure – no more nodes in priorityQueue
-                returnStack.Push(startCoordinates);
+                returnStack.Push(startCoordinates + tileCenterAddition);
                 return returnStack;
             }
 
@@ -72,7 +72,7 @@ public class PathGrid
                 // Success – (dequeued) priorityNode is the end node
                 PathNode pathNode = priorityNode;
                 while (pathNode.Precursor != null) {
-                    returnStack.Push(pathNode.Coordinates);
+                    returnStack.Push(pathNode.Coordinates + tileCenterAddition);
                     pathNode = pathNode.Precursor;
                 }
                 return returnStack;
@@ -119,7 +119,8 @@ public class PathGrid
     public static LayerMask unwalkableLayer;
     public static Tilemap floorTilemap;
 
-    private static readonly Vector2 tileCheckDiagonalRadius = new(-0.5f, 0.5f);
+    private static readonly Vector2 tileCheckDiagonalRadius = new(-0.3f, 0.3f);
+    private static readonly Vector2 tileCenterAddition = new(0.5f, 0.5f);
 
     public static bool IsWalkable(Vector2Int coordinates)
     {
@@ -128,8 +129,7 @@ public class PathGrid
         bool tilemapOk = floorTilemap.HasTile((Vector3Int)coordinates);
 
         Physics2D.queriesHitTriggers = false;
-        //bool layerOk = !Physics2D.OverlapArea(coordinates + tileCheckDiagonalRadius, coordinates - tileCheckDiagonalRadius, unwalkableLayer);
-        bool layerOk = !Physics2D.OverlapCircle(coordinates, 0.5f, unwalkableLayer);
+        bool layerOk = !Physics2D.OverlapArea(coordinates + tileCenterAddition + tileCheckDiagonalRadius, coordinates + tileCenterAddition - tileCheckDiagonalRadius, unwalkableLayer);
         Physics2D.queriesHitTriggers = true;
 
         return tilemapOk && layerOk;
@@ -138,9 +138,9 @@ public class PathGrid
     // == Pathfinding with bias ==
     private Vector2Int endCoordinatesWithBias;
     // If end tile is unreachable then try alternative end tiles
-    public Stack<Vector2Int> FindPathWithBias(Vector2 start, Vector2 end)
+    public Stack<Vector2> FindPathWithBias(Vector2 start, Vector2 end)
     {
-        endCoordinates = Vector2Int.RoundToInt(end);
+        endCoordinates = Vector2Int.FloorToInt(end);
 
         if (IsWalkable(endCoordinates)) {
             return FindPath(start, end);
@@ -160,6 +160,6 @@ public class PathGrid
             }
         }
 
-        return new Stack<Vector2Int>();
+        return new Stack<Vector2>();
     }
 }

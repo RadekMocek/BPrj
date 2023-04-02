@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 5647851968732090096}
   - component: {fileID: 5647851968732090092}
   - component: {fileID: 5647851968732090091}
+  - component: {fileID: 6307850455791654828}
+  - component: {fileID: 1980770148541506235}
   m_Layer: 8
   m_Name: Chairs
   m_TagString: Untagged
@@ -151,3 +153,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weight: 65
+--- !u!114 &6307850455791654828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5647851968732090089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000ffb246ed49bb038387dd0c66d7512a743da29ff2
+  m_ShapePath:
+  - {x: -0.33122504, y: 0.18987179, z: 0}
+  - {x: -0.35232192, y: 2.7834141, z: 0}
+  - {x: 0.41561255, y: 2.811543, z: 0}
+  - {x: 0.3945156, y: 0.20393646, z: 0}
+  m_ShapePathHash: -1391941495
+  m_Mesh: {fileID: 0}
+  m_InstanceId: 135412
+--- !u!114 &1980770148541506235
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5647851968732090089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02dd73ba3d30c664cb40923127e6d4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

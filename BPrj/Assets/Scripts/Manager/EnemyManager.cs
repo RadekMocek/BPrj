@@ -35,7 +35,7 @@ public class EnemyManager : MonoBehaviour
         if (floorTilemap == null) {
             UpdatePathfindingFloorTilemap();
         }
-        if (PathGrid.IsWalkable(Vector2Int.RoundToInt(playerTransform.position))) {
+        if (PathGrid.IsWalkable(Vector2Int.FloorToInt(playerTransform.position))) {
             playerPositionWalkable = playerTransform.position;
         }
     }

@@ -13,6 +13,8 @@ GameObject:
   - component: {fileID: 8132970126885063869}
   - component: {fileID: 3210483410478271521}
   - component: {fileID: 8194655395524007269}
+  - component: {fileID: 6069163489534399028}
+  - component: {fileID: 6035787876833122030}
   m_Layer: 8
   m_Name: Lockers_North
   m_TagString: Untagged
@@ -152,3 +154,42 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   propName: "Sk\u0159\xED\u0148ky"
+--- !u!114 &6069163489534399028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8132970126885063871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7db70e0ea77f5ac47a8f4565a9406397, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ShadowGroup: 0
+  m_ComponentVersion: 1
+  m_HasRenderer: 1
+  m_UseRendererSilhouette: 1
+  m_CastsShadows: 1
+  m_SelfShadows: 0
+  m_ApplyToSortingLayers: 00000000ffb246ed49bb038387dd0c66d7512a743da29ff2
+  m_ShapePath:
+  - {x: -1.8703755, y: 0.035874367, z: 0}
+  - {x: -1.8524383, y: 0.77298, z: 0}
+  - {x: 1.8703756, y: 0.75504255, z: 0}
+  - {x: 1.8793442, y: 0.044843197, z: 0}
+  m_ShapePathHash: -1485159935
+  m_Mesh: {fileID: 0}
+  m_InstanceId: -82056
+--- !u!114 &6035787876833122030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8132970126885063871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 02dd73ba3d30c664cb40923127e6d4ad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

@@ -228,6 +228,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     private Vector2 playerPosition;
     public Vector2 EnemyToPlayerVector { get; private set; }
     public float EnemyToPlayerAngle { get; private set; }
+    public bool PlayerVisibleOpaqueOnly { get; private set; }
 
     [HideInInspector] public Vector2 lastKnownPlayerPosition;
     [HideInInspector] public bool suspiciousDetection; // When true, enemy will always transition to the InvestigateSuspicious (or Chase) state after Detecting state
@@ -276,7 +277,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         }
 
         // Is there a clear vision of the player ? (nothing obstructing the way)
-        if (!Physics2D.Linecast(this.transform.position, playerPosition, opaqueLayer)) {
+        PlayerVisibleOpaqueOnly = !Physics2D.Linecast(this.transform.position, playerPosition, opaqueLayer);
+        if (PlayerVisibleOpaqueOnly) {
             // Ignore trigger colliders
             Physics2D.queriesHitTriggers = false;
             // Are there any closed doors in the way ?

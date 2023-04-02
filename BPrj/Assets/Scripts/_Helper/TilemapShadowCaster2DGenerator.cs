@@ -64,7 +64,7 @@ public class TilemapShadowCaster2DGenerator : MonoBehaviour
             var point = innerPath[i];
             var prevPoint = innerPath[(i == 0) ? (len - 1) : (i - 1)];
             var nextPoint = innerPath[(i + 1) % len];
-            var perpendicular = (nextPoint - prevPoint).NormalizePerPartes() * .45f;
+            var perpendicular = (nextPoint - prevPoint).NormalizedPerPartes() * .45f;
             outerPath[i].Set(point.x + perpendicular.y, point.y - perpendicular.x, 0);
         }
 

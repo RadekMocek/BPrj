@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   <Enabled>k__BackingField: 1
   <SceneName>k__BackingField: Floor1
-  <PlayerX>k__BackingField: -16
-  <PlayerY>k__BackingField: 75
+  <PlayerX>k__BackingField: 10
+  <PlayerY>k__BackingField: 0.5

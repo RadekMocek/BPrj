@@ -13,8 +13,8 @@ public class EnemyChaseState : EnemyState
 
     private readonly float movementSpeed = 4.7f;
 
-    private Stack<Vector2Int> pathStack;
-    private Vector2Int currentTargetNode;
+    private Stack<Vector2> pathStack;
+    private Vector2 currentTargetNode;
 
     private Vector2 currentPlayerPosition;
     private Vector2 previousPlayerPosition;
@@ -71,8 +71,8 @@ public class EnemyChaseState : EnemyState
                 RefreshPath(currentPlayerPosition);
             }
         }
+        // If player not visible and no more nodes in path, transition to another state
         else if (!pathStack.Any()) {
-            //enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
             enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPositionWalkable();
             End_PlayerLost = true;
         }
@@ -86,10 +86,5 @@ public class EnemyChaseState : EnemyState
         else if (pathStack.Any()) {
             currentTargetNode = pathStack.Pop();
         }
-        /*
-        else {
-            RefreshPath(currentPlayerPosition);
-        }
-        */
     }
 }

@@ -52,4 +52,14 @@ public class Enemy1 : Enemy
         ChangeState(PatrolState);
     }
 
+    protected override void OnCollisionEnter2D(Collision2D collision)
+    {
+        base.OnCollisionEnter2D(collision);
+
+        if (collision.transform.CompareTag("Player") && (!IsPlayerVisible || currentState == PatrolState)) {
+            lastKnownPlayerPosition = EnemyManager.GetPlayerPositionWalkable();
+            ChangeState(InvestigateAwareState);
+        }
+    }
+
 }

@@ -44,7 +44,10 @@ SpriteAtlas:
     secondaryTextureSettings: {}
     variantMultiplier: 1
     packables:
+    - {fileID: 2800000, guid: ac2d4e4a1e88cff4f8e7e9b7d7a468d5, type: 3}
+    - {fileID: 2800000, guid: dfdb12ec5bc2fe64ebe9b1535d44439f, type: 3}
     - {fileID: 2800000, guid: 16970c9090e27434795c1e087f6b1566, type: 3}
+    - {fileID: 2800000, guid: 15b2f3aa1e70b214b91ab9e7e90f445d, type: 3}
     - {fileID: 2800000, guid: 390aade91d261444f9dc327e680e2939, type: 3}
     - {fileID: 2800000, guid: 190c7f34a22050d4f9455035568cc840, type: 3}
     - {fileID: 2800000, guid: ffd182c3c5f11204d9d594f52ba5dc83, type: 3}
@@ -123,10 +126,14 @@ SpriteAtlas:
     - 390aade91d261444f9dc327e680e2939: -1821842464
     - 390aade91d261444f9dc327e680e2939: -2095062419
     - 390aade91d261444f9dc327e680e2939: 80597358
+    - ac2d4e4a1e88cff4f8e7e9b7d7a468d5: 21300000
+    - 15b2f3aa1e70b214b91ab9e7e90f445d: 1360232820
+    - 15b2f3aa1e70b214b91ab9e7e90f445d: -562168278
     - 87e9bdebba6c0e542b42e17b740b6c1c: -1609243434
     - 87e9bdebba6c0e542b42e17b740b6c1c: 1642351483
     - 87e9bdebba6c0e542b42e17b740b6c1c: 214292399
     - 87e9bdebba6c0e542b42e17b740b6c1c: 380498987
+    - dfdb12ec5bc2fe64ebe9b1535d44439f: 21300000
     - 07f71fdebacc85840a36fa0d2ec679ac: 21300000
     - dc845b3fb301f1b4996944fc3dcf4772: 21300000
   m_MasterAtlas: {fileID: 0}
@@ -195,10 +202,14 @@ SpriteAtlas:
   - {fileID: -1821842464, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   - {fileID: -2095062419, guid: 390aade91d261444f9dc327e680e2939, type: 3}
   - {fileID: 80597358, guid: 390aade91d261444f9dc327e680e2939, type: 3}
+  - {fileID: 21300000, guid: ac2d4e4a1e88cff4f8e7e9b7d7a468d5, type: 3}
+  - {fileID: 1360232820, guid: 15b2f3aa1e70b214b91ab9e7e90f445d, type: 3}
+  - {fileID: -562168278, guid: 15b2f3aa1e70b214b91ab9e7e90f445d, type: 3}
   - {fileID: -1609243434, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 1642351483, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 214292399, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
   - {fileID: 380498987, guid: 87e9bdebba6c0e542b42e17b740b6c1c, type: 3}
+  - {fileID: 21300000, guid: dfdb12ec5bc2fe64ebe9b1535d44439f, type: 3}
   - {fileID: 21300000, guid: 07f71fdebacc85840a36fa0d2ec679ac, type: 3}
   - {fileID: 21300000, guid: dc845b3fb301f1b4996944fc3dcf4772, type: 3}
   m_PackedSpriteNamesToIndex:
@@ -266,10 +277,14 @@ SpriteAtlas:
   - TilesBasic_4
   - TilesBasic_7
   - TilesBasic_6
+  - Wall1_0Vent_Left
+  - Vent_Floor_0_1
+  - Vent_Floor_0_0
   - Floor1_1_1_1
   - Floor1_1_1_0
   - Floor1_1_1_3
   - Floor1_1_1_2
+  - Wall1_0Vent_Right
   - Floor_2_0
   - Floor_5_0
   m_RenderDataMap: {}

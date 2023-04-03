@@ -24,7 +24,7 @@ public class PlayerKnockbackState : PlayerState
             player.RB.velocity = Vector2.zero;
 
             // ChangeState logic
-            if (!player.Sneaking) {
+            if (!player.IsSneaking) {
                 if (movementInput.magnitude != 0) {
                     player.ChangeState(player.MoveState);
                 }

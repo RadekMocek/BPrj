@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: 360788103231491002}
   - component: {fileID: 6196181978917443458}
   - component: {fileID: 3600712061206943808}
-  - component: {fileID: 271892737800051413}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Lockers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,6 +98,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -125,6 +143,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -174,22 +211,13 @@ MonoBehaviour:
   m_SelfShadows: 0
   m_ApplyToSortingLayers: 00000000ffb246ed49bb038387dd0c66d7512a743da29ff2
   m_ShapePath:
-  - {x: -1.8524383, y: 0.05381179, z: 0}
-  - {x: -1.861407, y: 0.75504255, z: 0}
-  - {x: 1.8703756, y: 0.7640114, z: 0}
-  - {x: 1.8703756, y: 0.06278026, z: 0}
-  m_ShapePathHash: 227893618
+  - {x: -1.8002183, y: 0.106031775, z: 0}
+  - {x: -1.794267, y: 0.75504255, z: 0}
+  - {x: 1.8032355, y: 0.7714714, z: 0}
+  - {x: 1.8032355, y: 0.11500025, z: 0}
+  m_ShapePathHash: -1783656120
   m_Mesh: {fileID: 0}
-  m_InstanceId: -80694
---- !u!114 &271892737800051413
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8543819449102903210}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02dd73ba3d30c664cb40923127e6d4ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_InstanceId: 254184
+  m_LocalBounds:
+    m_Center: {x: 0.0015085936, y: 0.43875158, z: 0}
+    m_Extent: {x: 1.8017269, y: 0.3327198, z: 0}

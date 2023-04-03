@@ -63,7 +63,7 @@ public class EnemyChaseState : EnemyState
         }
 
         // Follow player (if visible) or transition to another state
-        if (enemy.IsPlayerVisible()) {
+        if (enemy.IsPlayerVisible) {
             currentPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
 
             if (currentPlayerPosition != previousPlayerPosition) {

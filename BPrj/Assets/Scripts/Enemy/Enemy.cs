@@ -18,7 +18,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     private Animator Anim { get; set; }
 
     // == State machine =========================
-    private EnemyState currentState;
+    protected EnemyState currentState;
     
     public void ChangeState(EnemyState newState)
     {
@@ -228,7 +228,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     private Vector2 playerPosition;
     public Vector2 EnemyToPlayerVector { get; private set; }
     public float EnemyToPlayerAngle { get; private set; }
-    public bool PlayerVisibleOpaqueOnly { get; private set; }
+    public bool IsPlayerVisible { get; private set; }
+    public bool IsPlayerVisibleOpaqueOnly { get; private set; }
 
     [HideInInspector] public Vector2 lastKnownPlayerPosition;
     [HideInInspector] public bool suspiciousDetection; // When true, enemy will always transition to the InvestigateSuspicious (or Chase) state after Detecting state
@@ -240,7 +241,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         EnemyToPlayerAngle = ((Mathf.Rad2Deg * Mathf.Atan2(EnemyToPlayerVector.y, EnemyToPlayerVector.x)) + 270) % 360;
     }
 
-    public bool IsPlayerVisible(bool debug = false)
+    private bool UpdateIsPlayerVisible(bool debug = false)
     {
         UpdatePlayerPositionInfo();
 
@@ -277,8 +278,10 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         }
 
         // Is there a clear vision of the player ? (nothing obstructing the way)
-        PlayerVisibleOpaqueOnly = !Physics2D.Linecast(this.transform.position, playerPosition, opaqueLayer);
-        if (PlayerVisibleOpaqueOnly) {
+        Physics2D.queriesHitTriggers = false;
+        IsPlayerVisibleOpaqueOnly = !Physics2D.Linecast(this.transform.position, playerPosition, opaqueLayer);
+        Physics2D.queriesHitTriggers = true;
+        if (IsPlayerVisibleOpaqueOnly) {
             // Ignore trigger colliders
             Physics2D.queriesHitTriggers = false;
             // Are there any closed doors in the way ?
@@ -295,7 +298,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
             // Door check
             foreach (var door in doors) {
                 if (door.transform.TryGetComponent(out Door doorScript)) {
-                    if (!doorScript.Opened) {
+                    if (!doorScript.IsOpened) {
                         if (debug) print("No clear vision of the player – closed door");
                         return false;
                     }
@@ -459,6 +462,9 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     {
         // State logic
         currentState.FixedUpdate();
+
+        // Sub-functions
+        IsPlayerVisible = UpdateIsPlayerVisible();
     }
 
     protected virtual void Update()
@@ -471,7 +477,6 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
             if (CurrentDetectionLength == 0) {
                 this.enabled = false;
             }
-
             return;
         }
 
@@ -483,12 +488,13 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         UpdateViewCone();
     }
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        // Open door
+        ///* Open door
         if (collision.transform.TryGetComponent(out Door collisionDoorScript)) {
             collisionDoorScript.OpenDoor();
         }
+        /**/
     }
 
     private void OnDrawGizmosSelected()

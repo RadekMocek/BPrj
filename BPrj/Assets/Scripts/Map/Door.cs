@@ -16,7 +16,7 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
     // == Interact =============================
     public string GetInteractActionDescription()
     {
-        return (Opened) ? "Zavøít" : "Otevøít";
+        return (IsOpened) ? "Zavøít" : "Otevøít";
     }
 
     public bool CanInteract(Player playerScript)
@@ -26,8 +26,8 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
 
     public void OnInteract(Player playerScript)
     {
-        Opened = !Opened;
-        ChangeDoorState(Opened);
+        IsOpened = !IsOpened;
+        ChangeDoorState(IsOpened);
     }
 
     // == Config ================================
@@ -41,18 +41,18 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
     [SerializeField] private Sprite sprClosed;
     [SerializeField] private Sprite sprOpened;
 
-    public bool Opened { get; private set; }
+    public bool IsOpened { get; private set; }
 
     private void ChangeDoorState(bool opened)
     {
-        this.Opened = opened;
+        this.IsOpened = opened;
 
         if (!openedDoorUnwalkable) {
             CC.enabled = !opened;
         }
         else {
             CC.enabled = true;
-            if (Opened) {
+            if (IsOpened) {
                 CC.direction = CapsuleDirection2D.Vertical;
                 CC.offset = new(0.87f, -0.25f);
                 CC.size = new(0.17f, 1.47f);
@@ -83,7 +83,7 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
 
     private void Start()
     {
-        Opened = false;
-        ChangeDoorState(Opened);
+        IsOpened = false;
+        ChangeDoorState(IsOpened);
     }
 }

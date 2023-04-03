@@ -82,8 +82,8 @@ public class PlayerSneakMoveState : PlayerSneakSuperState
             player.SneakIdleState.initialMomentumSpeed = momentumSpeed;
             player.ChangeState(player.SneakIdleState);
         }
-        else if (sneakInputPressedThisFrame) {
-            player.Sneaking = false;
+        else if (sneakInputPressedThisFrame && !player.IsVenting()) {
+            player.IsSneaking = false;
             player.ChangeState(player.MoveState);
         }
         else if (player.WeaponEquipped) {

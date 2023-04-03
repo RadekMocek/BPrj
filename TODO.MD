@@ -18,6 +18,7 @@
 
 * Crosshair/cursor/...
 * Stealth
+  * Venting indicator
 
 ### Map
 

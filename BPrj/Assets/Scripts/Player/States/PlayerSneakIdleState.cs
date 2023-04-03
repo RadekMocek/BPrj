@@ -48,8 +48,8 @@ public class PlayerSneakIdleState : PlayerSneakSuperState
         if (movementInput.magnitude != 0) {
             player.ChangeState(player.SneakMoveState);
         }
-        else if (sneakInputPressedThisFrame) {
-            player.Sneaking = false;
+        else if (sneakInputPressedThisFrame && !player.IsVenting()) {
+            player.IsSneaking = false;
             player.ChangeState(player.IdleState);
         }
         else if (player.WeaponEquipped) {

@@ -48,7 +48,7 @@ public class PlayerAttackSuperState : PlayerState
         angleAdditionMultiplier = 1; // Counter clockwise
 
         // Change sprite so it faces the cursor (and attack direction), set slip direction
-        string animationType = (player.Sneaking) ? "Sneak_Idle" : "Idle";
+        string animationType = (player.IsSneaking) ? "Sneak_Idle" : "Idle";
         if (Mathf.Abs(playerToCursorDirection.x) > Mathf.Abs(playerToCursorDirection.y)) {
             // Right
             if (playerToCursorDirection.x > 0) {
@@ -161,7 +161,7 @@ public class PlayerAttackSuperState : PlayerState
     private void AttackEnd()
     {
         // ChangeState logic
-        if (!player.Sneaking) {
+        if (!player.IsSneaking) {
             if (movementInput.magnitude != 0) {
                 player.ChangeState(player.MoveState);
             }

@@ -14,8 +14,7 @@ GameObject:
   - component: {fileID: 3210483410478271521}
   - component: {fileID: 8194655395524007269}
   - component: {fileID: 6069163489534399028}
-  - component: {fileID: 6035787876833122030}
-  m_Layer: 8
+  m_Layer: 16
   m_Name: Lockers_North
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -99,6 +98,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -125,6 +143,25 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -174,22 +211,13 @@ MonoBehaviour:
   m_SelfShadows: 0
   m_ApplyToSortingLayers: 00000000ffb246ed49bb038387dd0c66d7512a743da29ff2
   m_ShapePath:
-  - {x: -1.8703755, y: 0.035874367, z: 0}
-  - {x: -1.8524383, y: 0.77298, z: 0}
-  - {x: 1.8703756, y: 0.75504255, z: 0}
-  - {x: 1.8793442, y: 0.044843197, z: 0}
-  m_ShapePathHash: -1485159935
+  - {x: -1.7717208, y: 0.089686155, z: 0}
+  - {x: -1.7806894, y: 0.77298, z: 0}
+  - {x: 1.8075953, y: 0.76401114, z: 0}
+  - {x: 1.8075954, y: 0.0807178, z: 0}
+  m_ShapePathHash: 776144040
   m_Mesh: {fileID: 0}
-  m_InstanceId: -82056
---- !u!114 &6035787876833122030
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8132970126885063871}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02dd73ba3d30c664cb40923127e6d4ad, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
+  m_InstanceId: 254286
+  m_LocalBounds:
+    m_Center: {x: 0.013453007, y: 0.4268489, z: 0}
+    m_Extent: {x: 1.7941424, y: 0.3461311, z: 0}

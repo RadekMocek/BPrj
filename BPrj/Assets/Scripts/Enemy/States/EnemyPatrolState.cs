@@ -70,7 +70,7 @@ public class EnemyPatrolState : EnemyState
         enemy.UpdateDecreaseViewConeRedRadius();
 
         //
-        if (enemy.IsPlayerVisible()) {
+        if (enemy.IsPlayerVisible) {
             patrolPointIndex--;
             End_PlayerVisible = true;
         }

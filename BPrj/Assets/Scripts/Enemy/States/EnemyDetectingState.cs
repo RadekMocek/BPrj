@@ -46,7 +46,7 @@ public class EnemyDetectingState : EnemyState
         enemy.FaceThePlayer(true);
 
         // Transition to a another state if we lose the sight of the player
-        if (!enemy.IsPlayerVisible()) {
+        if (!enemy.IsPlayerVisible) {
             DetectionLengthWhenPlayerLost = currentDetectionLength;
             enemy.lastKnownPlayerPosition = enemy.EnemyManager.GetPlayerPosition();
             End_PlayerLost = true;

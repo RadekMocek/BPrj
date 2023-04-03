@@ -56,7 +56,7 @@ public class EnemyInvestigateSuperState : EnemyState
         }
 
         // Switch to a different state immediately if the player is spotted
-        if (enemy.IsPlayerVisible()) {
+        if (enemy.IsPlayerVisible) {
             enemy.suspiciousDetection = true;
             End_PlayerFound = true;
         }

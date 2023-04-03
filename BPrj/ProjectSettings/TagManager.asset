@@ -19,9 +19,9 @@ TagManager:
   - Door
   - Observe
   - Enemy_Dead
-  - 
-  - 
-  - 
+  - Vent
+  - Vent_Open
+  - Object_Opaque
   - 
   - 
   - 

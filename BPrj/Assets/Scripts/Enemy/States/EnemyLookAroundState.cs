@@ -41,7 +41,7 @@ public class EnemyLookAroundState : EnemyState
         enemy.RB.velocity = Vector2.zero;
 
         // Transition to another state if we spot the player
-        if (enemy.IsPlayerVisible()) {
+        if (enemy.IsPlayerVisible) {
             End_PlayerSpotted = true;
         }
 

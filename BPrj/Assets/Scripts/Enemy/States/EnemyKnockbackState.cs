@@ -38,7 +38,7 @@ public class EnemyKnockbackState : EnemyState
             if (enemy.IsPlayerVisibleClose()) {
                 End_PlayerClose = true;
             }
-            else if (enemy.IsPlayerVisible()) {
+            else if (enemy.IsPlayerVisible) {
                 End_PlayerVisible = true;
             }
             else {

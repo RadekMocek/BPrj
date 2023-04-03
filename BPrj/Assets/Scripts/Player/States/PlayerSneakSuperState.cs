@@ -10,7 +10,7 @@ public class PlayerSneakSuperState : PlayerState
     {
         base.Enter();
 
-        player.Sneaking = true;
+        player.IsSneaking = true;
     }
 
     protected override void UpdateWeaponPositionInner()

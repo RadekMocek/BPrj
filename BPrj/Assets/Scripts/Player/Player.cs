@@ -127,7 +127,12 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // == Sneaking ==============================
-    public bool Sneaking { get; set; }
+    [Header("Sneaking")]
+    [SerializeField] private LayerMask ventLayer;
+    
+    public bool IsSneaking { get; set; }
+
+    public bool IsVenting() => Physics2D.OverlapCircle(this.transform.position, 0.1f, ventLayer);
 
     // == Dashing ===============================
     [Header("Dashing")]
@@ -287,7 +292,7 @@ public class Player : MonoBehaviour, IDamageable
     {
         // Init
         LastMovementDirection = Direction.S;
-        Sneaking = false;
+        IsSneaking = false;
         WeaponEquipped = false;
 
         // Health

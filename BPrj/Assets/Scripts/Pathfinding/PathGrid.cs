@@ -6,6 +6,9 @@ using UnityEngine.Tilemaps;
 public class PathGrid
 {
     // == Pathfinding ==
+    // Config
+    private readonly bool isDiagonalMovementAllowed = false;
+
     // Constant prices for moving between nodes on the grid
     public static readonly int straightPathCost = 10;
     public static readonly int diagonalPathCost = 14;
@@ -91,6 +94,10 @@ public class PathGrid
                 for (int vertical = -1; vertical <= 1; vertical++) {
                     if (horizontal == 0 && vertical == 0) continue; // Do not check itself
 
+                    bool isNeighbourDiagonal = (horizontal != 0 && vertical != 0);
+
+                    if (!isDiagonalMovementAllowed && isNeighbourDiagonal) continue;
+
                     tempVector.Set(x + horizontal, y + vertical); // Neighbour coordinates
 
                     // Add neighbour to nodeDatabase or load it if it's already in nodeDatabase
@@ -102,7 +109,7 @@ public class PathGrid
                         neighNode = nodesDatabase[tempVector];
                     }
 
-                    int pathCost = ((horizontal == vertical || horizontal == -vertical) && horizontal != 0) ? diagonalPathCost : straightPathCost;
+                    int pathCost = (isNeighbourDiagonal) ? diagonalPathCost : straightPathCost;
 
                     // Update neighbours Cost, Precursor, and add it to priorityQueue if it's unstable, walkable, and its current Cost is more expensive than going from the priorityNode
                     if (!neighNode.Stable && neighNode.Walkable && cost + pathCost < neighNode.Cost) {
@@ -119,7 +126,7 @@ public class PathGrid
     public static LayerMask unwalkableLayer;
     public static Tilemap floorTilemap;
 
-    private static readonly Vector2 tileCheckDiagonalRadius = new(-0.3f, 0.3f);
+    private static readonly Vector2 tileCheckDiagonalRadius = new(-0.31f, 0.31f);
     private static readonly Vector2 tileCenterAddition = new(0.5f, 0.5f);
 
     public static bool IsWalkable(Vector2Int coordinates)

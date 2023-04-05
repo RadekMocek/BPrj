@@ -86,7 +86,13 @@ public class PlayerAttackSuperState : PlayerState
         // Initial position
         ApplyPositionAndRotationAccordingToAngle();
 
+        // Initial part of the attack
         backswinging = true;
+
+        // Check critical hit
+        if (player.IsCooldownBarVisible()) {
+            Debug.Log("Critical hit");
+        }
     }
 
     public override void Update()
@@ -112,6 +118,7 @@ public class PlayerAttackSuperState : PlayerState
         else {
             if (backswinging) {
                 // Set lastAttackTime for attack cooldown
+                player.criticalHitMissed = false;
                 player.lastAttackTime = Time.time;
                 backswinging = false;
             }

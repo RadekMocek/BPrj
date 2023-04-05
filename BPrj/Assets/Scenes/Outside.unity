@@ -430,7 +430,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!43 &458741267
+--- !u!43 &434361490
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2706,8 +2706,8 @@ MonoBehaviour:
   - {x: 4.4500294, y: -5.45, z: 0}
   - {x: 4.4499707, y: -8.45, z: 0}
   m_ShapePathHash: -2094533790
-  m_Mesh: {fileID: 458741267}
-  m_InstanceId: 237586
+  m_Mesh: {fileID: 434361490}
+  m_InstanceId: 70580
   m_LocalBounds:
     m_Center: {x: 0.50000095, y: 15.500001, z: 0}
     m_Extent: {x: 15.950001, y: 23.95, z: 0}
@@ -4694,7 +4694,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.769, g: 0.16104485, b: 0.16104485, a: 1}
+  m_Color: {r: 0.76, g: 0.16, b: 0.16, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1

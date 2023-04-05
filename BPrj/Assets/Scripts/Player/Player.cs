@@ -22,7 +22,7 @@ public class Player : MonoBehaviour, IDamageable
     public PlayerSneakIdleState SneakIdleState { get; private set; }
     public PlayerSneakMoveState SneakMoveState { get; private set; }
     public PlayerAttackLightState AttackLightState { get; private set; }
-    public PlayerAttackHeavyState AttackHeavyState { get; private set; }
+    //public PlayerAttackHeavyState AttackHeavyState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     public PlayerDialogueState DialogueState { get; private set; }
     public PlayerKnockbackState KnockbackState { get; private set; }
@@ -108,13 +108,21 @@ public class Player : MonoBehaviour, IDamageable
     private readonly float attackCooldownDuration = 0.7f;
 
     [HideInInspector] public float lastAttackTime;
+    [HideInInspector] public bool criticalHitMissed;
 
-    public bool CanAttack() => (Time.time > lastAttackTime + attackCooldownDuration);
+    public bool CanAttack() => ((!criticalHitMissed && Time.time > lastAttackTime + attackCooldownDuration) || (criticalHitMissed && !IsCooldownBarVisible()));
 
     private void UpdateCooldownBar()
     {
-        if (WeaponEquipped) HUD.ShowCooldownBar(lastAttackTime, attackCooldownDuration);
+        if (WeaponEquipped) {
+            if (!criticalHitMissed && IsCooldownBarVisible() && Input.GetMouseButtonDown(0) && !CanAttack()) {
+                criticalHitMissed = true;
+            }
+            HUD.ShowCooldownBar(lastAttackTime, attackCooldownDuration, criticalHitMissed);
+        }
     }
+
+    public bool IsCooldownBarVisible() => HUD.IsCooldownBarVisible();
 
     // == Movement ==============================
     private Vector2 movementInputTempVector; // Saving input to variable so we don't have to call new() every frame
@@ -282,7 +290,7 @@ public class Player : MonoBehaviour, IDamageable
         SneakIdleState = new PlayerSneakIdleState(this);
         SneakMoveState = new PlayerSneakMoveState(this);
         AttackLightState = new PlayerAttackLightState(this);
-        AttackHeavyState = new PlayerAttackHeavyState(this);
+        //AttackHeavyState = new PlayerAttackHeavyState(this);
         DashState = new PlayerDashState(this);
         DialogueState = new PlayerDialogueState(this);
         KnockbackState = new PlayerKnockbackState(this);

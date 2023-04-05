@@ -1,3 +1,4 @@
+/*
 public class PlayerAttackHeavyState : PlayerAttackSuperState
 {
     public PlayerAttackHeavyState(Player player) : base(player)
@@ -17,3 +18,4 @@ public class PlayerAttackHeavyState : PlayerAttackSuperState
         recoveryDuration = .25f;
     }
 }
+*/

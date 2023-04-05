@@ -8,6 +8,11 @@ using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
+    // == HUD colors ============================
+    private readonly Color barGreenColor = new(0.72f, 0.76f, 0.16f);
+    private readonly Color barOrangeColor = new(0.76f, 0.62f, 0.16f);
+    private readonly Color barRedColor = new(0.76f, 0.16f, 0.16f);
+
     // == References ============================
     private Player playerScript;
     public void SetPlayerScript(Player value) => playerScript = value;
@@ -45,16 +50,13 @@ public class HUDManager : MonoBehaviour
     [Header("HUD – Stamina bar")]
     [SerializeField] private Slider staminaBarSlider;
     [SerializeField] private Image staminaBarImage;
-
-    private readonly Color staminaBarEnoughColor = new(0.72f, 0.76f, 0.16f);
-    private readonly Color staminaBarNotEnoughColor = new(0.76f, 0.62f, 0.16f);
-
+    
     public void SetMaxStamina(int max) => staminaBarSlider.maxValue = max;
 
     public void SetStamina(int value)
     {
         staminaBarSlider.value = value;
-        staminaBarImage.color = (value >= PlayerStaticValues.dash_staminaCost) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
+        staminaBarImage.color = (value >= PlayerStaticValues.dash_staminaCost) ? barGreenColor : barOrangeColor;
     }
 
     // == Attack cooldown =======================
@@ -66,10 +68,11 @@ public class HUDManager : MonoBehaviour
     private Slider cooldownBarSlider;
     private RectTransform cooldownBarRT;
 
-    private readonly int cooldownBarWidth = 300;
+    private readonly int cooldownBarWidth = 400;
+    private readonly int cooldownBarHeight = 15;
     private readonly float cooldownBarGreenAreaPercentage = 20;
 
-    public void ShowCooldownBar(float start, float duration)
+    public void ShowCooldownBar(float start, float duration, bool criticalHitMissed)
     {
         float barDuration = (100 * duration) / (100 - cooldownBarGreenAreaPercentage);
         var maxValue = start + barDuration;
@@ -79,12 +82,16 @@ public class HUDManager : MonoBehaviour
         cooldownBarSlider.value = Time.time;
         cooldownBarSlider.maxValue = maxValue;
 
-        cooldownBarHandleImage.color = (Time.time >= start + duration + .04f) ? staminaBarEnoughColor : staminaBarNotEnoughColor;
+        cooldownBarHandleImage.color = (criticalHitMissed) ? barRedColor : (Time.time >= start + duration) ? barGreenColor : barOrangeColor;
 
-        if (Time.time >= maxValue) HideCoolDownBar();
+        cooldownBarGreenAreaRT.gameObject.SetActive(!criticalHitMissed);
+
+        if (Time.time >= maxValue) HideCooldownBar();
     }
 
-    public void HideCoolDownBar() => cooldownBarGO.SetActive(false);
+    public void HideCooldownBar() => cooldownBarGO.SetActive(false);
+
+    public bool IsCooldownBarVisible() => cooldownBarGO.activeSelf;
 
     // == Inspect ===============================
     [Header("WIN – Inspect")]
@@ -184,8 +191,8 @@ public class HUDManager : MonoBehaviour
     private void Start()
     {
         // Cooldown bar
-        cooldownBarRT.sizeDelta = new(cooldownBarWidth, 20);
-        cooldownBarGreenAreaRT.sizeDelta = new((cooldownBarWidth / 100 * cooldownBarGreenAreaPercentage) - 30, 10); // subtracting constant so clicking just before green area counts
+        cooldownBarRT.sizeDelta = new(cooldownBarWidth, cooldownBarHeight);
+        cooldownBarGreenAreaRT.sizeDelta = new((cooldownBarWidth / 100 * cooldownBarGreenAreaPercentage) - (cooldownBarWidth / 11), cooldownBarHeight - 10);
 
         // Inspecting
         IsInspecting = false;

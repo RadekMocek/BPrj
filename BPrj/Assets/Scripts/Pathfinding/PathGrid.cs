@@ -7,7 +7,7 @@ public class PathGrid
 {
     // == Pathfinding ==
     // Config
-    private readonly bool isDiagonalMovementAllowed = false;
+    private readonly bool isDiagonalMovementAllowed = true;
 
     // Constant prices for moving between nodes on the grid
     public static readonly int straightPathCost = 10;
@@ -29,6 +29,8 @@ public class PathGrid
     private PathNode priorityNode;
     private PathNode neighNode;
     private Vector2Int tempVector;
+    private Vector2Int tempVectorDiagonalCheckX;
+    private Vector2Int tempVectorDiagonalCheckY;
     private Stack<Vector2> returnStack;
 
     // Pathfinding, returns Stack of coordinates that make path from `start` to `end`
@@ -99,6 +101,12 @@ public class PathGrid
                     if (!isDiagonalMovementAllowed && isNeighbourDiagonal) continue;
 
                     tempVector.Set(x + horizontal, y + vertical); // Neighbour coordinates
+                    
+                    if (isDiagonalMovementAllowed && isNeighbourDiagonal) {
+                        tempVectorDiagonalCheckX.Set(tempVector.x, y);
+                        tempVectorDiagonalCheckY.Set(x, tempVector.y);
+                        if (!IsWalkable(tempVectorDiagonalCheckX) || !IsWalkable(tempVectorDiagonalCheckY)) continue;
+                    }
 
                     // Add neighbour to nodeDatabase or load it if it's already in nodeDatabase
                     if (!nodesDatabase.ContainsKey(tempVector)) {

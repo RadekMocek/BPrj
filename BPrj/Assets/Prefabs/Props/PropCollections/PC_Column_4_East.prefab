@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 335816733961756767}
   m_Layer: 0
-  m_Name: PC_Row_4Vertical_East
+  m_Name: PC_Column_4_East
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

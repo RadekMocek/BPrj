@@ -12,30 +12,38 @@ public class VentDoor : MonoBehaviour, IObservable, IPlayerInteractable
     }
 
     // == Interact =============================
-    public string GetInteractActionDescription()
+    public string GetInteractActionDescription(Player playerScript)
     {
-        return "Otevøít";
+        return (isLocked && !playerScript.EquippedKeys.Contains(lockColor)) ? "Chybí klíè" : "Otevøít";
     }
 
     public bool CanInteract(Player playerScript)
     {
-        return (!isOpening && Vector2.Distance(playerScript.transform.position, this.transform.position) <= 2.0f);
+        bool distanceOk = (Vector2.Distance(playerScript.transform.position, this.transform.position) <= 2.0f);
+        bool lockOk = (!isLocked || (isLocked && playerScript.EquippedKeys.Contains(lockColor)));
+        return distanceOk && lockOk;
     }
 
     public void OnInteract(Player playerScript)
     {
-        isOpening = true;
         StartCoroutine(Open());
+        if (lockGO != null) {
+            ManagerAccessor.instance.ConsistencyManager.SetRecord(lockGO.transform.name, false);
+            Destroy(lockGO);
+        }
     }
 
-    // == Opening ===============================
-    private bool isOpening;
-    //public bool IsOpened { get; private set; }
+    // == Lock, Key =============================
+    [Header("Lock, Key")]
+    [SerializeField] private GameObject lockGO;
+    [SerializeField] private LockColor lockColor;
 
+    private bool isLocked;
+
+    // == Opening ===============================
     private void Start()
     {
-        isOpening = false;
-        //IsOpened = false;
+        isLocked = (lockGO != null);
     }
 
     private IEnumerator Open()
@@ -49,6 +57,5 @@ public class VentDoor : MonoBehaviour, IObservable, IPlayerInteractable
             this.transform.localPosition = new Vector2(localX, localY);
             yield return new WaitForFixedUpdate();
         }
-        //IsOpened = true;
     }
 }

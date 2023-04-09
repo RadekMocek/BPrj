@@ -8,6 +8,7 @@ public class ManagerAccessor : MonoBehaviour
     public HUDManager HUD { get; private set; }
     public SceneTransitionManager SceneManager { get; private set; }
     public EnemyManager EnemyManager { get; private set; }
+    public ConsistencyManager ConsistencyManager { get; private set; }
 
     private void Awake()
     {
@@ -27,5 +28,6 @@ public class ManagerAccessor : MonoBehaviour
         HUD = transform.Find("HUDManager").GetComponent<HUDManager>();
         SceneManager = transform.Find("SceneTransitionManager").GetComponent<SceneTransitionManager>();
         EnemyManager = transform.Find("EnemyManager").GetComponent<EnemyManager>();
+        ConsistencyManager = transform.Find("ConsistencyManager").GetComponent<ConsistencyManager>();
     }
 }

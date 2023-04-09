@@ -9,7 +9,7 @@ public class Weapon : MonoBehaviour, IPlayerInteractable
     [HideInInspector] public bool equipped;
 
     // == IPlayerInteractable ===================
-    public string GetInteractActionDescription() => "Sebrat zbraò";
+    public string GetInteractActionDescription(Player playerScript) => "Sebrat zbraò";
 
     public bool CanInteract(Player playerScript)
     {

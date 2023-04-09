@@ -21,6 +21,7 @@ public class Trigger : MonoBehaviour
     {
         if (!triggered && Physics2D.OverlapCircle(this.transform.position, 1, playerLayer)) {
             triggered = true;
+            ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
             TriggerLogic();
         }
     }

@@ -14,7 +14,7 @@ public class InspectableProp : MonoBehaviour, IPlayerInteractable
         return (Vector2.Distance(playerScript.transform.position, this.transform.position) <= 2.5f);
     }
 
-    public string GetInteractActionDescription()
+    public string GetInteractActionDescription(Player playerScript)
     {
         return "Prozkoumat";
     }

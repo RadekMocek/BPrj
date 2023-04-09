@@ -21,7 +21,7 @@ public class Stairs : MonoBehaviour, IPlayerInteractable
         return !string.IsNullOrEmpty(sceneName) && Physics2D.OverlapArea(interactZonePointA + tempVector, interactZonePointB + tempVector, playerLayer);
     }
 
-    public string GetInteractActionDescription()
+    public string GetInteractActionDescription(Player playerScript)
     {
         return (!string.IsNullOrEmpty(sceneName)) ? ("→ " + interactActionDescription) : ("Nedostupné");
     }

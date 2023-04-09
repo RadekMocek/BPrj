@@ -14,14 +14,16 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
     }
 
     // == Interact =============================
-    public string GetInteractActionDescription()
+    public string GetInteractActionDescription(Player playerScript)
     {
-        return (IsOpened) ? "Zavøít" : "Otevøít";
+        return (isLocked && !playerScript.EquippedKeys.Contains(lockColor)) ? "Chybí klíè" : (IsOpened) ? "Zavøít" : "Otevøít";
     }
 
     public bool CanInteract(Player playerScript)
     {
-        return (Vector2.Distance(playerScript.transform.position, this.transform.position) <= 2.0f);
+        bool distanceOk = (Vector2.Distance(playerScript.transform.position, this.transform.position) <= 2.0f);
+        bool lockOk = (!isLocked || (isLocked && playerScript.EquippedKeys.Contains(lockColor)));
+        return distanceOk && lockOk;
     }
 
     public void OnInteract(Player playerScript)
@@ -33,6 +35,13 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
     // == Config ================================
     [Header("Settings")]
     [SerializeField] private bool openedDoorUnwalkable;
+
+    // == Lock, Key =============================
+    [Header("Lock, Key")]
+    [SerializeField] private GameObject lockGO;
+    [SerializeField] private LockColor lockColor;
+
+    private bool isLocked;
 
     // == Open/close door =======================
     [Header("Door parts")]
@@ -69,6 +78,11 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
         foreach (var doorPartSR in doorPartSRs) {
             doorPartSR.sprite = (opened) ? sprOpened : sprClosed;
         }
+
+        if (IsOpened && lockGO != null) {
+            ManagerAccessor.instance.ConsistencyManager.SetRecord(lockGO.transform.name, false);
+            Destroy(lockGO);
+        }
     }
 
     public void OpenDoor() => ChangeDoorState(true);
@@ -83,6 +97,7 @@ public class Door : MonoBehaviour, IObservable, IPlayerInteractable
 
     private void Start()
     {
+        isLocked = (lockGO != null);
         IsOpened = false;
         ChangeDoorState(IsOpened);
     }

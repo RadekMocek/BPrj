@@ -12,6 +12,7 @@ public class SceneTransitionManager : MonoBehaviour
     [SerializeField] private GameObject canvasGO;
     [SerializeField] private GameObject camerasGO;
 
+    private ConsistencyManager consistencyManagerScript;
     private Vector2 tempVector;
 
     public string GetCurrentSceneName() => SceneManager.GetActiveScene().name;
@@ -29,6 +30,8 @@ public class SceneTransitionManager : MonoBehaviour
         // Teleport player to desired coordinates
         tempVector.Set(playerX, playerY);
         playerGO.transform.position = tempVector;
+        // Consistency
+        consistencyManagerScript.OnSceneChanged(name);
     }
 
     private void Awake()
@@ -43,7 +46,9 @@ public class SceneTransitionManager : MonoBehaviour
 
         canvasGO.SetActive(true);
 
-        ///*TODO: For testing purposes, comment out me in release
+        consistencyManagerScript = ManagerAccessor.instance.ConsistencyManager;
+
+        ///*TODO: For testing purposes, comment me out in release
         if (customSpawnData != null && customSpawnData.Enabled) {
             var data = customSpawnData;
             ChangeScene(data.SceneName, data.PlayerX, data.PlayerY);
@@ -51,7 +56,7 @@ public class SceneTransitionManager : MonoBehaviour
         /**/
     }
 
-    ///*TODO: For testing purposes, comment out me in release
+    ///*TODO: For testing purposes, comment me out in release
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.R)) {

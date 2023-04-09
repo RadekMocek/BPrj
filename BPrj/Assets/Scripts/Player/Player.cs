@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour, IDamageable
@@ -22,7 +23,6 @@ public class Player : MonoBehaviour, IDamageable
     public PlayerSneakIdleState SneakIdleState { get; private set; }
     public PlayerSneakMoveState SneakMoveState { get; private set; }
     public PlayerAttackLightState AttackLightState { get; private set; }
-    //public PlayerAttackHeavyState AttackHeavyState { get; private set; }
     public PlayerDashState DashState { get; private set; }
     public PlayerDialogueState DialogueState { get; private set; }
     public PlayerKnockbackState KnockbackState { get; private set; }
@@ -202,7 +202,7 @@ public class Player : MonoBehaviour, IDamageable
                 // Is cursorHit interactable ?
                 if (cursorHitGO.TryGetComponent(out cursorHitScriptInteractable)) {
                     HUD.HideObserveHealthBar();
-                    HUD.SetInteractActionText("(" + IH.InteractBinding + ") " + cursorHitScriptInteractable.GetInteractActionDescription());
+                    HUD.SetInteractActionText("(" + IH.InteractBinding + ") " + cursorHitScriptInteractable.GetInteractActionDescription(this));
                     // Can player interact with cursorHit ?
                     if (cursorHitScriptInteractable.CanInteract(this)) {
                         HUD.SetIsInteractActionPossible(true);
@@ -271,6 +271,9 @@ public class Player : MonoBehaviour, IDamageable
         currentState.UpdateWeaponPosition();
     }
 
+    // == Lock, Key =============================
+    public HashSet<LockColor> EquippedKeys { get; private set; }
+
     // == MonoBehaviour functions ===============
     private void Awake()
     {
@@ -290,7 +293,6 @@ public class Player : MonoBehaviour, IDamageable
         SneakIdleState = new PlayerSneakIdleState(this);
         SneakMoveState = new PlayerSneakMoveState(this);
         AttackLightState = new PlayerAttackLightState(this);
-        //AttackHeavyState = new PlayerAttackHeavyState(this);
         DashState = new PlayerDashState(this);
         DialogueState = new PlayerDialogueState(this);
         KnockbackState = new PlayerKnockbackState(this);
@@ -302,6 +304,7 @@ public class Player : MonoBehaviour, IDamageable
         LastMovementDirection = Direction.S;
         IsSneaking = false;
         WeaponEquipped = false;
+        EquippedKeys = new HashSet<LockColor>();
 
         // Health
         health = maxHealth;

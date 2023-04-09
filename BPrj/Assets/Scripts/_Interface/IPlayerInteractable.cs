@@ -1,6 +1,6 @@
 public interface IPlayerInteractable
 {
-    string GetInteractActionDescription();
+    string GetInteractActionDescription(Player playerScript);
     bool CanInteract(Player playerScript);
     void OnInteract(Player playerScript);
 }

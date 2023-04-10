@@ -26,7 +26,7 @@ public class CustomTrigger_Outside : Trigger
         playerSR = playerGO.GetComponent<SpriteRenderer>();
         playerScript = playerGO.GetComponent<Player>();
         playerSR.enabled = false;
-        playerScript.DialogueStart(); // Prevent from moving
+        playerScript.DialogueStart(Direction.S); // Prevent player from moving
 
         FM_Door_TopGO.SetActive(false);
 

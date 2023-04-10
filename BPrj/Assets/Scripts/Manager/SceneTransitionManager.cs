@@ -55,13 +55,4 @@ public class SceneTransitionManager : MonoBehaviour
         }
         /**/
     }
-
-    ///*TODO: For testing purposes, comment me out in release
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.R)) {
-            ChangeScene(GetCurrentSceneName(), playerGO.transform.position.x, playerGO.transform.position.y);
-        }
-    }
-    /**/
 }

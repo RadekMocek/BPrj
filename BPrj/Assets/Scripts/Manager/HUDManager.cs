@@ -122,18 +122,19 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private GameObject dialogueMainGO;
     [SerializeField] private TMP_Text dialogueText;
     [SerializeField] private GameObject dialogueContinueIndicatorGO;
+    [SerializeField] private GameObject dialogueIconGO;
 
     private bool isInDialogue;
     private Stack<string> dialogueStack;
     private Coroutine fillDialogueBoxCoroutine;
     private bool isFillDialogueBoxCoroutineRunning;
 
-    public void StartDialogue(Stack<string> dialogueStack)
+    public void StartDialogue(Stack<string> dialogueStack, Direction facingDirection)
     {
         this.dialogueStack = dialogueStack;
         fillDialogueBoxCoroutine = StartCoroutine(FillDialogueBox());
         dialogueMainGO.SetActive(true);
-        playerScript.DialogueStart();
+        playerScript.DialogueStart(facingDirection);
         isInDialogue = true;
 
         SetObserveNameText("");
@@ -143,6 +144,7 @@ public class HUDManager : MonoBehaviour
     private void EndDialogue()
     {
         dialogueMainGO.SetActive(false);
+        dialogueIconGO.SetActive(false);
         playerScript.DialogueEnd();
         isInDialogue = false;
     }
@@ -167,7 +169,13 @@ public class HUDManager : MonoBehaviour
     }
 
     private bool DialogueContinuePressed() =>
-        playerScript.IH.InteractAction.WasPressedThisFrame() || Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter) || Input.GetMouseButtonDown(0);
+        playerScript.IH.InteractAction.WasPressedThisFrame() ||
+        playerScript.IH.DashAction.WasPressedThisFrame() ||
+        Input.GetKeyDown(KeyCode.Return) ||
+        Input.GetKeyDown(KeyCode.KeypadEnter) ||
+        Input.GetMouseButtonDown(0);
+
+    public void ShowDialogueIcon() => dialogueIconGO.SetActive(true);
 
     // == MonoBehaviour =========================
     private void Awake()

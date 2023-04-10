@@ -4,10 +4,12 @@ using UnityEngine;
 public class DialogueTrigger : Trigger
 {
     [Header("Dialogue trigger")]
-    [TextArea(minLines: 1, maxLines: 2)] [SerializeField] private string[] dialogue;
+    [TextArea(minLines: 2, maxLines: 3)] [SerializeField] private string[] dialogue;
+    [SerializeField] private bool showDialogueIcon;
 
-    private HUDManager HUD;
-    
+    protected HUDManager HUD;
+    protected Direction facingDirection = Direction.S;
+
     private Stack<string> dialogueStack;
 
     private void Awake()
@@ -15,8 +17,10 @@ public class DialogueTrigger : Trigger
         HUD = ManagerAccessor.instance.HUD;
     }
 
-    private void Start()
+    protected override void Start()
     {
+        base.Start();
+
         dialogueStack = new Stack<string>();
     }
 
@@ -27,7 +31,9 @@ public class DialogueTrigger : Trigger
         for (int i = dialogue.Length - 1; i >= 0; i--) {
             dialogueStack.Push(dialogue[i]);
         }
-            
-        HUD.StartDialogue(dialogueStack);
+
+        if (showDialogueIcon) HUD.ShowDialogueIcon();
+
+        HUD.StartDialogue(dialogueStack, facingDirection);
     }
 }

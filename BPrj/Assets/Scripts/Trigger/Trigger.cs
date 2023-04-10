@@ -2,24 +2,26 @@ using UnityEngine;
 
 public class Trigger : MonoBehaviour
 {
+    private readonly float radius = 1.0f;
+
     [Header("Trigger")]
     [SerializeField] private LayerMask playerLayer;
 
-    private bool triggered;
+    protected bool triggered;
 
     protected virtual void TriggerLogic()
     {
 
     }
 
-    private void Start()
+    protected virtual void Start()
     {
         triggered = false;
     }
 
     private void FixedUpdate()
     {
-        if (!triggered && Physics2D.OverlapCircle(this.transform.position, 1, playerLayer)) {
+        if (!triggered && Physics2D.OverlapCircle(this.transform.position, radius, playerLayer)) {
             triggered = true;
             ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
             TriggerLogic();
@@ -28,6 +30,6 @@ public class Trigger : MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireSphere(this.transform.position, 1.0f);
+        Gizmos.DrawWireSphere(this.transform.position, radius);
     }
 }

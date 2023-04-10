@@ -1,10 +1,9 @@
-using System.Collections;
 using UnityEngine;
 
 public class Key : MonoBehaviour, IPlayerInteractable
 {
     // == IPlayerInteractable ===================
-    public string GetInteractActionDescription(Player playerScript) => "Sebrat klíè";
+    public string GetInteractActionDescription(Player playerScript) => "Sebrat";
 
     public bool CanInteract(Player playerScript)
     {
@@ -20,30 +19,4 @@ public class Key : MonoBehaviour, IPlayerInteractable
 
     // == Lock, Key =============================
     [SerializeField] private LockColor color;
-
-    // == Floating effect =======================
-    private Vector2 initialPosition;
-    private Vector2 currentPosition;
-    private int floatingOffset;
-    private int floatingAddition;
-
-    private IEnumerator FloatingEffect()
-    {
-        while (true) {
-            if (floatingOffset == 0 || floatingOffset == 10) floatingAddition *= -1;
-            floatingOffset += floatingAddition;
-            currentPosition.Set(initialPosition.x, initialPosition.y + floatingOffset * 0.02f);
-            this.transform.position = currentPosition;
-            yield return new WaitForSeconds(0.075f);
-        }
-    }
-
-    // == MonoBehaviour functions ===============
-    private void Start()
-    {
-        initialPosition = this.transform.position;
-        floatingOffset = 0;
-        floatingAddition = -1;
-        StartCoroutine(FloatingEffect());
-    }
 }

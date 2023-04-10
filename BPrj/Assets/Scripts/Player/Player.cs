@@ -17,7 +17,7 @@ public class Player : MonoBehaviour, IDamageable
     private HUDManager HUD;
 
     // == State machine =========================
-    private PlayerState currentState;
+    public PlayerState CurrentState { get; private set; }
     public PlayerIdleState IdleState { get; private set; }
     public PlayerMoveState MoveState { get; private set; }
     public PlayerSneakIdleState SneakIdleState { get; private set; }
@@ -29,12 +29,12 @@ public class Player : MonoBehaviour, IDamageable
 
     public void ChangeState(PlayerState newState)
     {
-        if (currentState == IdleState) IdleState.momentumDirection = Vector2.zero;
-        else if (currentState == SneakIdleState) SneakIdleState.momentumDirection = Vector2.zero;
+        if (CurrentState == IdleState) IdleState.momentumDirection = Vector2.zero;
+        else if (CurrentState == SneakIdleState) SneakIdleState.momentumDirection = Vector2.zero;
 
-        currentState?.Exit();
+        CurrentState?.Exit();
         newState.Enter();
-        currentState = newState;
+        CurrentState = newState;
     }
 
     // == Health, Receive damage, Knockback =====
@@ -47,7 +47,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
-        if (currentState == DashState) return;
+        if (CurrentState == DashState) return;
 
         health -= amount;
 
@@ -183,7 +183,7 @@ public class Player : MonoBehaviour, IDamageable
 
     private void UpdateCursorObserveAndInteract()
     {
-        if (currentState == DialogueState) return;
+        if (CurrentState == DialogueState) return;
 
         if (HUD.IsInspecting) {
             if (IH.InteractAction.WasPressedThisFrame() || !HUD.InspectedObjectScript.CanInteract(this)) {
@@ -242,8 +242,9 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // == Dialogue ==============================
-    public void DialogueStart()
+    public void DialogueStart(Direction facingDirection)
     {
+        DialogueState.facingDirection = facingDirection;
         ChangeState(DialogueState);
     }
 
@@ -268,11 +269,12 @@ public class Player : MonoBehaviour, IDamageable
         WeaponSR = weaponGO.GetComponent<SpriteRenderer>();
         WeaponSR.sortingLayerName = "Player";
         WeaponEquipped = true;
-        currentState.UpdateWeaponPosition();
+        CurrentState.UpdateWeaponPosition();
     }
 
-    // == Lock, Key =============================
+    // == Lock, Key, Story items ================
     public HashSet<LockColor> EquippedKeys { get; private set; }
+    [HideInInspector] public bool hasFlash;
 
     // == MonoBehaviour functions ===============
     private void Awake()
@@ -304,7 +306,10 @@ public class Player : MonoBehaviour, IDamageable
         LastMovementDirection = Direction.S;
         IsSneaking = false;
         WeaponEquipped = false;
+
+        // Lock, Key, Story items
         EquippedKeys = new HashSet<LockColor>();
+        hasFlash = false;
 
         // Health
         health = maxHealth;
@@ -327,13 +332,13 @@ public class Player : MonoBehaviour, IDamageable
     private void FixedUpdate()
     {
         // State logic
-        currentState.FixedUpdate();
+        CurrentState.FixedUpdate();
     }
 
     private void Update()
     {
         // State logic
-        currentState.Update();
+        CurrentState.Update();
 
         // Update sub-functions
         UpdateCooldownBar();

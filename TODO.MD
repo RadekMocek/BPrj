@@ -1,17 +1,18 @@
 # TODO
 
-## To implement
+## Plan
+
+* Combat balance – health/damage, weapon logic, more weapon sprites, critical hits
+* Game over logic
+* Tutorials, tasks hud
+* Menu
+
+## Details
 
 ### Enemy
 
-* Enemy opening door delay
-* ~~Improve enemy pathfindingWithBias~~
-* ~~Enemy death – decrease view cone over time~~
-* ~~Enemy death – drop weapon~~
-* Enemy death – drop weapon better animation
-* ~~Enemy death – corpse sprites~~
+* Enemy death – drop weapon better animation (or do not drop weapon ?)
 * Enemy attack – better telegraph
-* ~~Enemy wait at patrol points~~
 * Enemy1 state sprites
 
 ### Player/gameplay

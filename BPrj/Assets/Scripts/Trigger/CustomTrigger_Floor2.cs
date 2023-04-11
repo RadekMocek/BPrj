@@ -3,8 +3,8 @@ using UnityEngine;
 public class CustomTrigger_Floor2 : DialogueTrigger
 {
     [Header("Custom trigger – Floor 2")]
-    [SerializeField] SpriteRenderer tableSR;
-    [SerializeField] Sprite tableWithoutPhoneSprite;
+    [SerializeField] private SpriteRenderer tableSR;
+    [SerializeField] private Sprite tableWithoutPhoneSprite;
 
     private Player playerScript;
     private bool triggerEnd;

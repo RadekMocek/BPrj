@@ -16,6 +16,7 @@ public class EnemyManager : MonoBehaviour
     public Vector2 GetPlayerPosition() => playerTransform.position;
     public Vector2 GetPlayerPositionWalkable() => playerPositionWalkable;
     public bool IsPlayerSneaking() => playerScript.IsSneaking;
+    public bool IsPlayerInDialogueState() => (playerScript.CurrentState == playerScript.DialogueState);
 
     public void UpdatePathfindingFloorTilemap()
     {

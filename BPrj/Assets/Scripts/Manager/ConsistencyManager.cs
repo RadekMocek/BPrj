@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class ConsistencyManager : MonoBehaviour
 {
-    private readonly string[] consistentTransformParentNames = new string[] { "Triggers", "Items", "Locks" }; //TODO: Enemy consistency
+    private readonly string[] consistentTransformParentNames = new string[] { "Triggers", "Items", "Locks", "Enemies" };
 
     private Dictionary<string, Dictionary<string, bool>> records;
     private string currentSceneName;

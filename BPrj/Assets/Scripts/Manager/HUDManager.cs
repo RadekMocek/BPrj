@@ -177,6 +177,12 @@ public class HUDManager : MonoBehaviour
 
     public void ShowDialogueIcon() => dialogueIconGO.SetActive(true);
 
+    // == Thanks for playing ====================
+    [Header("WIN – Thanks for playing")]
+    [SerializeField] private GameObject thanksForPlayingGO;
+
+    public void ShowThanksForPlaying() => thanksForPlayingGO.SetActive(true);
+
     // == MonoBehaviour =========================
     private void Awake()
     {
@@ -194,6 +200,9 @@ public class HUDManager : MonoBehaviour
         
         // Dialogue
         dialogueMainGO.SetActive(false);
+
+        // Thanks for playing
+        thanksForPlayingGO.SetActive(false);
     }
 
     private void Start()

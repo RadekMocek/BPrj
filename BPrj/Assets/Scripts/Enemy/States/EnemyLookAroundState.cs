@@ -4,12 +4,15 @@ public class EnemyLookAroundState : EnemyState
 {
     public EnemyLookAroundState(Enemy enemy) : base(enemy)
     {
+        rotationPauseDuration = enemy.Data.RotationPauseDuration;
     }
 
     protected bool End_PlayerLost { get; private set; }
     protected bool End_PlayerSpotted { get; private set; }
 
-    private readonly float rotationPauseDuration = .75f;
+    private readonly bool endFast = true;
+
+    private readonly float rotationPauseDuration; // SO
     private readonly int[] rotations = new int[] { 60, -60, -60, 60 };
 
     private int nRotations;
@@ -26,7 +29,7 @@ public class EnemyLookAroundState : EnemyState
 
         nRotations = rotations.Length;
         rotationsIndex = 0;
-        lastRotationTime = enterTime;
+        lastRotationTime = enterTime - rotationPauseDuration;
         targetRotation = enemy.TargetFacingDirection;
     }
 
@@ -50,7 +53,7 @@ public class EnemyLookAroundState : EnemyState
         // Rotate according to angles stored in `rotations` every time `rotationPauseDuration` passes
         if (Time.time > lastRotationTime + rotationPauseDuration) {
             lastRotationTime = Time.time;
-
+            
             if (rotationsIndex < nRotations) {
                 targetRotation += rotations[rotationsIndex];
 
@@ -61,6 +64,10 @@ public class EnemyLookAroundState : EnemyState
                 enemy.DirectionToAnimation(enemy.FacingDirectionToDirectionRound(targetRotation));
 
                 rotationsIndex++;
+
+                if (endFast && rotationsIndex == nRotations) {
+                    End_PlayerLost = true;
+                }
             }
             else {
                 End_PlayerLost = true;

@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class Trigger : MonoBehaviour
 {
-    private readonly float radius = 1.0f;
-
     [Header("Trigger")]
+    [SerializeField] private float radius = 1.0f;
     [SerializeField] private LayerMask playerLayer;
 
     protected bool triggered;

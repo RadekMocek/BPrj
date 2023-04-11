@@ -13,5 +13,6 @@ MonoBehaviour:
   m_Name: Enemy1Data
   m_EditorClassIdentifier: 
   <MaxHealth>k__BackingField: 50
-  <FieldOfView>k__BackingField: 105
-  <ViewDistance>k__BackingField: 8.2
+  <FieldOfView>k__BackingField: 110
+  <ViewDistance>k__BackingField: 9
+  <RotationPauseDuration>k__BackingField: 0.5

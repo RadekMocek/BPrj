@@ -21,6 +21,7 @@ public class Weapon : MonoBehaviour, IPlayerInteractable
         playerScript.EquipWeapon(this.gameObject);
         BC.enabled = false;
         equipped = true;
+        ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
     }
  
     // == MonoBehaviour functions ===============

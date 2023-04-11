@@ -55,13 +55,6 @@ public class PlayerIdleState : PlayerState
             if (Input.GetMouseButtonDown(0) && player.CanAttack()) {
                 player.ChangeState(player.AttackLightState);
             }
-            /*
-            else if (Input.GetMouseButtonDown(1) && player.CanAttack()) {
-                player.ChangeState(player.AttackHeavyState);
-            }
-            */
         }
-
     }
-
 }

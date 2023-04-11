@@ -91,7 +91,7 @@ public class PlayerAttackSuperState : PlayerState
 
         // Check critical hit
         if (player.IsCooldownBarVisible()) {
-            Debug.Log("Critical hit");
+            Debug.Log("Critical hit"); //TODO: cirtical hit
         }
     }
 

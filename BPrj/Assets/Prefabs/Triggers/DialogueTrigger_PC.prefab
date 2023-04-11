@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6317728291882738092}
-  - component: {fileID: 6569244231077515043}
+  - component: {fileID: 4726141941532806773}
   m_Layer: 0
   m_Name: DialogueTrigger_PC
   m_TagString: Untagged
@@ -32,7 +32,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6569244231077515043
+--- !u!114 &4726141941532806773
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -41,12 +41,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 8192449535354565090}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32b023b5be5d2504491c717ac9ccbc13, type: 3}
+  m_Script: {fileID: 11500000, guid: 61430408a1ba1c940839b7e824a3115e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   playerLayer:
     serializedVersion: 2
     m_Bits: 64
   dialogue:
-  - "Hlup\xE1ku!"
-  showDialogueIcon: 1
+  - "Zrada!\nOd te\u010F jedu na vlastn\xED p\u011Bst."
+  - "Odeslalo to data n\u011Bkam do serverovny..."
+  - "Musim ji naj\xEDt a zni\u010Dit to tam."
+  showDialogueIcon: 0

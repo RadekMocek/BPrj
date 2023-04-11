@@ -1,4 +1,3 @@
-using System.Data.Common;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
 
@@ -81,6 +80,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         weaponScript.equipped = false;
         // Make unobservable
         this.gameObject.layer = LayerMask.NameToLayer("Enemy_Dead");
+        // Make dead consistent
+        ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
         // Decrease red view cone over time and then disable this script
         IsDead = true;
     }
@@ -453,12 +454,14 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         StartViewCone();
         CurrentDetectionLength = 0;
         ChangeViewConeRedRadius(CurrentDetectionLength);
+        // - Final cutscene special case
+        if (ManagerAccessor.instance.SceneManager.GetCurrentSceneName() == "Outside_End") ChangeViewConeRedRadius(ViewDistance);
 
         // Weapon
         StartWeapon();
     }
 
-    protected virtual void FixedUpdate()
+    private void FixedUpdate()
     {
         // State logic
         currentState.FixedUpdate();
@@ -467,8 +470,14 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         IsPlayerVisible = UpdateIsPlayerVisible();
     }
 
-    protected virtual void Update()
+    private void Update()
     {
+        // Stop all logic if player in DialogueState (Except final cutscene)
+        if (EnemyManager.IsPlayerInDialogueState() && ManagerAccessor.instance.SceneManager.GetCurrentSceneName() != "Outside_End") {
+            RB.velocity = Vector2.zero;
+            return;
+        }
+
         // Dead logic
         if (IsDead) {
             RB.velocity = Vector2.zero;
@@ -490,22 +499,21 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     protected virtual void OnCollisionEnter2D(Collision2D collision)
     {
-        ///* Open door
+        // Open door
         if (collision.transform.TryGetComponent(out Door collisionDoorScript)) {
             collisionDoorScript.OpenDoor();
         }
-        /**/
     }
 
     private void OnDrawGizmosSelected()
     {
         if (patrolPoints != null) {
-            foreach (var patrolPoint in patrolPoints) {
+            foreach (Vector2 patrolPoint in patrolPoints) {
                 Gizmos.DrawWireSphere(patrolPoint, .2f);
             }
         }
     }
-
+    //TODO: delete debug
     [HideInInspector] public Vector2 gizmoCircleCenter;
     [HideInInspector] public float gizmoCircleRadius;
     private void OnDrawGizmos()

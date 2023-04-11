@@ -175,6 +175,7 @@ public class Player : MonoBehaviour, IDamageable
     // == Cursor observe & interact =============
     [Header("Observe and interact")]
     [SerializeField] private LayerMask observableLayer;
+    [SerializeField] private LayerMask facadeLayer;
 
     private Collider2D cursorHit;
     private GameObject cursorHitGO;
@@ -191,6 +192,8 @@ public class Player : MonoBehaviour, IDamageable
             }
             return;
         }
+
+        if (Physics2D.OverlapCircle(cursorCoordinates, 0.25f, facadeLayer)) return;
 
         // Ray has no direction and no length but it still detects if cursor hovers over something with a collider
         cursorHit = Physics2D.OverlapCircle(cursorCoordinates, 0.25f, observableLayer);
@@ -244,6 +247,7 @@ public class Player : MonoBehaviour, IDamageable
     // == Dialogue ==============================
     public void DialogueStart(Direction facingDirection)
     {
+        IsSneaking = false;
         DialogueState.facingDirection = facingDirection;
         ChangeState(DialogueState);
     }
@@ -309,7 +313,11 @@ public class Player : MonoBehaviour, IDamageable
 
         // Lock, Key, Story items
         EquippedKeys = new HashSet<LockColor>();
-        hasFlash = false;
+        hasFlash = true; //TODO: FALSE
+        //TODO: DELETE
+        EquippedKeys.Add(LockColor.Red);
+        EquippedKeys.Add(LockColor.Green);
+        EquippedKeys.Add(LockColor.Blue);
 
         // Health
         health = maxHealth;
@@ -347,6 +355,7 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // == Debug =================================
+    //TODO: delete debug
     [Header("Debug")]
     public Vector2 gizmoCircleCenter;
     public float gizmoCircleRadius;

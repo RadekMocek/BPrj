@@ -23,9 +23,11 @@ public class CustomTrigger_Outside : Trigger
         FM_DoorSR.sprite = FM_Door_AnimTopSprite;
 
         var playerGO = GameObject.Find("Player");
+
         playerSR = playerGO.GetComponent<SpriteRenderer>();
-        playerScript = playerGO.GetComponent<Player>();
         playerSR.enabled = false;
+        
+        playerScript = playerGO.GetComponent<Player>();
         playerScript.DialogueStart(Direction.S); // Prevent player from moving
 
         FM_Door_TopGO.SetActive(false);

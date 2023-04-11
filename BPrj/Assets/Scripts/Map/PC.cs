@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PC : MonoBehaviour, IPlayerInteractable
 {
-    [SerializeField] private GameObject triggerPrefab;
+    [SerializeField] private GameObject triggerGO;
 
     private Transform playerTransform;
 
@@ -17,12 +17,15 @@ public class PC : MonoBehaviour, IPlayerInteractable
     public void OnInteract(Player playerScript)
     {
         playerTransform = playerScript.transform;
+
+        playerScript.hasFlash = false;
         CameraShake.Instance.ShakeCamera();
         Invoke(nameof(Dialogue), 1.5f);
     }
 
     private void Dialogue()
     {
-        Instantiate(triggerPrefab, playerTransform.position, Quaternion.identity);
+        triggerGO.transform.position = playerTransform.position;
+        triggerGO.SetActive(true);
     }
 }

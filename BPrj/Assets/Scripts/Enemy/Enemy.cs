@@ -248,6 +248,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     private bool UpdateIsPlayerVisible(bool debug = false)
     {
+        if (EnemyManager.isPlayerDead) return false;
+
         UpdatePlayerPositionInfo();
 
         // Is player in view distance ?
@@ -335,6 +337,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 
     public bool IsPlayerVisibleClose()
     {
+        if (EnemyManager.isPlayerDead) return false;
+
         playerCheckClose = (Vector2)this.transform.position + realBottom + (playerCheckCloseDistance * FacingDirectionToDirectionRound(TargetFacingDirection));
         return Physics2D.OverlapCircle(playerCheckClose, playerCheckCloseRadius, playerLayer);
     }

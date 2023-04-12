@@ -13,6 +13,8 @@ public class EnemyManager : MonoBehaviour
     private Vector2 playerPositionWalkable;
     private Tilemap floorTilemap;
 
+    [HideInInspector] public bool isPlayerDead;
+
     public Vector2 GetPlayerPosition() => playerTransform.position;
     public Vector2 GetPlayerPositionWalkable() => playerPositionWalkable;
     public bool IsPlayerSneaking() => playerScript.IsSneaking;
@@ -29,6 +31,11 @@ public class EnemyManager : MonoBehaviour
         playerScript = playerTransform.gameObject.GetComponent<Player>();
         PathGrid.unwalkableLayer = unwalkableLayer;
         UpdatePathfindingFloorTilemap();
+    }
+
+    private void Start()
+    {
+        isPlayerDead = false;
     }
 
     private void FixedUpdate()

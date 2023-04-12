@@ -26,6 +26,7 @@ public class Player : MonoBehaviour, IDamageable
     public PlayerDashState DashState { get; private set; }
     public PlayerDialogueState DialogueState { get; private set; }
     public PlayerKnockbackState KnockbackState { get; private set; }
+    public PlayerDeadState DeadState { get; private set; }
 
     public void ChangeState(PlayerState newState)
     {
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Receive damage")]
     [SerializeField] private GameObject hitBloodParticlePrefab;
     
-    private readonly int maxHealth = 50;
+    private readonly int maxHealth = 20; //TODO: maxHealth 50?
     private int health;
     public Vector2 KnockbackDirection { get; private set; }
 
@@ -56,7 +57,9 @@ public class Player : MonoBehaviour, IDamageable
 
         if (health <= 0) {
             health = 0;
-            print("player dead");
+            HUD.SetHealth(health);
+            ChangeState(DeadState);
+            return;
         }
 
         HUD.SetHealth(health);
@@ -215,7 +218,7 @@ public class Player : MonoBehaviour, IDamageable
                     HUD.HideObserveHealthBar();
                     HUD.SetInteractActionText("(" + IH.InteractBinding + ") " + cursorHitScriptInteractable.GetInteractActionDescription(this));
                     // Can player interact with cursorHit ?
-                    if (cursorHitScriptInteractable.CanInteract(this)) {
+                    if (cursorHitScriptInteractable.CanInteract(this) && CurrentState != DeadState) {
                         HUD.SetIsInteractActionPossible(true);
                         // Interaction:
                         if (IH.InteractAction.WasPressedThisFrame()) {
@@ -292,6 +295,12 @@ public class Player : MonoBehaviour, IDamageable
     public HashSet<LockColor> EquippedKeys { get; private set; }
     [HideInInspector] public bool hasFlash;
 
+    // == Changing scenes =======================
+    public void OnSceneChanged()
+    {
+        ChangeState(IdleState);
+    }
+
     // == MonoBehaviour functions ===============
     private void Awake()
     {
@@ -314,6 +323,7 @@ public class Player : MonoBehaviour, IDamageable
         DashState = new PlayerDashState(this);
         DialogueState = new PlayerDialogueState(this);
         KnockbackState = new PlayerKnockbackState(this);
+        DeadState = new PlayerDeadState(this);
     }
 
     private void Start()

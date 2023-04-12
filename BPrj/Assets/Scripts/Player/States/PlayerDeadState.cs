@@ -8,9 +8,14 @@ public class PlayerDeadState : PlayerState
 
     private readonly float respawnDuration = 3;
 
+    private bool respawnRequested;
+
     public override void Enter()
     {
         base.Enter();
+
+        // Init
+        respawnRequested = false;
 
         // Change corpse's collision rules
         player.gameObject.layer = LayerMask.NameToLayer("Player_Dead");
@@ -27,7 +32,8 @@ public class PlayerDeadState : PlayerState
         player.RB.velocity = Vector2.zero;
 
         // Respawn after respawnDuration passes
-        if (Time.time > enterTime + respawnDuration) {
+        if (!respawnRequested && Time.time > enterTime + respawnDuration) {
+            respawnRequested = true;
             ManagerAccessor.instance.SceneManager.Respawn();
         }
     }
@@ -36,6 +42,7 @@ public class PlayerDeadState : PlayerState
     {
         base.Exit();
 
+        player.ResetHealth();
         player.gameObject.layer = LayerMask.NameToLayer("Player");
         ManagerAccessor.instance.EnemyManager.isPlayerDead = false;
     }

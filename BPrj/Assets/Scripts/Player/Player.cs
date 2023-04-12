@@ -42,7 +42,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Receive damage")]
     [SerializeField] private GameObject hitBloodParticlePrefab;
     
-    private readonly int maxHealth = 20; //TODO: maxHealth 50?
+    private readonly int maxHealth = 10; //TODO: maxHealth 50?
     private int health;
     public Vector2 KnockbackDirection { get; private set; }
 
@@ -66,6 +66,13 @@ public class Player : MonoBehaviour, IDamageable
 
         KnockbackDirection = direction;
         ChangeState(KnockbackState);
+    }
+
+    public void ResetHealth()
+    {
+        health = maxHealth;
+        HUD.SetMaxHealth(maxHealth);
+        HUD.SetHealth(health);
     }
 
     // == Stamina ===============================
@@ -342,9 +349,7 @@ public class Player : MonoBehaviour, IDamageable
         EquippedKeys.Add(LockColor.Green);
 
         // Health
-        health = maxHealth;
-        HUD.SetMaxHealth(maxHealth);
-        HUD.SetHealth(health);
+        ResetHealth();
 
         // Stamina
         stamina = maxStamina;

@@ -38,7 +38,7 @@ public class SceneTransitionManager : MonoBehaviour
 
     public void Respawn()
     {
-        ChangeScene("Floor1", 0.5f, -4);
+        ChangeScene("RespawnMiddleman", 0, 0);
     }
 
     private void Awake()

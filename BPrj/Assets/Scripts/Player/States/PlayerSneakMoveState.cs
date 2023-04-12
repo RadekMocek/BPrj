@@ -6,7 +6,7 @@ public class PlayerSneakMoveState : PlayerSneakSuperState
     {
     }
 
-    private readonly float maxMovementSpeed = 3.0f;
+    private readonly float maxMovementSpeed = 3.3f;
     private readonly float initialMovementSpeed = 0.0f;
     private readonly int movementSpeedAcceleration = 18;
 

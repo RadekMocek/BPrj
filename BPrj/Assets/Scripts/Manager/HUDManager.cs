@@ -56,7 +56,7 @@ public class HUDManager : MonoBehaviour
     public void SetStamina(int value)
     {
         staminaBarSlider.value = value;
-        staminaBarImage.color = (value >= PlayerStaticValues.dash_staminaCost) ? barGreenColor : barOrangeColor;
+        staminaBarImage.color = (value >= Player.dashStaminaCost) ? barGreenColor : barOrangeColor;
     }
 
     // == Attack cooldown =======================

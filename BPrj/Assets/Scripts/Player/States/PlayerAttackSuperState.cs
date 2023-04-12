@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PlayerAttackSuperState : PlayerState
@@ -31,6 +33,7 @@ public class PlayerAttackSuperState : PlayerState
     private Vector2 weaponRawPosition;
     private bool recovering;
     private float recoveryStartTime;
+    private int damage;
 
     public override void Enter()
     {
@@ -91,7 +94,10 @@ public class PlayerAttackSuperState : PlayerState
 
         // Check critical hit
         if (player.IsCooldownBarVisible()) {
-            Debug.Log("Critical hit"); //TODO: cirtical hit
+            damage = player.attackDamageCritical;
+        }
+        else {
+            damage = player.attackDamageNormal;
         }
     }
 
@@ -135,19 +141,23 @@ public class PlayerAttackSuperState : PlayerState
                 // Disable slip
                 player.RB.velocity = Vector2.zero;
 
-                ///* TEMP gizmos
+                ///* TEMP gizmos //TODO: del temp
                 player.gizmoCircleCenter = (Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition);
                 player.gizmoCircleRadius = damageRadius;
                 /**/
 
                 // Deal damage to IDamageable
                 var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius);
-                foreach (var hit in hits) {
-                    if (hit.gameObject != player.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
-                        hitScript.ReceiveDamage(playerToCursorDirection, 10);
+                HashSet<GameObject> uniqueHits = new(hits.Select(x => x.gameObject));
+                foreach (var hit in uniqueHits) {
+                    if (hit != player.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
+                        hitScript.ReceiveDamage(playerToCursorDirection, damage);
                     }
                 }
 
+                // Decrease stamina
+                player.DecreaseStamina(player.attackStaminaCost);
+                
                 // Transition to Recovery
                 recovering = true;
                 recoveryStartTime = Time.time;

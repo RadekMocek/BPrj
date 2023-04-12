@@ -41,7 +41,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Receive damage")]
     [SerializeField] private GameObject hitBloodParticlePrefab;
     
-    private readonly int maxHealth = 100;
+    private readonly int maxHealth = 50;
     private int health;
     public Vector2 KnockbackDirection { get; private set; }
 
@@ -56,6 +56,7 @@ public class Player : MonoBehaviour, IDamageable
 
         if (health <= 0) {
             health = 0;
+            print("player dead");
         }
 
         HUD.SetHealth(health);
@@ -68,7 +69,7 @@ public class Player : MonoBehaviour, IDamageable
     private readonly int maxStamina = 100;
     private int stamina;
 
-    public bool CanDash() => (stamina >= PlayerStaticValues.dash_staminaCost);
+    public bool CanDash() => (stamina >= dashStaminaCost);
 
     public void DecreaseStamina(int amount)
     {
@@ -103,6 +104,11 @@ public class Player : MonoBehaviour, IDamageable
         }
         isStaminaRegenerationCoroutineRunning = false;
     }
+
+    // == Attack ================================
+    public readonly int attackDamageNormal = 10;
+    public readonly int attackDamageCritical = 16;
+    public readonly int attackStaminaCost = 10;
 
     // == Attack cooldown =======================
     private readonly float attackCooldownDuration = 0.7f;
@@ -145,6 +151,8 @@ public class Player : MonoBehaviour, IDamageable
     // == Dashing ===============================
     [Header("Dashing")]
     [SerializeField] private GameObject afterImagePrefab;
+
+    public static readonly int dashStaminaCost = 30;
 
     private GameObject afterImageGO;
     private AfterImageEffect afterImageScript;
@@ -245,8 +253,11 @@ public class Player : MonoBehaviour, IDamageable
     }
 
     // == Dialogue ==============================
+    private bool wasSneakingBeforeDialogue;
+
     public void DialogueStart(Direction facingDirection)
     {
+        wasSneakingBeforeDialogue = IsSneaking;
         IsSneaking = false;
         DialogueState.facingDirection = facingDirection;
         ChangeState(DialogueState);
@@ -254,7 +265,8 @@ public class Player : MonoBehaviour, IDamageable
 
     public void DialogueEnd()
     {
-        ChangeState(IdleState);
+        IsSneaking = wasSneakingBeforeDialogue;
+        ChangeState((IsSneaking) ? SneakIdleState : IdleState);
     }
 
     // == Weapon handling =======================
@@ -316,8 +328,8 @@ public class Player : MonoBehaviour, IDamageable
         hasFlash = true; //TODO: FALSE
         //TODO: DELETE
         EquippedKeys.Add(LockColor.Red);
-        EquippedKeys.Add(LockColor.Green);
         EquippedKeys.Add(LockColor.Blue);
+        EquippedKeys.Add(LockColor.Green);
 
         // Health
         health = maxHealth;

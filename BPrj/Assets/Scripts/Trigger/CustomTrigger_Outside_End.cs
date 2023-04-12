@@ -28,12 +28,11 @@ public class CustomTrigger_Outside_End : Trigger
         // Kill robots
         yield return new WaitForSeconds(0.3f);
         foreach (Enemy enemyScript in enemyScripts) {
-            yield return new WaitForSeconds(1.0f);
+            yield return new WaitForSeconds(0.7f);
             enemyScript.ReceiveDamage(Vector2.zero, int.MaxValue);
         }
 
         // Raise the bars
-        yield return new WaitForSeconds(0.7f);
         var FM_Door_AnimMovingSR = FM_Door_AnimMovingGO.GetComponent<SpriteRenderer>();
         FM_Door_AnimMovingSR.sortingOrder = -1;
 
@@ -53,12 +52,15 @@ public class CustomTrigger_Outside_End : Trigger
         FM_Door_TopGOPlayer.SetActive(true);
 
         // Walk out
+        yield return new WaitForSeconds(1.0f);
         playerSR.enabled = true;
         playerScript.Anim.CrossFade("Player_Walk_Down", 0);
         playerScript.RB.velocity = 4.7f * Vector2.down;
 
         // Thanks for playing
         yield return new WaitForSeconds(2.0f);
+        playerScript.Anim.CrossFade("Player_Idle_Down", 0);
+        playerScript.RB.velocity = Vector2.zero;
         ManagerAccessor.instance.HUD.ShowThanksForPlaying();
     }
 }

@@ -6,12 +6,13 @@ public class EnemyInvestigateSuperState : EnemyState
 {
     public EnemyInvestigateSuperState(Enemy enemy) : base(enemy)
     {
+        movementSpeed = enemy.Data.InvestigateMovementSpeed;
     }
 
     protected bool End_TargetReached { get; private set; }
     protected bool End_PlayerFound { get; private set; }
 
-    private readonly float movementSpeed = 4.7f;
+    private readonly float movementSpeed; // SO
 
     private Stack<Vector2> pathStack;
     private Vector2 currentTargetNode;
@@ -20,6 +21,7 @@ public class EnemyInvestigateSuperState : EnemyState
     {
         pathStack = enemy.Pathfinder.FindPathWithBias(enemy.transform.position, enemy.lastKnownPlayerPosition);
         if (pathStack.Any()) currentTargetNode = pathStack.Pop();
+        else End_TargetReached = true;
     }
 
     public override void Enter()

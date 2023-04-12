@@ -35,7 +35,7 @@ public class PlayerDashState : PlayerState
 
         player.RB.AddForce(dashSpeed * dashDirection);
 
-        player.DecreaseStamina(PlayerStaticValues.dash_staminaCost);
+        player.DecreaseStamina(Player.dashStaminaCost);
     }
 
     public override void Update()

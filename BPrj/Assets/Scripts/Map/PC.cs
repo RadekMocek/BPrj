@@ -20,7 +20,7 @@ public class PC : MonoBehaviour, IPlayerInteractable
 
         playerScript.hasFlash = false;
         CameraShake.Instance.ShakeCamera();
-        Invoke(nameof(Dialogue), 1.5f);
+        Invoke(nameof(Dialogue), 1.0f);
     }
 
     private void Dialogue()

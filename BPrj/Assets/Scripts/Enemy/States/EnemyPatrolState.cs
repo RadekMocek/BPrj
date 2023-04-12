@@ -7,12 +7,14 @@ public class EnemyPatrolState : EnemyState
     public EnemyPatrolState(Enemy enemy) : base(enemy)
     {
         patrolPointIndex = -1; // (`NextPatrolPoint()` adds one to the `patrolPointIndex`)
+
+        movementSpeed = enemy.Data.PatrolMovementSpeed;
     }
 
     protected bool End_PlayerVisible { get; private set; }
     protected bool End_PatrolPointReached { get; private set; }
 
-    private readonly float movementSpeed = 4.7f;
+    private readonly float movementSpeed; // SO
 
     private Vector2[] patrolPoints;     // Enemy will patrol from point to point
     private int nPatrolPoints;          // Length of `patrolPoints`

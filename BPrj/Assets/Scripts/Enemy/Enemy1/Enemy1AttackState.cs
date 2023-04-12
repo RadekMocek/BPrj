@@ -1,5 +1,3 @@
-using UnityEngine;
-
 public class Enemy1AttackState : EnemyAttackState
 {
     public Enemy1AttackState(Enemy enemy) : base(enemy)

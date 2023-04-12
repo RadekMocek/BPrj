@@ -6,12 +6,13 @@ public class EnemyChaseState : EnemyState
 {
     public EnemyChaseState(Enemy enemy) : base(enemy)
     {
+        movementSpeed = enemy.Data.ChaseMovementSpeed;
     }
 
     protected bool End_PlayerLost { get; private set; }
     protected bool End_PlayerClose { get; private set; }
 
-    private readonly float movementSpeed = 4.7f;
+    private readonly float movementSpeed; // SO
 
     private Stack<Vector2> pathStack;
     private Vector2 currentTargetNode;

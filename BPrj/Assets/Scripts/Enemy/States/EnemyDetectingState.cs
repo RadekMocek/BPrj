@@ -4,6 +4,7 @@ public class EnemyDetectingState : EnemyState
 {
     public EnemyDetectingState(Enemy enemy) : base(enemy)
     {
+        detectionSpeed = enemy.Data.DetectionSpeed;
     }
 
     protected bool End_PlayerLost { get; private set; }
@@ -11,7 +12,7 @@ public class EnemyDetectingState : EnemyState
 
     protected float DetectionLengthWhenPlayerLost { get; private set; }
 
-    private readonly float detectionSpeed = 6;
+    private readonly float detectionSpeed; // SO
 
     private float fullDetectionDuration;
     private float enterDetectionLength;

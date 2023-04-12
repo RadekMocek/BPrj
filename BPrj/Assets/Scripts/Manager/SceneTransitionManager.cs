@@ -51,7 +51,7 @@ public class SceneTransitionManager : MonoBehaviour
         ///*TODO: For testing purposes, comment me out in release
         if (customSpawnData != null && customSpawnData.Enabled) {
             var data = customSpawnData;
-            ChangeScene(data.SceneName, data.PlayerX, data.PlayerY);
+            ChangeScene(data.SceneName, (customSpawnData.CustomCors) ? data.PlayerX : 0, (customSpawnData.CustomCors) ? data.PlayerY : 0);
         }
         /**/
     }

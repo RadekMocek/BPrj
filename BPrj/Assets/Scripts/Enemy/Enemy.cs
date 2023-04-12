@@ -40,7 +40,7 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [SerializeField] private GameObject deadParticlePrefab;
     [SerializeField] private Sprite[] deadSprites;
 
-    private int maxHealth; // SO value
+    private int maxHealth; // SO (value is set in the ScriptableObject (in the editor))
     private int health;
     public bool IsDead { get; private set; }
     
@@ -71,13 +71,18 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
         // Add some weight to the object
         RB.mass = 35;
         RB.drag = 35;
-        // Drop weapon
+        // What to do with the weapon ?
+        /* Drop weapon
         Vector3 dropDirection = new(Random.Range(-1f, 1f), Random.Range(-1f, 1f));
         WeaponSR.sortingLayerName = "Floor_Items";
         weaponBC.enabled = true;
         WeaponTransform.SetParent(null);
         WeaponTransform.SetPositionAndRotation(this.transform.position + dropDirection, Quaternion.Euler(0, 0, Random.Range(0, 360)));
         weaponScript.equipped = false;
+        /**/
+        ///* Destroy weapon
+        Destroy(weaponGO);
+        /**/
         // Make unobservable
         this.gameObject.layer = LayerMask.NameToLayer("Enemy_Dead");
         // Make dead consistent
@@ -222,9 +227,8 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     [SerializeField] private LayerMask doorLayer;
     [SerializeField] private LayerMask playerLayer;
 
-    // SO values
-    private int fieldOfView;
-    public float ViewDistance { get; private set; }
+    private int fieldOfView; // SO
+    public float ViewDistance { get; private set; } // SO
 
     private Vector2 playerPosition;
     public Vector2 EnemyToPlayerVector { get; private set; }

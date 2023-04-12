@@ -2,10 +2,12 @@
 
 ## Plan
 
+* Better stamina bar
 * Combat balance – health/damage, weapon logic, more weapon sprites, critical hits
 * Game over logic
 * Tutorials, tasks hud
-* Menu
+* Pause menu
+* Main menu
 
 ## Details
 
@@ -18,8 +20,8 @@
 ### Player/gameplay
 
 * Crosshair/cursor/...
-* Stealth
-  * Venting indicator
+* Venting indicator
+* Critical hit indication
 
 ### Map
 

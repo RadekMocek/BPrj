@@ -12,7 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a01d66e0121f1044187b08943de7c705, type: 3}
   m_Name: Enemy1Data
   m_EditorClassIdentifier: 
-  <MaxHealth>k__BackingField: 50
-  <FieldOfView>k__BackingField: 110
+  <MaxHealth>k__BackingField: 41
+  <FieldOfView>k__BackingField: 109
   <ViewDistance>k__BackingField: 9
+  <AttackMovementSpeed>k__BackingField: 5
+  <AttackDamage>k__BackingField: 10
+  <DetectionSpeed>k__BackingField: 5.6
+  <FractionOfViewDistanceToGetSuspicious>k__BackingField: 2.8
+  <InvestigateMovementSpeed>k__BackingField: 5
+  <ChaseMovementSpeed>k__BackingField: 5
   <RotationPauseDuration>k__BackingField: 0.5
+  <PatrolMovementSpeed>k__BackingField: 5

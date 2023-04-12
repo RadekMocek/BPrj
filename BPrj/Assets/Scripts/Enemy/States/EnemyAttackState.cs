@@ -1,9 +1,13 @@
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class EnemyAttackState : EnemyState
 {
     public EnemyAttackState(Enemy enemy) : base(enemy)
     {
+        damage = enemy.Data.AttackDamage;
+        movementSpeed = enemy.Data.AttackMovementSpeed;
     }
 
     protected bool End_PlayerClose { get; private set; }
@@ -20,7 +24,8 @@ public class EnemyAttackState : EnemyState
     private readonly float slipSpeed = 1.0f;
     private readonly float recoveryDuration = .25f;
 
-    private readonly float movementSpeed = 3.0f;
+    private readonly int damage; // SO
+    private readonly float movementSpeed; // SO
 
     private bool backswinging;
     private Vector2 enemyToPlayerVector;
@@ -131,11 +136,12 @@ public class EnemyAttackState : EnemyState
                 enemy.gizmoCircleRadius = damageRadius;
                 /**/
 
-                // Deal damage to IDamageable
+                // Deal damage to IDamageable, no friendly fire
                 var hits = Physics2D.OverlapCircleAll((Vector2)enemy.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)enemy.Core.localPosition), damageRadius);
-                foreach (var hit in hits) {
-                    if (hit.gameObject != enemy.gameObject && hit.TryGetComponent(out IDamageable hitScript)) {
-                        hitScript.ReceiveDamage(enemyToPlayerVectorNormalized, 10);
+                HashSet<GameObject> uniqueHits = new(hits.Select(x => x.gameObject));
+                foreach (var hit in uniqueHits) {
+                    if (hit.TryGetComponent(out IDamageable hitScript) && hitScript is not Enemy) {
+                        hitScript.ReceiveDamage(enemyToPlayerVectorNormalized, damage);
                     }
                 }
 

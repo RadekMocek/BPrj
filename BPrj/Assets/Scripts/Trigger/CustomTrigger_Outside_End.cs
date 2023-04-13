@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class CustomTrigger_Outside_End : Trigger
 {
@@ -26,7 +27,7 @@ public class CustomTrigger_Outside_End : Trigger
         playerScript.DialogueStart(Direction.S); // Prevent player from moving
 
         // Kill robots
-        yield return new WaitForSeconds(0.3f);
+        yield return new WaitForSeconds(1.2f);
         foreach (Enemy enemyScript in enemyScripts) {
             yield return new WaitForSeconds(0.7f);
             enemyScript.ReceiveDamage(Vector2.zero, int.MaxValue);
@@ -47,6 +48,7 @@ public class CustomTrigger_Outside_End : Trigger
         }
 
         // Open the door
+        yield return new WaitForSeconds(0.3f);
         FM_Door_TopGO.SetActive(false);
         FM_DoorGO.SetActive(true);
         FM_Door_TopGOPlayer.SetActive(true);
@@ -62,5 +64,9 @@ public class CustomTrigger_Outside_End : Trigger
         playerScript.Anim.CrossFade("Player_Idle_Down", 0);
         playerScript.RB.velocity = Vector2.zero;
         ManagerAccessor.instance.HUD.ShowThanksForPlaying();
+
+        // Main menu
+        yield return new WaitForSeconds(2.0f);
+        ManagerAccessor.instance.SceneManager.MainMenu();
     }
 }

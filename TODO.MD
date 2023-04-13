@@ -4,8 +4,8 @@
 
 * Better stamina bar
 * Combat balance – health/damage, weapon logic, more weapon sprites, critical hits
-* Game over logic
-* Tutorials, tasks hud
+* Tutorials
+* Tasks hud
 * Pause menu
 * Main menu
 
@@ -13,9 +13,7 @@
 
 ### Enemy
 
-* Enemy death – drop weapon better animation (or do not drop weapon ?)
 * Enemy attack – better telegraph
-* Enemy1 state sprites
 
 ### Player/gameplay
 
@@ -29,4 +27,4 @@
 
 ## Issues
 
-* Stuttering view cone rotation in build
+* Non-smooth view cone rotation in build

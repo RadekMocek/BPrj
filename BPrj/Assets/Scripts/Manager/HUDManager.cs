@@ -183,6 +183,12 @@ public class HUDManager : MonoBehaviour
 
     public void ShowThanksForPlaying() => thanksForPlayingGO.SetActive(true);
 
+    // == Pause menu ============================
+    [Header("WIN – Pause")]
+    [SerializeField] private GameObject pauseGO;
+
+    public void ShowPause(bool value) => pauseGO.SetActive(value);
+
     // == MonoBehaviour =========================
     private void Awake()
     {
@@ -203,6 +209,9 @@ public class HUDManager : MonoBehaviour
 
         // Thanks for playing
         thanksForPlayingGO.SetActive(false);
+
+        // Pause
+        ShowPause(false);
     }
 
     private void Start()

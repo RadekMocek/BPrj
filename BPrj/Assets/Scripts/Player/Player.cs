@@ -42,7 +42,8 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Receive damage")]
     [SerializeField] private GameObject hitBloodParticlePrefab;
     
-    private readonly int maxHealth = 10; //TODO: maxHealth 50?
+    private readonly int maxHealth = 40;
+    private readonly int maxHealedHealth = 20;
     private int health;
     public Vector2 KnockbackDirection { get; private set; }
 
@@ -54,6 +55,8 @@ public class Player : MonoBehaviour, IDamageable
 
         Instantiate(hitBloodParticlePrefab, this.Core.position, Quaternion.identity);
         CameraShake.Instance.ShakeCamera();
+
+        lastDamagedTime = Time.time;
 
         if (health <= 0) {
             health = 0;
@@ -75,6 +78,32 @@ public class Player : MonoBehaviour, IDamageable
         HUD.SetHealth(health);
     }
 
+    // Health regeneration
+    private readonly float healthIncreasePauseDuration = 1.6f;
+    private readonly float healthIncreaseDamagedPenaltyDuration = 2.0f;
+
+    private float lastHealthIncreaseTime;
+    private float lastDamagedTime;
+
+    private void UpdateHealthRegeneration()
+    {
+        if (stamina == maxStamina
+            && health < maxHealedHealth
+            && Time.time > lastHealthIncreaseTime + healthIncreasePauseDuration
+            && Time.time > lastDamagedTime + healthIncreaseDamagedPenaltyDuration) {
+            
+            lastHealthIncreaseTime = Time.time;
+            IncreaseHealth(1);
+        }
+    }
+
+    private void IncreaseHealth(int amount)
+    {
+        health += amount;
+        if (health > maxHealth) health = maxHealth;
+        HUD.SetHealth(health);
+    }
+    
     // == Stamina ===============================
     private readonly int maxStamina = 100;
     private int stamina;
@@ -91,14 +120,7 @@ public class Player : MonoBehaviour, IDamageable
         staminaRegenerationCoroutine = StartCoroutine(StaminaRegeneration());
     }
 
-    private void IncreaseStamina(int amount)
-    {
-        stamina += amount;
-        if (stamina > maxStamina) stamina = maxStamina;
-        HUD.SetStamina(stamina);
-    }
-
-    // Stamina regen
+    // Stamina regeneration
     private Coroutine staminaRegenerationCoroutine;
     private bool isStaminaRegenerationCoroutineRunning;
 
@@ -115,10 +137,17 @@ public class Player : MonoBehaviour, IDamageable
         isStaminaRegenerationCoroutineRunning = false;
     }
 
+    private void IncreaseStamina(int amount)
+    {
+        stamina += amount;
+        if (stamina > maxStamina) stamina = maxStamina;
+        HUD.SetStamina(stamina);
+    }
+
     // == Attack ================================
     public readonly int attackDamageNormal = 10;
-    public readonly int attackDamageCritical = 16;
-    public readonly int attackStaminaCost = 10;
+    public readonly int attackDamageCritical = 20;
+    public readonly int attackStaminaCost = 5;
 
     // == Attack cooldown =======================
     private readonly float attackCooldownDuration = 0.7f;
@@ -162,7 +191,7 @@ public class Player : MonoBehaviour, IDamageable
     [Header("Dashing")]
     [SerializeField] private GameObject afterImagePrefab;
 
-    public static readonly int dashStaminaCost = 30;
+    public static readonly int dashStaminaCost = 25;
 
     private GameObject afterImageGO;
     private AfterImageEffect afterImageScript;
@@ -342,11 +371,14 @@ public class Player : MonoBehaviour, IDamageable
 
         // Lock, Key, Story items
         EquippedKeys = new HashSet<LockColor>();
-        hasFlash = true; //TODO: FALSE
-        //TODO: DELETE
+        
+        //TODO: DEBUG
+        /*
+        hasFlash = true;
         EquippedKeys.Add(LockColor.Red);
         EquippedKeys.Add(LockColor.Blue);
         EquippedKeys.Add(LockColor.Green);
+        /**/
 
         // Health
         ResetHealth();
@@ -372,22 +404,15 @@ public class Player : MonoBehaviour, IDamageable
 
     private void Update()
     {
+        if (Time.timeScale == 0) return;
+
         // State logic
         CurrentState.Update();
 
         // Update sub-functions
+        UpdateHealthRegeneration();
         UpdateCooldownBar();
         UpdateCursorPositionAndCoordinates();
         UpdateCursorObserveAndInteract();
-    }
-
-    // == Debug =================================
-    //TODO: delete debug
-    [Header("Debug")]
-    public Vector2 gizmoCircleCenter;
-    public float gizmoCircleRadius;
-    private void OnDrawGizmos()
-    {
-        Gizmos.DrawWireSphere(gizmoCircleCenter, gizmoCircleRadius);
     }
 }

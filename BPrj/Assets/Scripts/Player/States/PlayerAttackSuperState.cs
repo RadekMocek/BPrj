@@ -141,11 +141,6 @@ public class PlayerAttackSuperState : PlayerState
                 // Disable slip
                 player.RB.velocity = Vector2.zero;
 
-                ///* TEMP gizmos //TODO: del temp
-                player.gizmoCircleCenter = (Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition);
-                player.gizmoCircleRadius = damageRadius;
-                /**/
-
                 // Deal damage to IDamageable
                 var hits = Physics2D.OverlapCircleAll((Vector2)player.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)player.Core.localPosition), damageRadius);
                 HashSet<GameObject> uniqueHits = new(hits.Select(x => x.gameObject));

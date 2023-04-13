@@ -7,8 +7,8 @@ public class PlayerDashState : PlayerState
     }
 
     // == Dash ==
-    private readonly int dashSpeed = 660;
-    private readonly float dashDuration = .14f;
+    private readonly int dashSpeed = 700;
+    private readonly float dashDuration = .16f;
     private readonly float breatheOutDuration = .1f;
 
     public Vector2 dashDirection;

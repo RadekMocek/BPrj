@@ -41,6 +41,12 @@ public class SceneTransitionManager : MonoBehaviour
         ChangeScene("RespawnMiddleman", 0, 0);
     }
 
+    public void MainMenu()
+    {
+        SceneManager.LoadScene("MainMenu");
+        Destroy(ManagerAccessor.instance);
+    }
+
     private void Awake()
     {
         DontDestroyOnLoad(playerGO);

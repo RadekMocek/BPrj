@@ -131,11 +131,6 @@ public class EnemyAttackState : EnemyState
 
             // When we reach the endingAngle:
             if (angle >= endingAngle) {
-                ///* TEMP gizmos
-                enemy.gizmoCircleCenter = (Vector2)enemy.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)enemy.Core.localPosition);
-                enemy.gizmoCircleRadius = damageRadius;
-                /**/
-
                 // Deal damage to IDamageable, no friendly fire
                 var hits = Physics2D.OverlapCircleAll((Vector2)enemy.transform.position + (weaponRawPosition * damageDistanceFromCore + (Vector2)enemy.Core.localPosition), damageRadius);
                 HashSet<GameObject> uniqueHits = new(hits.Select(x => x.gameObject));

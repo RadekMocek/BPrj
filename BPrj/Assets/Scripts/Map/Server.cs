@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class Server : MonoBehaviour, IObservable, IDamageable, IObservableHealth
 {
+    [SerializeField] private GameObject deadServerParticlePrefab;
+    [SerializeField] private Enemy[] floor3enemyScripts;
+
     // == Observe ===============================
-    public virtual string GetName() => "Server";
+    public virtual string GetName() => "AI Server";
 
     // == Health, damage ========================
     private int maxHealth;
@@ -15,9 +18,21 @@ public class Server : MonoBehaviour, IObservable, IDamageable, IObservableHealth
     {
         CameraShake.Instance.ShakeCamera();
         health -= amount;
-        if (health <= 0) { //TODO: vypnout zde player sprite (?)
-            ManagerAccessor.instance.SceneManager.ChangeScene("Outside_End", -3, 1.8f);
+        if (health <= 0) {
+            Instantiate(deadServerParticlePrefab, this.transform.position, Quaternion.identity);
+            this.GetComponent<SpriteRenderer>().enabled = false;
+
+            foreach (Enemy enemyScript in floor3enemyScripts) {
+                enemyScript.ReceiveDamage(Vector2.zero, int.MaxValue);
+            }
+
+            Invoke(nameof(Cutscene), 1.5f);
         }
+    }
+
+    private void Cutscene()
+    {
+        ManagerAccessor.instance.SceneManager.ChangeScene("Outside_End", -3, 1.8f);
     }
 
     // == MonoBehaviour functions ===============

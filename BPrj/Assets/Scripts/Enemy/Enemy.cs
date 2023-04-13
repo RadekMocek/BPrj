@@ -521,15 +521,4 @@ public class Enemy : MonoBehaviour, IObservable, IDamageable, IObservableHealth
             }
         }
     }
-    //TODO: delete debug
-    [HideInInspector] public Vector2 gizmoCircleCenter;
-    [HideInInspector] public float gizmoCircleRadius;
-    private void OnDrawGizmos()
-    {
-        /*
-        Gizmos.DrawWireSphere(gizmoCircleCenter, gizmoCircleRadius);
-        //Gizmos.DrawRay(this.transform.position, EnemyToPlayerVector);
-        Gizmos.DrawWireSphere((Vector2)this.transform.position + realBottom + (playerCheckCloseDistance * FacingDirectionToDirectionRound(TargetFacingDirection)), playerCheckCloseRadius);
-        /**/
-    }
 }

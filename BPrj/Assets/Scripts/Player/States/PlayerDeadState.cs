@@ -17,6 +17,12 @@ public class PlayerDeadState : PlayerState
         // Init
         respawnRequested = false;
 
+        //
+        player.IsSneaking = false;
+
+        // Change to dead sprite
+        player.Anim.CrossFade("Player_Dead", 0);
+
         // Change corpse's collision rules
         player.gameObject.layer = LayerMask.NameToLayer("Player_Dead");
         

@@ -1,6 +1,7 @@
 // https://stackoverflow.com/a/48817315/
 // https://stackoverflow.com/a/40578161/
 
+///*
 #if UNITY_EDITOR
 
 using System.Reflection;
@@ -37,3 +38,4 @@ public static class CustomSceneLoader
 }
 
 #endif
+/**/

@@ -1,15 +1,19 @@
 # TODO
 
-## Plan
+## Main
 
 * Better stamina bar
 * Combat balance – health/damage, weapon logic, more weapon sprites, critical hits
 * Tutorials
 * Tasks hud
-* Pause menu
-* Main menu
+* ~~Pause menu~~
+* ~~Main menu~~
 
-## Details
+## Side
+
+### Sounds
+
+* Bfxr (?)
 
 ### Enemy
 

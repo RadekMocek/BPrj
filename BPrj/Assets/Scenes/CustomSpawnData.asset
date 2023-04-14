@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52fc633c89a993147afa3cec3caaadfe, type: 3}
   m_Name: CustomSpawnData
   m_EditorClassIdentifier: 
-  <Enabled>k__BackingField: 0
+  <Enabled>k__BackingField: 1
   <SceneName>k__BackingField: Floor1
   <CustomCors>k__BackingField: 0
   <PlayerX>k__BackingField: 5

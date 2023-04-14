@@ -18,6 +18,7 @@ public class CustomTrigger_Outside_End : Trigger
 
     private IEnumerator Animation()
     {
+        // Init
         var playerGO = GameObject.Find("Player");
 
         var playerSR = playerGO.GetComponent<SpriteRenderer>();
@@ -65,8 +66,8 @@ public class CustomTrigger_Outside_End : Trigger
         playerScript.RB.velocity = Vector2.zero;
         ManagerAccessor.instance.HUD.ShowThanksForPlaying();
 
-        // Main menu
-        yield return new WaitForSeconds(2.0f);
+        // Return to main menu
+        yield return new WaitForSeconds(2.5f);
         ManagerAccessor.instance.SceneManager.MainMenu();
     }
 }

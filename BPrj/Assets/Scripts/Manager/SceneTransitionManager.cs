@@ -44,7 +44,7 @@ public class SceneTransitionManager : MonoBehaviour
     public void MainMenu()
     {
         SceneManager.LoadScene("MainMenu");
-        Destroy(ManagerAccessor.instance);
+        Destroy(ManagerAccessor.instance.gameObject);
     }
 
     private void Awake()
@@ -62,11 +62,10 @@ public class SceneTransitionManager : MonoBehaviour
         consistencyManagerScript = ManagerAccessor.instance.ConsistencyManager;
         playerScript = playerGO.GetComponent<Player>();
 
-        ///*TODO: For testing purposes, comment me out in release
-        if (customSpawnData != null && customSpawnData.Enabled) {
+        // Debug
+        if (Application.isEditor && customSpawnData != null && customSpawnData.Enabled) {
             var data = customSpawnData;
             ChangeScene(data.SceneName, (customSpawnData.CustomCors) ? data.PlayerX : 0, (customSpawnData.CustomCors) ? data.PlayerY : 0);
         }
-        /**/
     }
 }

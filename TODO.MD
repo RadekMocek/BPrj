@@ -3,11 +3,11 @@
 ## Main
 
 * Better stamina bar
-* Combat balance – health/damage, weapon logic, more weapon sprites, critical hits
-* Tutorials
+* ~~Tutorials~~
 * Tasks hud
 * ~~Pause menu~~
 * ~~Main menu~~
+* More weapon sprites
 
 ## Side
 

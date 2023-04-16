@@ -18,6 +18,8 @@ public class PC : MonoBehaviour, IPlayerInteractable
     {
         playerTransform = playerScript.transform;
 
+        ManagerAccessor.instance.HUD.ShowItem(3, false); // Hide flash drive icon from HUD
+
         playerScript.hasFlash = false;
         CameraShake.Instance.ShakeCamera();
         Invoke(nameof(Dialogue), 1.0f);

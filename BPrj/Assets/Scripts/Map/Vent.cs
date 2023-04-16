@@ -2,8 +2,6 @@ using UnityEngine;
 
 public class Vent : MonoBehaviour
 {
-    //[SerializeField] private VentDoor ventDoorScript;
-    
     private EnemyManager enemyManager;
     private int ventLayer;
     private int ventOpenLayer;
@@ -17,6 +15,6 @@ public class Vent : MonoBehaviour
 
     private void Update()
     {
-        this.gameObject.layer = (/*!ventDoorScript.IsOpened || */!enemyManager.IsPlayerSneaking()) ? ventLayer : ventOpenLayer;
+        this.gameObject.layer = (!enemyManager.IsPlayerSneaking()) ? ventLayer : ventOpenLayer;
     }
 }

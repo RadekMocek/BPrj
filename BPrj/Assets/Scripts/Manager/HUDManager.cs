@@ -183,11 +183,120 @@ public class HUDManager : MonoBehaviour
 
     public void ShowThanksForPlaying() => thanksForPlayingGO.SetActive(true);
 
+    private void UpdateDialogue()
+    {
+        if (isInDialogue && DialogueContinuePressed()) {
+            if (isFillDialogueBoxCoroutineRunning) {
+                isFillDialogueBoxCoroutineRunning = false;
+                StopCoroutine(fillDialogueBoxCoroutine);
+                dialogueText.text = dialogueStack.Peek(); // Skip filling with letters
+                dialogueContinueIndicatorGO.SetActive(true);
+            }
+            else {
+                dialogueStack.Pop(); // Handle the next line in stack (if there is any)
+                if (dialogueStack.Any()) {
+                    fillDialogueBoxCoroutine = StartCoroutine(FillDialogueBox());
+                }
+                else {
+                    EndDialogue();
+                }
+            }
+        }
+    }
+
     // == Pause menu ============================
     [Header("WIN – Pause")]
     [SerializeField] private GameObject pauseGO;
 
     public void ShowPause(bool value) => pauseGO.SetActive(value);
+
+    // == Tutorial ==============================
+    [Header("Tutorial")]
+    [SerializeField] private GameObject[] tutorialGOs;
+    [SerializeField] private GameObject tutorialPopupGO;
+
+    private bool isTutorialShown;
+    private int tutorialUnlockedIndex;
+    private int tutorialSessionIndex;
+    private int nTutorials;
+
+    private readonly float tutorialPopupDuration = 8;
+    private bool isTutorialPopupShown;
+    private float tutorialPopupShownTime;
+
+    private void ShowTutorial(int index)
+    {
+        if (index < 0 || index >= nTutorials) return;
+
+        tutorialPopupShownTime = -10; // Hide popup
+
+        tutorialSessionIndex = index;
+
+        for (int i = 0; i < nTutorials; i++) {
+            tutorialGOs[i].SetActive(i == index);
+        }
+
+        isTutorialShown = true;
+    }
+
+    private void HideTutorial()
+    {
+        foreach (GameObject tutorialGO in tutorialGOs) tutorialGO.SetActive(false);
+        isTutorialShown = false;
+    }
+
+    public void NewTutorial()
+    {
+        tutorialUnlockedIndex++;
+
+        if (tutorialUnlockedIndex >= nTutorials) tutorialUnlockedIndex = nTutorials - 1; // (Should not happen, just in case)
+
+        isTutorialPopupShown = true;
+        tutorialPopupShownTime = Time.time;
+        tutorialPopupGO.SetActive(true);
+    }
+
+    private void UpdateTutorial()
+    {
+        // Tutorial popup
+        if (isTutorialPopupShown && Time.time > tutorialPopupShownTime + tutorialPopupDuration) {
+            isTutorialPopupShown = false;
+            tutorialPopupGO.SetActive(false);
+        }
+
+        // Tab
+        if (Input.GetKeyDown(KeyCode.Tab)) {
+            if (!isTutorialShown) {
+                ShowTutorial(tutorialUnlockedIndex);
+            }
+            else {
+                HideTutorial();
+            }
+        }
+    }
+
+    public void OnTutorialCloseClick() => HideTutorial();
+    
+    public void OnTutorialPreviousClick()
+    {
+        if (tutorialSessionIndex != 0) ShowTutorial(tutorialSessionIndex - 1);
+    }
+
+    public void OnTutorialNextClick()
+    {
+        if (tutorialSessionIndex != tutorialUnlockedIndex) ShowTutorial(tutorialSessionIndex + 1);
+    }
+
+    // == Items =================================
+    [Header("Items")]
+    [SerializeField] private GameObject itemsGO;
+    [SerializeField] private GameObject[] itemImageGOs;
+
+    public void ShowItem(int itemIndex, bool show)
+    {
+        itemsGO.SetActive(true);
+        itemImageGOs[itemIndex].SetActive(show);
+    }
 
     // == MonoBehaviour =========================
     private void Awake()
@@ -212,6 +321,9 @@ public class HUDManager : MonoBehaviour
 
         // Pause
         ShowPause(false);
+
+        // Items
+        itemsGO.SetActive(false);
     }
 
     private void Start()
@@ -226,27 +338,22 @@ public class HUDManager : MonoBehaviour
         // Dialogue
         isInDialogue = false;
         isFillDialogueBoxCoroutineRunning = false;
+
+        // Tutorial
+        isTutorialShown = false;
+        tutorialUnlockedIndex = -1;
+        nTutorials = tutorialGOs.Length;
+        HideTutorial();
+
+        tutorialPopupGO.SetActive(false);
+        isTutorialPopupShown = false;
+        NewTutorial();
     }
 
     private void Update()
     {
-        // Dialogue
-        if (isInDialogue && DialogueContinuePressed()) {
-            if (isFillDialogueBoxCoroutineRunning) {
-                isFillDialogueBoxCoroutineRunning = false;
-                StopCoroutine(fillDialogueBoxCoroutine);
-                dialogueText.text = dialogueStack.Peek(); // Skip filling with letters
-                dialogueContinueIndicatorGO.SetActive(true);
-            }
-            else {
-                dialogueStack.Pop(); // Handle the next line in stack (if there is any)
-                if (dialogueStack.Any()) {
-                    fillDialogueBoxCoroutine = StartCoroutine(FillDialogueBox());
-                }
-                else {
-                    EndDialogue();
-                }
-            }
-        }
+        // Update sub-functions
+        UpdateDialogue();
+        UpdateTutorial();
     }
 }

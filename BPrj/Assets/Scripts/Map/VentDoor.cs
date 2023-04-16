@@ -19,6 +19,8 @@ public class VentDoor : MonoBehaviour, IObservable, IPlayerInteractable
 
     public bool CanInteract(Player playerScript)
     {
+        if (isOpened) return false;
+
         bool distanceOk = (Vector2.Distance(playerScript.transform.position, this.transform.position) <= 2.0f);
         bool lockOk = (!isLocked || (isLocked && playerScript.EquippedKeys.Contains(lockColor)));
         return distanceOk && lockOk;
@@ -41,8 +43,11 @@ public class VentDoor : MonoBehaviour, IObservable, IPlayerInteractable
     private bool isLocked;
 
     // == Opening ===============================
+    private bool isOpened;
+
     private void Start()
     {
+        isOpened = false;
         isLocked = (lockGO != null);
     }
 
@@ -57,5 +62,6 @@ public class VentDoor : MonoBehaviour, IObservable, IPlayerInteractable
             this.transform.localPosition = new Vector2(localX, localY);
             yield return new WaitForFixedUpdate();
         }
+        isOpened = true;
     }
 }

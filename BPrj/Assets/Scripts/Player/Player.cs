@@ -316,7 +316,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public void EquipWeapon(GameObject newWeapon)
     {
-        if (WeaponEquipped) return; //TODO: Temporary?, two equipped weapons prevention
+        if (WeaponEquipped) return;
 
         weaponGO = newWeapon;
         WeaponTransform = weaponGO.transform;
@@ -325,6 +325,8 @@ public class Player : MonoBehaviour, IDamageable
         WeaponSR.sortingLayerName = "Player";
         WeaponEquipped = true;
         CurrentState.UpdateWeaponPosition();
+
+        HUD.NewTutorial();
     }
 
     // == Lock, Key, Story items ================

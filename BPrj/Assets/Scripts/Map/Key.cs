@@ -14,6 +14,7 @@ public class Key : MonoBehaviour, IPlayerInteractable
     {
         playerScript.EquippedKeys.Add(color);
         ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
+        ManagerAccessor.instance.HUD.ShowItem((int)color, true);
         Destroy(this.gameObject);
     }
 

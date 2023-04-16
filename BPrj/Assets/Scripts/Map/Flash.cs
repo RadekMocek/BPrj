@@ -19,6 +19,7 @@ public class Flash : MonoBehaviour, IPlayerInteractable
         playerTransform = playerScript.transform;
         playerScript.hasFlash = true;
         ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
+        ManagerAccessor.instance.HUD.ShowItem(3, true); // Show flash drive icon on HUD
 
         this.GetComponent<SpriteRenderer>().enabled = false;
         this.transform.Find("Light").gameObject.SetActive(false);

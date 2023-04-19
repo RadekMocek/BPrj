@@ -214,6 +214,9 @@ public class HUDManager : MonoBehaviour
     [Header("Tutorial")]
     [SerializeField] private GameObject[] tutorialGOs;
     [SerializeField] private GameObject tutorialPopupGO;
+    [SerializeField] private GameObject tutorialButtonsGO;
+    [SerializeField] private Button tutorialButtonPrev;
+    [SerializeField] private Button tutorialButtonNext;
 
     private bool isTutorialShown;
     private int tutorialUnlockedIndex;
@@ -228,7 +231,7 @@ public class HUDManager : MonoBehaviour
     {
         if (index < 0 || index >= nTutorials) return;
 
-        tutorialPopupShownTime = -10; // Hide popup
+        HideTutorialPopup();
 
         tutorialSessionIndex = index;
 
@@ -236,12 +239,20 @@ public class HUDManager : MonoBehaviour
             tutorialGOs[i].SetActive(i == index);
         }
 
+        tutorialButtonsGO.SetActive(true);
+        tutorialButtonPrev.interactable = (index != 0);
+        tutorialButtonNext.interactable = (index != tutorialUnlockedIndex);
+
+        taskGO.SetActive(true);
+
         isTutorialShown = true;
     }
 
     private void HideTutorial()
     {
         foreach (GameObject tutorialGO in tutorialGOs) tutorialGO.SetActive(false);
+        tutorialButtonsGO.SetActive(false);
+        taskGO.SetActive(false);
         isTutorialShown = false;
     }
 
@@ -255,6 +266,8 @@ public class HUDManager : MonoBehaviour
         tutorialPopupShownTime = Time.time;
         tutorialPopupGO.SetActive(true);
     }
+
+    public void HideTutorialPopup() => tutorialPopupShownTime = -tutorialPopupDuration;
 
     private void UpdateTutorial()
     {
@@ -285,6 +298,21 @@ public class HUDManager : MonoBehaviour
     public void OnTutorialNextClick()
     {
         if (tutorialSessionIndex != tutorialUnlockedIndex) ShowTutorial(tutorialSessionIndex + 1);
+    }
+
+    // == Task ==================================
+    [Header("Tasks")]
+    [SerializeField] private GameObject taskGO;
+    [SerializeField] private TMP_Text taskText;
+
+    private readonly string[] taskTexts = new string[] { "Podat pøihlášku na FM TUL.", "Zjistit, co se dìje.", "Najít si nìjakou zbraò.", "Získat flash disk z kabinetu v druhém patøe.", "Zapojit flash disk do PC v A104.", "Najít serverovnu a zastavit UI." };
+
+    private int taskIndex;
+
+    public void NewTask()
+    {
+        taskIndex++;
+        taskText.text = "Aktuální úkol: " + taskTexts[taskIndex];
     }
 
     // == Items =================================
@@ -348,6 +376,10 @@ public class HUDManager : MonoBehaviour
         tutorialPopupGO.SetActive(false);
         isTutorialPopupShown = false;
         NewTutorial();
+
+        // Tasks
+        taskIndex = -1;
+        NewTask();
     }
 
     private void Update()

@@ -22,6 +22,12 @@ public class Weapon : MonoBehaviour, IPlayerInteractable
         BC.enabled = false;
         equipped = true;
         ManagerAccessor.instance.ConsistencyManager.SetRecord(this.transform.name, false);
+
+        if (TryGetComponent(out FloatingEffect floatingEffectScript)) {
+            Destroy(floatingEffectScript);
+        }
+
+        transform.Find("Light 2D").gameObject.SetActive(false);
     }
  
     // == MonoBehaviour functions ===============

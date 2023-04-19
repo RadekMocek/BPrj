@@ -327,6 +327,7 @@ public class Player : MonoBehaviour, IDamageable
         CurrentState.UpdateWeaponPosition();
 
         HUD.NewTutorial();
+        HUD.NewTask();
     }
 
     // == Lock, Key, Story items ================

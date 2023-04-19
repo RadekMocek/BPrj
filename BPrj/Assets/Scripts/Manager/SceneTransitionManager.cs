@@ -32,6 +32,8 @@ public class SceneTransitionManager : MonoBehaviour
         tempVector.Set(playerX, playerY);
         playerGO.transform.position = tempVector;
         playerScript.OnSceneChanged();
+        // Hide tutorial popup
+        ManagerAccessor.instance.HUD.HideTutorialPopup();
         // Consistency
         consistencyManagerScript.OnSceneChanged(name);
     }

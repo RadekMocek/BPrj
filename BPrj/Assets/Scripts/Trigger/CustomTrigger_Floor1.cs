@@ -46,5 +46,6 @@ public class CustomTrigger_Floor1 : DialogueTrigger
     {
         Instantiate(secondDialogueTriggerPrefab, playerGO.transform.position, Quaternion.identity);
         secondDialogueSpawned = true;
+        ManagerAccessor.instance.HUD.NewTask();
     }
 }

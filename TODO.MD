@@ -4,10 +4,18 @@
 
 * Better stamina bar
 * ~~Tutorials~~
-* Tasks hud
+* ~~Tasks hud~~
 * ~~Pause menu~~
 * ~~Main menu~~
-* More weapon sprites
+* ~~More weapon sprites~~
+* Consistency manager spawn enemy corpses
+* __Revive glitch__
+
+### Balance/qol
+
+* Dash out of crouch
+* Quicker stamina regen while standing
+* Pause while viewing tutorial (?)
 
 ## Side
 
@@ -21,7 +29,7 @@
 
 ### Player/gameplay
 
-* Crosshair/cursor/...
+* Crosshair / custom cursor / ...
 * Venting indicator
 * Critical hit indication
 

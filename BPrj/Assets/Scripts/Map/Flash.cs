@@ -30,6 +30,7 @@ public class Flash : MonoBehaviour, IPlayerInteractable
     private void Dialogue()
     {
         Instantiate(triggerPrefab, playerTransform.position, Quaternion.identity);
+        ManagerAccessor.instance.HUD.NewTask();
         Destroy(this.gameObject);
     }
 }

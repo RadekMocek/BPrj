@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: CustomSpawnData
   m_EditorClassIdentifier: 
   <Enabled>k__BackingField: 0
-  <SceneName>k__BackingField: Floor2
+  <SceneName>k__BackingField: Floor3
   <CustomCors>k__BackingField: 1
-  <PlayerX>k__BackingField: -37
-  <PlayerY>k__BackingField: 2
+  <PlayerX>k__BackingField: 4
+  <PlayerY>k__BackingField: 32

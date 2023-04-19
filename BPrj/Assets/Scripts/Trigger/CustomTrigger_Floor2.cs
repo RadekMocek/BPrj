@@ -35,6 +35,7 @@ public class CustomTrigger_Floor2 : DialogueTrigger
         if (!triggerEnd && triggered && playerScript.CurrentState != playerScript.DialogueState) {
             triggerEnd = true;
             tableSR.sprite = tableWithoutPhoneSprite;
+            HUD.NewTask();
         }
     }
 

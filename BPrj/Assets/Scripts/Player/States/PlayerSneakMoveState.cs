@@ -86,6 +86,10 @@ public class PlayerSneakMoveState : PlayerSneakSuperState
             player.IsSneaking = false;
             player.ChangeState(player.MoveState);
         }
+        else if (dashInputPressedThisFrame && player.CanDash()) {
+            player.DashState.dashDirection = movementInput;
+            player.ChangeState(player.DashState);
+        }
         else if (player.WeaponEquipped) {
             if (Input.GetMouseButtonDown(0) && player.CanAttack()) {
                 player.ChangeState(player.AttackLightState);

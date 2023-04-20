@@ -27,7 +27,7 @@ public class PauseManager : MonoBehaviour
             else {
                 paused = false;
                 HUD.ShowPause(false);
-                Time.timeScale = 1;
+                if (!HUD.IsTutorialShown) Time.timeScale = 1;
             }
         }
     }

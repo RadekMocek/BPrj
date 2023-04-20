@@ -33,6 +33,8 @@ public class PlayerDashState : PlayerState
 
         isBreathingOut = false;
 
+        player.IsSneaking = false;
+
         player.RB.AddForce(dashSpeed * dashDirection);
 
         player.DecreaseStamina(Player.dashStaminaCost);

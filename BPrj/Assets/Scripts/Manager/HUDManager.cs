@@ -218,7 +218,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] private Button tutorialButtonPrev;
     [SerializeField] private Button tutorialButtonNext;
 
-    private bool isTutorialShown;
+    public bool IsTutorialShown { get; private set; }
     private int tutorialUnlockedIndex;
     private int tutorialSessionIndex;
     private int nTutorials;
@@ -244,8 +244,8 @@ public class HUDManager : MonoBehaviour
         tutorialButtonNext.interactable = (index != tutorialUnlockedIndex);
 
         taskGO.SetActive(true);
-
-        isTutorialShown = true;
+        Time.timeScale = 0;
+        IsTutorialShown = true;
     }
 
     private void HideTutorial()
@@ -253,7 +253,8 @@ public class HUDManager : MonoBehaviour
         foreach (GameObject tutorialGO in tutorialGOs) tutorialGO.SetActive(false);
         tutorialButtonsGO.SetActive(false);
         taskGO.SetActive(false);
-        isTutorialShown = false;
+        Time.timeScale = 1;
+        IsTutorialShown = false;
     }
 
     public void NewTutorial()
@@ -279,7 +280,7 @@ public class HUDManager : MonoBehaviour
 
         // Tab
         if (Input.GetKeyDown(KeyCode.Tab)) {
-            if (!isTutorialShown) {
+            if (!IsTutorialShown) {
                 ShowTutorial(tutorialUnlockedIndex);
             }
             else {
@@ -368,7 +369,7 @@ public class HUDManager : MonoBehaviour
         isFillDialogueBoxCoroutineRunning = false;
 
         // Tutorial
-        isTutorialShown = false;
+        IsTutorialShown = false;
         tutorialUnlockedIndex = -1;
         nTutorials = tutorialGOs.Length;
         HideTutorial();

@@ -49,7 +49,7 @@ public class Player : MonoBehaviour, IDamageable
 
     public virtual void ReceiveDamage(Vector2 direction, int amount)
     {
-        if (CurrentState == DashState) return;
+        if (CurrentState == DashState || CurrentState == DeadState) return;
 
         health -= amount;
 
@@ -125,13 +125,14 @@ public class Player : MonoBehaviour, IDamageable
     private bool isStaminaRegenerationCoroutineRunning;
 
     private readonly int staminaRegenerationSpeed = 2;
+    private readonly int staminaRegenerationSpeedIdle = 3;
 
     private IEnumerator StaminaRegeneration()
     {
         isStaminaRegenerationCoroutineRunning = true;
         yield return new WaitForSeconds(1.0f);
         while (stamina < maxStamina) {
-            IncreaseStamina(staminaRegenerationSpeed);
+            IncreaseStamina((CurrentState == IdleState || CurrentState == SneakIdleState || CurrentState == DialogueState) ? staminaRegenerationSpeedIdle : staminaRegenerationSpeed);
             yield return new WaitForSeconds(0.1f);
         }
         isStaminaRegenerationCoroutineRunning = false;

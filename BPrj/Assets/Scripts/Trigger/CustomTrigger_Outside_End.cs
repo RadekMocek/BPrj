@@ -67,7 +67,9 @@ public class CustomTrigger_Outside_End : Trigger
         ManagerAccessor.instance.HUD.ShowThanksForPlaying();
 
         // Return to main menu
+        /*
         yield return new WaitForSeconds(2.5f);
         ManagerAccessor.instance.SceneManager.MainMenu();
+        /**/
     }
 }

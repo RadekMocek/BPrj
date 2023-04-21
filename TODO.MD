@@ -2,20 +2,13 @@
 
 ## Main
 
-* Better stamina bar
+* Better stamina bar?
 * ~~Tutorials~~
 * ~~Tasks hud~~
 * ~~Pause menu~~
 * ~~Main menu~~
 * ~~More weapon sprites~~
 * Consistency manager spawn enemy corpses
-* __Revive glitch__
-
-### Balance/qol
-
-* Dash out of crouch
-* Quicker stamina regen while standing
-* Pause while viewing tutorial (?)
 
 ## Side
 

@@ -118,7 +118,7 @@ public class EnemyAttackState : EnemyState
         else {
             if (backswinging) {
                 backswinging = false;
-                //TODO: Telegraph enemy attack here (?)
+                // Possibly telegraph enemy attack here (?)
             }
             // 2. SWING
             // Slip

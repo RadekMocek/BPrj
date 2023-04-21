@@ -177,12 +177,6 @@ public class HUDManager : MonoBehaviour
 
     public void ShowDialogueIcon() => dialogueIconGO.SetActive(true);
 
-    // == Thanks for playing ====================
-    [Header("WIN – Thanks for playing")]
-    [SerializeField] private GameObject thanksForPlayingGO;
-
-    public void ShowThanksForPlaying() => thanksForPlayingGO.SetActive(true);
-
     private void UpdateDialogue()
     {
         if (isInDialogue && DialogueContinuePressed()) {
@@ -202,6 +196,17 @@ public class HUDManager : MonoBehaviour
                 }
             }
         }
+    }
+
+    // == Thanks for playing ====================
+    [Header("WIN – Thanks for playing")]
+    [SerializeField] private GameObject thanksForPlayingGO;
+    [SerializeField] private TMP_Text finalTimeText;
+
+    public void ShowThanksForPlaying()
+    {
+        thanksForPlayingGO.SetActive(true);
+        finalTimeText.text = ManagerAccessor.instance.StatsManager.GetRunTime();
     }
 
     // == Pause menu ============================

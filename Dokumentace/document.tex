@@ -1,0 +1,83 @@
+% !TEX TS-program = xelatex
+
+% Inicializace tulthesis
+\documentclass[FM,Proj]{tulthesis}
+\usepackage{polyglossia}
+\setdefaultlanguage{czech}
+\usepackage{xevlna}
+
+% Pro seznam použité literatury
+\usepackage[backend=biber, style=iso-numeric]{biblatex}
+\addbibresource{zdroje.bib}
+
+% Titulní strana
+\TULtitle{Vývoj akční videohry zasazené do prostředí FM}{Development of an action video game set in FM}
+\TULprogramme{B0613A140005}{Informační technologie}{Information technology}
+\TULbranch{kód studijního oboru}{název česky}{anglicky}
+\TULauthor{Radek Mocek}
+\TULsupervisor{Ing. Jan Hybš}
+\TULyear{2023}
+
+\begin{document}
+	% Prohlášení
+	\ThesisStart{male}
+	
+	% Abstrakt česky
+	\begin{abstractCZ}
+		Český abstrakt
+	\end{abstractCZ}
+	
+	% Klíčová slova česky
+	\begin{keywordsCZ}
+		klíčová slova česky
+	\end{keywordsCZ}
+	\vspace{2cm}
+	
+	% Abstrakt anglicky
+	\begin{abstractEN}
+		English abstract
+	\end{abstractEN}
+	
+	% Klíčová slova anglicky
+	\begin{keywordsEN}
+		keywords in English
+	\end{keywordsEN}
+	
+	% Obsah
+	\tableofcontents
+	
+	% Seznam obrázků
+	\listoffigures
+	
+	% Seznam tabulek
+	\listoftables
+	
+	\clearpage
+	
+	% Zkratky
+%	\begin{abbrList}
+%		\textbf{TUL} & Technická univerzita v~Liberci \\
+%		\textbf{FM} & Fakulta mechatroniky, informatiky a mezioborových studií Technické univerzity v~Liberci
+%	\end{abbrList}
+	
+	% Začátek hlavního textu
+	\chapter{Úvod}
+	
+	\chapter{Herní engine Unity}
+	
+	\chapter{Návrh 2D top-down videohry}
+	
+	\chapter{Návrh umělé inteligence}
+	
+	\chapter{Implementace}
+	
+	\chapter{Kritické zhodnocení}
+	
+	\chapter{Závěr}
+	
+	% Zdroje
+	\chapter*{Seznam použité literatury}
+	\addcontentsline{toc}{chapter}{Seznam použité literatury}
+	\printbibliography[heading=none]
+	
+\end{document}

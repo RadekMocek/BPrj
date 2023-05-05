@@ -9,6 +9,7 @@
 * ~~Main menu~~
 * ~~More weapon sprites~~
 * Consistency manager spawn enemy corpses
+* V tutorial GUI je tlačítko vpravo nahoře umístěno o trochu níže než tlačítka vlevo nahoře
 
 ## Side
 
@@ -33,3 +34,4 @@
 ## Issues
 
 * Non-smooth view cone rotation in build
+* Čtvercové monitory

@@ -73,7 +73,7 @@
 	% * [X] Sprite, animace, 9slicing
 	% * [X] Tilemap – https://unity.com/how-to/optimize-performance-2d-games-unity-tilemap
 	% * [ ] SpriteShape – https://docs.unity3d.com/Packages/com.unity.2d.spriteshape@7.0/manual/index.html
-	% * [ ] URP, především 2DLight
+	% * [X] URP, především 2DLight
 	% * [ ] Balíčky – CineMachine, VectorGraphics, InputSystem, ...; asset store
 	% * [ ] Canvas
 	
@@ -136,9 +136,60 @@
 	Universal Render Pipeline (URP) je skriptovatelný vykreslovací řetězec, který je do Unity projektu přidán ve formě balíku. Otázka použití alternativního vykreslovacího řetězce bývá častější u vývoje 3D her, i pro 2D projekty ale URP přináší nové grafické možnosti. Tím nejzásadnějším jsou dvě nové komponenty \textit{Light 2D} a \textit{Shadow Caster 2D}, díky kterým lze do scény přidat dynamická světla a stíny.
 	
 	\chapter{Návrh videohry}
-	% Vymyslete koncept a herní mechaniky pro 2D top-down videohru.	Rozmyslete si, jak bude hráč ovládat postavu, jaké budou cíle a výzvy ve hře a jaké prostředí a překážky budou hráči čelit.
+	% Vymyslete koncept a herní mechaniky pro 2D top-down videohru.	Rozmyslete si, jak bude hráč ovládat postavu, jaké budou cíle a výzvy ve hře a jakému prostředí a překážkám budou hráči čelit.	
+	% * Základní přehled – premisa; perspektiva; žánr
+	% * Žánr podrobněji, jednotlivé herní mechaniky (co všechno hráč může dělat ?)
+	% * Zasazení podrobněji, level design
+	% * Art style
+	% * ..., technologické detaily, story, audio
 	
-	\chapter{Návrh umělé inteligence}
+	\section{Příběh}
+	
+	Navrhovaná hra tohoto projektu uvádí hráče do role maturanta, který se chystá na FM podat přihlášku ke studiu. Po vstupu na fakultu se za ním zavřou a uzamknou dveře. Novým cílem je tedy zjistit, co se děje. Posléze je hráč kontaktován osobou, která ho informuje, že celou budovu fakulty má pod kontrolou místní umělá inteligence, jež se vymkla kontrole.
+	
+	Hlavním cílem hry je zastavit umělou inteligenci a uniknout z fakulty. V budově se nachází nepřátelští roboti, kteří se v tom hráči pokusí zabránit. Zhruba v druhé polovině příběhu se hráč dozvídá, že osoba, jež ho kontaktovala, byla ve skutečnosti samotná umělá inteligence, která ho tímto využívala. Příběh je inspirován hrou System Shock 2 (1999, Irrational Games).
+	
+	\section{Žánr}
+	
+	Obecně by se hra dala kategorizovat jako akční a nabízí dva základní styly hraní. Tím prvním je boj na blízko. Hráč má k dispozici zbraň, konkrétně se jedná o hasák, se kterou může útočit na nepřátele. Ti mohou stejným způsobem zase útočit na hráče. Po každém úspěšném zásahu je cíli útoku ubráno jeho zdraví, které je v případě této hry reprezentováno celým číslem, a jakmile se dostane na nulu, tak je cíl zneškodněn.
+	
+	Druhou možností pro hráče je vyhnout se přímé konfrontaci s nepřáteli a namísto toho se před nimi skrývat. Žánr, kde se hráč snaží, aby nebyl odhalen nepřátelskými jednotkami, se ve videoherní terminologii nazývá stealth game. Slovem stealth se označuje i hlavní mechanika tohoto žánru – plížení, které hráči pomáhá nebýt spatřen.
+	
+	\section{Vizuální stránka}
+	
+	Hra je zobrazována pohledem kamery, která na mapu pohlíží svrchu. Tato perspektiva bývá obecně nazývána jako top-down. V případě tohoto projektu není kamera namířena přímo kolmo na plochu mapy, ale sleduje herní svět pod úhlem přibližně 45 stupňů. Pohled pod určitým úhlem odhaluje hloubku vyobrazovaných objektů a přesněji by se dal nazvat jako axonometrická projekce.
+	\cite{MatejJan}
+	
+	Grafika hry je nakreslena ve stylu pixel art. Jedná se o druh digitálního grafického umění, kde každý pixel ve výsledném obraze hraje svou roli a změna jediného pixelu může značně ovlivnit, jak obraz na pozorovatele působí. Počátky pixel artu sahají do dob 8 a 16bitových konzolí, kde byla omezená paleta barev a rozlišení zobrazovaných spritů. Svou důležitost si ale pixel art zachoval dodnes. Je oblíbený zejména mezi nezávislými vývojáři kvůli jednoduchosti a rychlosti tvorby.
+	\cite{pixelArt}
+	
+	V grafickém stylu této hry není dodrženo pravidlo užití omezené palety barev. Sprite postavy hráče má rozměry 16 na 32 pixelů a od toho jsou přibližně odvozeny velikosti všech ostatních spritů. Kromě dlaždic pro tilemap mají všechny sprity přidán tmavý obrys o šířce jednoho pixelu, aby vynikly a nesplývaly s pozadím.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=0.5\textwidth]{img/SpriteBorder}
+		\caption{Druhy obrysů u spritu}
+	\end{figure}
+	
+	\section{Herní mechaniky}
+	
+	\subsection{Pohyb} % WASD, Dash, Stamina, Door Lock&Key, Ctrl, Airvents, stealth
+	
+	Postava hráče se může pohybovat v osmi směrech pomocí kláves W, A, S a D. Stiskem mezerníku se provede rychlý úskok (dash), během kterého je postava nezranitelná. Dash ubírá hráčovu staminu, která se časem regeneruje na svou původní hodnotu, a nelze ho provést, pokud není staminy dostatek.
+	
+	Aby hráč nenavštěvoval jednotlivé lokace na herní mapě v pořadí, které by porušilo konzistenci příběhu, je jeho pohyb omezen pomocí uzamčených dveří. Aby tyto dveře mohly být otevřeny, musí nejprve hráč nalézt klíč v barvě odpovídající zámku na daných dveřích.
+	
+	Stiskem klávesy Ctrl se postava hráče skrčí a přepne do režimu plížení. V tomto módu se pohybuje pomaleji, ale může pro přesun využít větracích šachet rozmístěných po mapě. Hráč ve větrací šachtě nemůže být spatřen nepřítelem. To samé platí, pokud je v režimu plížení hráč schovaný za nějakým objektem (např. za stolem).
+	
+	\subsection{Boj} % attack, cooldown, dead + RESPAWN
+	
+	Stiskem levého tlačítka myši (LMB) se provede útok na blízko, ten si bere malou část staminy a na chvíli pozastavuje její regeneraci. Útok má také svou vlastní dobíjecí dobu, aby nemohl být opakován jeden za druhým bez jakékoliv pauzy (attack spamming). Po vypršení dobíjecí doby následuje krátké časové okénko, během kterého stisknutí LMB provede útok s kritickým zásahem, který ubírá více bodů zdraví. Pokud naopak hráč stiskne LMB během dobíjecí doby, již není možné provést útok s kritickým zásahem a dobíjecí doba se o toto časové okénko prodlouží.
+	
+	Hráč má svou hladinu zdraví, která se, pokud nebyl po určitou dobu zraněn nepřítelem, regeneruje do poloviny své maximální kapacity. Pokud hráčovo zdraví klesne na nulu, neznamená to konec hry. Namísto toho je hráč oživen (respawn) ve vestibulu budovy s tím, že jeho aktuální úkol, sebrané předměty a zneškodnění nepřátelé nejsou resetováni.
+		
+	\subsection{Grafické uživatelské rozhraní} % Tutorial, inspect&interact, pauza, dialogue
+	
+	\section{Umělá inteligence}	
 	% Vytvořte jednoduchý systém umělé inteligence pro nepřátelské jednotky ve hře, který bude řízen stavovým automatem. Uvažujte o různých stavech, ve kterých se může nepřítel nacházet (např. hlídka, útok, ústup), a jak tyto stavy ovlivní chování nepřátelských jednotek.
 	
 	\chapter{Implementace}

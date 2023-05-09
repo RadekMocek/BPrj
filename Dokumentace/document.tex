@@ -143,11 +143,11 @@
 	% * Art style
 	% * ..., technologické detaily, story, audio
 	
-	\section{Příběh}
+	\section{Příběh} %přidat zasazení ?, úkoly
 	
 	Navrhovaná hra tohoto projektu uvádí hráče do role maturanta, který se chystá na FM podat přihlášku ke studiu. Po vstupu na fakultu se za ním zavřou a uzamknou dveře. Novým cílem je tedy zjistit, co se děje. Posléze je hráč kontaktován osobou, která ho informuje, že celou budovu fakulty má pod kontrolou místní umělá inteligence, jež se vymkla kontrole.
 	
-	Hlavním cílem hry je zastavit umělou inteligenci a uniknout z fakulty. V budově se nachází nepřátelští roboti, kteří se v tom hráči pokusí zabránit. Zhruba v druhé polovině příběhu se hráč dozvídá, že osoba, jež ho kontaktovala, byla ve skutečnosti samotná umělá inteligence, která ho tímto využívala. Příběh je inspirován hrou System Shock 2 (1999, Irrational Games).
+	Hlavním cílem hry je zastavit umělou inteligenci a uniknout z fakulty. V budově se nachází nepřátelští roboti, kteří se v tom hráči pokusí zabránit. Zhruba v druhé polovině příběhu se hráč dozvídá, že osoba, jež ho kontaktovala, byla ve skutečnosti samotná umělá inteligence, která ho tímto využívala. Koncept příběhu je inspirován herní sérií System Shock.
 	
 	\section{Žánr}
 	
@@ -179,7 +179,7 @@
 	
 	Aby hráč nenavštěvoval jednotlivé lokace na herní mapě v pořadí, které by porušilo konzistenci příběhu, je jeho pohyb omezen pomocí uzamčených dveří. Aby tyto dveře mohly být otevřeny, musí nejprve hráč nalézt klíč v barvě odpovídající zámku na daných dveřích.
 	
-	Stiskem klávesy Ctrl se postava hráče skrčí a přepne do režimu plížení. V tomto módu se pohybuje pomaleji, ale může pro přesun využít větracích šachet rozmístěných po mapě. Hráč ve větrací šachtě nemůže být spatřen nepřítelem. To samé platí, pokud je v režimu plížení hráč schovaný za nějakým objektem (např. za stolem).
+	Stiskem klávesy Ctrl se postava hráče skrčí a přepne do režimu plížení. V tomto módu se pohybuje pomaleji, ale může pro přesun využít větracích šachet rozmístěných po mapě. Hráč ve větrací šachtě nemůže být spatřen nepřítelem. To samé platí, pokud je v režimu plížení schovaný za nějakým objektem (např. za stolem).
 	
 	\subsection{Boj} % attack, cooldown, dead + RESPAWN
 	
@@ -189,11 +189,60 @@
 		
 	\subsection{Grafické uživatelské rozhraní} % Tutorial, inspect&interact, pauza, dialogue
 	
+	Pro informování hráče ohledně hodnot určitých atributů se používá heads-up display (HUD). Jedná se o samostatnou vrstvu, která je vykreslena nad herním světem a její pozice na obrazovce je fixní. V pravé dolní části obrazovky je napsána informace o právě zkoumaném objektu ve hře. Jedná se o objekt, na který uživatel najede kurzorem. Na prvním řádku je zobrazen název tohoto objektu a pokud s ním lze nějakým způsobem interagovat, tak je na druhém řádku napsán název příslušné akce (např. otevření dveří). Při zkoumání nepřátelské jednotky je na druhém řádku vykreslena hladina jejího zdraví. Ukazatele hráčova zdraví a staminy se nachází v levé dolní části obrazovky.
+	
+	Pokud je pro hráče k dispozici nový tutoriál, tak se nad těmito dvěma ukazateli zobrazí oznámení. Stiskem klávesy tabulátoru se otevře okno s tutoriálem. Jedná se o stručnou nápovědu popisující, jak se má hra ovládat a jak fungují základní mechaniky. Na začátku hry je k dispozici pouze první tutoriál popisující pohyb postavy a další nápověda se zpřístupní ve chvíli, jakmile je relevantní.
+	
 	\section{Umělá inteligence}	
 	% Vytvořte jednoduchý systém umělé inteligence pro nepřátelské jednotky ve hře, který bude řízen stavovým automatem. Uvažujte o různých stavech, ve kterých se může nepřítel nacházet (např. hlídka, útok, ústup), a jak tyto stavy ovlivní chování nepřátelských jednotek.
+	% * FSM obecně
+	% * Enemy FSM
+	% * A*
+	% * Implementace ?
 	
+	Hra obsahuje nepřátelskou jednotku s jednoduchou umělou inteligencí řízenou konečným stavovým automatem. Výchozí činností nepřítele je hlídkovat libovolný počet bodů na mapě. Jakmile nepřítel zahlédne postavu hráče, vydá se toto místo prozkoumat a popřípadě na hráče zaútočí. Nepřítel využívá algoritmu A*, aby věděl, jakou cestou se vydat ke svému aktuálnímu cíli.
+	
+	Je třeba zmínit, že pojem \quotedblbase umělá inteligence\textquotedblleft\ v kontextu videoherní tvorby obvykle neznamená algoritmus řešící komplexní problémy na základě datové analýzy. Cílem je vytvořit chování nehráčských postav, které je uvěřitelné a zlepšuje herní zážitek. Předvídatelnost a čitelnost může mít tedy při návrhu takového algoritmu prioritu před simulací reálného lidského chování.
+	\cite{gameAI}
+	
+	\subsection{Konečný stavový automat}
+	
+	Konečný stavový automat (finite state machine, FSM) je výpočetní model běžně používaný ve videohrách pro implementaci umělé inteligence nehráčských postav. Objekt implementující FSM má definovaný konečný počet stavů a vždy se musí nacházet právě v jednom z nich. V případě her jednotlivé stavy reprezentují akce a činnosti, kterou mohou nehráčské postavy vykonávat. Pro návrh FSM lze použít graf, kde je pro každý stav vytvořen příslušný vrchol a orientované hrany mezi těmito vrcholy značí podmíněné přechody mezi stavy. Objekt se tedy přepne z jednoho stavu do jiného, pokud mezi těmito stavy existuje přechod a jsou splněny jeho podmínky.
+	\cite{lit1}
+	
+	\subsection{Nepřátelská jednotka}
+	
+	Výchozím stavem nepřátel v této hře je stav hlídky \textit{PatrolState}. Nepřítel hlídkuje mezi jednotlivými body na mapě, které má v sobě uložené jako kolekci dvourozměrných souřadnic. Jakmile se dostane na souřadnice stanoviště, zastaví se a přepne do stavu rozhlížení \textit{LookAroundState}, po kterém následuje opět stav hlídky. Tentokrát má ale tento stav jako stanoviště nastavené následující souřadnice z kolekce. Mezi těmito dvěma stavy takto nepřítel přepíná do té doby, než se do jeho zorného pole dostane postava hráče.
+	
+	Zorné pole nepřátel je ve hře vizualizováno pomocí barevné kruhové výseče, která je vykreslena na zemi tak, že střed kružnice leží nepříteli u nohou a její poloměr je roven délce dohledu nepřítele. Tvar této výseče se dynamicky mění, aby odpovídal tomu, kde nepřítel může a nemůže spatřit hráče. Pokud se tedy např. hráč krčí za stolem, tak je zkrácena délka paprsků výseče, které se stolem kolidují.
+	
+	Výchozí barvou výseče během stavu hlídky je zelená. Jakmile do zorného pole nepřítele vstoupí hráč, změní výseč svou barvu na žlutou a nepřítel se přepne do stavu detekce \textit{DetectingState}. Pokud se hráč v určitém čase nestihne skrýt, pak nepřítel přejde do stavu pronásledování \textit{ChaseState}. Tento čas, během kterého má hráč šanci se ukrýt a nebýt detekován, je také vizualizován. Nad žlutou výsečí je vykreslena druhá červená výseč stejného tvaru, jejíž poloměr se postupně zvětšuje a jakmile se její okraj dostane až k hráči, znamená to, že byl detekován. Během stavu hlídky se pak poloměr červené výseče zmenšuje zpět na nulu. Tento druh zobrazení zorného pole a hladiny podezření nepřátelských jednotek je inspirován hrou Shadow Tactics: Blades of the Shogun.
+	
+	Při stavu pronásledování nepřítel stíhá hráče a když se dostane dostatečně blízko, tak na něj zaútočí (\textit{AttackState}). Pokud hráč zmizí z jeho dohledu, přechází nepřítel do stavu průzkumu \textit{InvestigateAwareState}. Cílem jeho cesty v tomto stavu je poslední pozice, na které byl hráč viděn. Spatření hráče během tohoto stavu znamená opětovné pronásledování, jinak, jakmile se dostane na konec své cesty, se nepřítel vrátí k rutině neutrálních stavů hlídka a rozhlížení. Podobně funguje stav \textit{InvestigateSuspiciousState} s tím rozdílem, že do něj se lze dostat ze stavu detekce a spatření hráče tedy znamená opětovnou detekci.
+	
+	Posledním stavem je \textit{KnockbackState} (vynechán z obrázku \ref{imgFSM} kvůli přehlednosti). Do něj se nepřítel dostane po obdržení zásahu od hráče. V tomto stavu je mírně odstrčen ve směru obdrženého útoku a následně se vrací do stavu útoku, pronásledování, nebo průzkumu podle toho, jak daleko od něj se nachází hráč a zdali je vůbec v jeho zorném poli.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=\textwidth]{img/FSM}
+		\caption{Graf konečného automatu nepřátelské jednotky}
+		\label{imgFSM}
+	\end{figure}
+	
+	% A* a případ: patrol -> investigateAware řešit až v implementaci ?
+	%TODO: Chp3 hotfix
 	\chapter{Implementace}
 	% Implementace demonstrativní videohry v prostředí budovy FM TUL.
+	% * Unity
+	% * Grafika, animace
+	% * Player State Machine
+	% * Tilemap a tvorba mapy; sprite atlas; cinemachine
+	% * YSorting problémy
+	% * HUD – observer, inspect, dialogue; tutorial
+	% * Enemy, pathfinding, view cone, player vision/detection/chase/...
+	% * Triggers, consistency manager, managers, menu, ...
+	
+	Text kapitoly.
 	
 	\chapter{Kritické zhodnocení}
 	% Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.

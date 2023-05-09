@@ -191,7 +191,7 @@
 	
 	Pro informování hráče ohledně hodnot určitých atributů se používá heads-up display (HUD). Jedná se o samostatnou vrstvu, která je vykreslena nad herním světem a její pozice na obrazovce je fixní. V pravé dolní části obrazovky je napsána informace o právě zkoumaném objektu ve hře. Jedná se o objekt, na který uživatel najede kurzorem. Na prvním řádku je zobrazen název tohoto objektu a pokud s ním lze nějakým způsobem interagovat, tak je na druhém řádku napsán název příslušné akce (např. otevření dveří). Při zkoumání nepřátelské jednotky je na druhém řádku vykreslena hladina jejího zdraví. Ukazatele hráčova zdraví a staminy se nachází v levé dolní části obrazovky.
 	
-	Pokud je pro hráče k dispozici nový tutoriál, tak se nad těmito dvěma ukazateli zobrazí oznámení. Stiskem klávesy tabulátoru se otevře okno s tutoriálem. Jedná se o stručnou nápovědu popisující, jak se má hra ovládat a jak fungují základní mechaniky. Na začátku hry je k dispozici pouze první tutoriál popisující pohyb postavy a další nápověda se zpřístupní ve chvíli, jakmile je relevantní.
+	Pokud je pro hráče k dispozici nový tutoriál, tak se nad těmito dvěma ukazateli zobrazí oznámení. Stiskem klávesy tabulátoru se otevře okno s tutoriálem. Jedná se o stručnou nápovědu popisující, jak se má hra ovládat a jak fungují základní mechaniky. Na začátku hry je k dispozici pouze první tutoriál popisující pohyb postavy a další nápověda se zpřístupní ve chvíli, kdy je relevantní.
 	
 	\section{Umělá inteligence}	
 	% Vytvořte jednoduchý systém umělé inteligence pro nepřátelské jednotky ve hře, který bude řízen stavovým automatem. Uvažujte o různých stavech, ve kterých se může nepřítel nacházet (např. hlídka, útok, ústup), a jak tyto stavy ovlivní chování nepřátelských jednotek.
@@ -202,15 +202,15 @@
 	
 	Hra obsahuje nepřátelskou jednotku s jednoduchou umělou inteligencí řízenou konečným stavovým automatem. Výchozí činností nepřítele je hlídkovat libovolný počet bodů na mapě. Jakmile nepřítel zahlédne postavu hráče, vydá se toto místo prozkoumat a popřípadě na hráče zaútočí. Nepřítel využívá algoritmu A*, aby věděl, jakou cestou se vydat ke svému aktuálnímu cíli.
 	
-	Je třeba zmínit, že pojem \quotedblbase umělá inteligence\textquotedblleft\ v kontextu videoherní tvorby obvykle neznamená algoritmus řešící komplexní problémy na základě datové analýzy. Cílem je vytvořit chování nehráčských postav, které je uvěřitelné a zlepšuje herní zážitek. Předvídatelnost a čitelnost může mít tedy při návrhu takového algoritmu prioritu před simulací reálného lidského chování.
+	Je třeba zmínit, že pojem \quotedblbase umělá inteligence\textquotedblleft\ v kontextu videoherní tvorby obvykle neznamená algoritmus řešící komplexní problémy na základě datové analýzy. Cílem je vytvořit chování nehráčských postav, které zlepšuje herní zážitek. Předvídatelnost a čitelnost může mít při návrhu takového algoritmu prioritu před simulací reálného lidského chování.
 	\cite{gameAI}
 	
 	\subsection{Konečný stavový automat}
 	
-	Konečný stavový automat (finite state machine, FSM) je výpočetní model běžně používaný ve videohrách pro implementaci umělé inteligence nehráčských postav. Objekt implementující FSM má definovaný konečný počet stavů a vždy se musí nacházet právě v jednom z nich. V případě her jednotlivé stavy reprezentují akce a činnosti, kterou mohou nehráčské postavy vykonávat. Pro návrh FSM lze použít graf, kde je pro každý stav vytvořen příslušný vrchol a orientované hrany mezi těmito vrcholy značí podmíněné přechody mezi stavy. Objekt se tedy přepne z jednoho stavu do jiného, pokud mezi těmito stavy existuje přechod a jsou splněny jeho podmínky.
+	Konečný stavový automat (finite state machine, FSM) je výpočetní model běžně používaný ve videohrách pro implementaci umělé inteligence nehráčských postav. Objekt implementující FSM má definovaný konečný počet stavů a vždy se musí nacházet právě v jednom z nich. V případě her jednotlivé stavy reprezentují akce a činnosti, které mohou nehráčské postavy vykonávat. K návrhu FSM lze použít graf, kde je pro každý stav vytvořen příslušný vrchol a orientované hrany mezi těmito vrcholy značí podmíněné přechody mezi stavy. Objekt se tedy přepne z jednoho stavu do jiného, pokud mezi těmito stavy existuje přechod a jsou splněny jeho podmínky.
 	\cite{lit1}
 	
-	\subsection{Nepřátelská jednotka}
+	\subsection{Nepřátelská jednotka – návrh}
 	
 	Výchozím stavem nepřátel v této hře je stav hlídky \textit{PatrolState}. Nepřítel hlídkuje mezi jednotlivými body na mapě, které má v sobě uložené jako kolekci dvourozměrných souřadnic. Jakmile se dostane na souřadnice stanoviště, zastaví se a přepne do stavu rozhlížení \textit{LookAroundState}, po kterém následuje opět stav hlídky. Tentokrát má ale tento stav jako stanoviště nastavené následující souřadnice z kolekce. Mezi těmito dvěma stavy takto nepřítel přepíná do té doby, než se do jeho zorného pole dostane postava hráče.
 	
@@ -218,19 +218,19 @@
 	
 	Výchozí barvou výseče během stavu hlídky je zelená. Jakmile do zorného pole nepřítele vstoupí hráč, změní výseč svou barvu na žlutou a nepřítel se přepne do stavu detekce \textit{DetectingState}. Pokud se hráč v určitém čase nestihne skrýt, pak nepřítel přejde do stavu pronásledování \textit{ChaseState}. Tento čas, během kterého má hráč šanci se ukrýt a nebýt detekován, je také vizualizován. Nad žlutou výsečí je vykreslena druhá červená výseč stejného tvaru, jejíž poloměr se postupně zvětšuje a jakmile se její okraj dostane až k hráči, znamená to, že byl detekován. Během stavu hlídky se pak poloměr červené výseče zmenšuje zpět na nulu. Tento druh zobrazení zorného pole a hladiny podezření nepřátelských jednotek je inspirován hrou Shadow Tactics: Blades of the Shogun.
 	
-	Při stavu pronásledování nepřítel stíhá hráče a když se dostane dostatečně blízko, tak na něj zaútočí (\textit{AttackState}). Pokud hráč zmizí z jeho dohledu, přechází nepřítel do stavu průzkumu \textit{InvestigateAwareState}. Cílem jeho cesty v tomto stavu je poslední pozice, na které byl hráč viděn. Spatření hráče během tohoto stavu znamená opětovné pronásledování, jinak, jakmile se dostane na konec své cesty, se nepřítel vrátí k rutině neutrálních stavů hlídka a rozhlížení. Podobně funguje stav \textit{InvestigateSuspiciousState} s tím rozdílem, že do něj se lze dostat ze stavu detekce a spatření hráče tedy znamená opětovnou detekci.
+	Při stavu pronásledování nepřítel stíhá hráče a když se dostane dostatečně blízko, tak na něj zaútočí (\textit{AttackState}). Pokud hráč zmizí z jeho dohledu, přechází nepřítel do stavu průzkumu \textit{InvestigateAwareState}, kde je cílem jeho cesty poslední pozice, na které byl hráč viděn. Spatření hráče během tohoto stavu znamená opětovné pronásledování, jinak, jakmile se dostane na konec své cesty, se nepřítel vrátí k rutině neutrálních stavů hlídka a rozhlížení. Podobně funguje stav \textit{InvestigateSuspiciousState} s tím rozdílem, že do něj se lze dostat ze stavu detekce a spatření hráče tedy znamená opětovnou detekci.
 	
-	Posledním stavem je \textit{KnockbackState} (vynechán z obrázku \ref{imgFSM} kvůli přehlednosti). Do něj se nepřítel dostane po obdržení zásahu od hráče. V tomto stavu je mírně odstrčen ve směru obdrženého útoku a následně se vrací do stavu útoku, pronásledování, nebo průzkumu podle toho, jak daleko od něj se nachází hráč a zdali je vůbec v jeho zorném poli.
+	Posledním stavem je \textit{KnockbackState} (vynechán z obrázku \ref{imgFSM} kvůli přehlednosti). Do něj se nepřítel dostane po obdržení zásahu od hráče. V tomto stavu je mírně odstrčen ve směru obdrženého útoku a následně se vrací do stavu útoku, pronásledování, nebo průzkumu podle toho, jak daleko se od něj nachází hráč a zdali je vůbec v jeho zorném poli.
 	
 	\begin{figure}[ht]
 		\centering
 		\includegraphics[width=\textwidth]{img/FSM}
-		\caption{Graf konečného automatu nepřátelské jednotky}
+		\caption{Graf stavového automatu nepřátelské jednotky}
 		\label{imgFSM}
 	\end{figure}
 	
 	% A* a případ: patrol -> investigateAware řešit až v implementaci ?
-	%TODO: Chp3 hotfix
+	
 	\chapter{Implementace}
 	% Implementace demonstrativní videohry v prostředí budovy FM TUL.
 	% * Unity
@@ -242,8 +242,39 @@
 	% * Enemy, pathfinding, view cone, player vision/detection/chase/...
 	% * Triggers, consistency manager, managers, menu, ...
 	
-	Text kapitoly.
+	Po návrhu videohry následovala její implementace, která začala založením prázdného 2D projektu v Unity 2021. Byla zvolena verze 2021, protože se jedná o verzi s dlouhodobou podporou a samo Unity ji v tuto chvíli doporučuje.
 	
+	Poté už se mohly začít tvořit jednotlivé assety. Prvním cílem bylo vytvořit postavu hráče a umožnit jí základní pohyb. To si vyžadovalo nakreslit sprity a z nich sestavit animace, napsat skripty pohybující s postavou hráče, ale také zprovoznit tilemap a pro základní testovací mapu.
+	
+	Implementace takto probíhala postupným nabalováním jednotlivých herních mechanik. Vždy se pracovalo na jedné konkrétní funkční části a dokud nebyla dotažena do uspokojivého stavu, nevěnoval se vývoj ničemu jinému. Tento postup vývoje byl validní, dokud se nedostal k tvorbě nepřátelské jednotky, která byla časově náročnější. Hra sice obsahovala nepřátelskou jednotku, která se postupně zlepšovala, ale čas určený pro praktickou část této práce se krátil a hra postrádala jakýkoliv příběh či mapu, na které by se příběh odehrával.
+	
+	Proto byl zvolen přístup tvorby minimálního životaschopného produktu. Prioritou bylo zhotovit hru, kterou lze dohrát od začátku do konce, a až poté se věnovat případným detailům, chybám a nedostatkům. Vývoj se po této změně zaměřoval převážně na herní mapu, příběh a grafické uživatelské rozhraní. Hra byla po dokončení své první verze odeslána malé skupince testerů, na základě jejichž zpětné vazby byly doladěny některé herní mechaniky a opraveny nalezené chyby.
+	
+	\section{Grafika} % GIMP, animace
+	
+	Unity v sobě nemá zabudovaný žádný grafický editor, pro tvorbu spritů do 2D hry je ale možné použít jakýkoliv program s podporou průhlednosti. Vhodným nástrojem pro tvorbu herní grafiky ve stylu pixel art je program Aseprite, pro tento projekt byl ale zvolen  GIMP kvůli své bezplatné licenci a předchozím zkušenostem s tímto programem.
+	
+	V programu GIMP byla většina potřeb grafiky této hry pokryta nástrojem tužka. Vhod přišla také možnost nechat si v obrázku vykreslit mřížku oddělující jednotlivé snímky ve spritesheetu. GIMP nemá žádné podpůrné nástroje pro tvorbu animací. Ty proto vznikaly tak, že byly nakresleny jejich jednotlivé snímky, v Unity se z nich vytvořila animace a teprve v té chvíli si bylo možné animaci prohlédnout. Kvůli neintuitivnosti a časové náročnosti tohoto procesu se nakonec postava hráče stala jediným objektem ve hře, který disponuje animacemi složenými z více snímků.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=\textwidth]{img/GIMP}
+		\caption{Program GIMP}		
+	\end{figure}
+	
+	\section{Postava hráče} % FSM stavy – idle, move, sneak, attack, dash, (dialogue, dead, knockback)
+	
+	Postava hráče využívá stejnou implementaci stavového automatu jako jednotka nepřítele (podrobněji popsáno v sekci \ref{chpFSM}). FSM je typičtější používat pro nehráčské postavy, i zde se dá ale využít jeho výhod. Kód je logicky členěn do souborů podle jednotlivých činností, které může hráč vykonávat. Přechody mezi jednotlivými stavy jsou v tomto případě většinou podmíněny stiskem nějaké klávesy.
+	
+	\textit{Rigidbody2D}.
+	
+	\section{Herní mapa} % Tilemap, problémy s perspektivou
+	
+	\section{Nepřátelská jednotka – implementace} % FSM, URP, A*
+	\label{chpFSM}
+	
+	\section{Příběh a postup hrou}
+	 
 	\chapter{Kritické zhodnocení}
 	% Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.
 	

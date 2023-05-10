@@ -165,11 +165,11 @@
 	
 	V grafickém stylu této hry není dodrženo pravidlo užití omezené palety barev. Sprite postavy hráče má rozměry 16 na 32 pixelů a od toho jsou přibližně odvozeny velikosti všech ostatních spritů. Kromě dlaždic pro tilemap mají všechny sprity přidán tmavý obrys o šířce jednoho pixelu, aby vynikly a nesplývaly s pozadím.
 	
-	\begin{figure}[ht]
-		\centering
-		\includegraphics[width=0.5\textwidth]{img/SpriteBorder}
-		\caption{Druhy obrysů u spritu}
-	\end{figure}
+%	\begin{figure}[ht]
+%		\centering
+%		\includegraphics[width=0.5\textwidth]{img/SpriteBorder}
+%		\caption{Druhy obrysů u spritu}
+%	\end{figure}
 	
 	\section{Herní mechaniky}
 	
@@ -244,15 +244,15 @@
 	
 	Po návrhu videohry následovala její implementace, která začala založením prázdného 2D projektu v Unity 2021. Byla zvolena verze 2021, protože se jedná o verzi s dlouhodobou podporou a samo Unity ji v tuto chvíli doporučuje.
 	
-	Poté už se mohly začít tvořit jednotlivé assety. Prvním cílem bylo vytvořit postavu hráče a umožnit jí základní pohyb. To si vyžadovalo nakreslit sprity a z nich sestavit animace, napsat skripty pohybující s postavou hráče, ale také zprovoznit tilemap a pro základní testovací mapu.
+	Poté už se mohly začít tvořit jednotlivé assety. Prvním cílem bylo vytvořit postavu hráče a umožnit jí základní pohyb. To si vyžadovalo nakreslit sprity a z nich sestavit animace, napsat skripty pohybující s postavou hráče, ale také zprovoznit tilemap pro základní testovací mapu.
 	
-	Implementace takto probíhala postupným nabalováním jednotlivých herních mechanik. Vždy se pracovalo na jedné konkrétní funkční části a dokud nebyla dotažena do uspokojivého stavu, nevěnoval se vývoj ničemu jinému. Tento postup vývoje byl validní, dokud se nedostal k tvorbě nepřátelské jednotky, která byla časově náročnější. Hra sice obsahovala nepřátelskou jednotku, která se postupně zlepšovala, ale čas určený pro praktickou část této práce se krátil a hra postrádala jakýkoliv příběh či mapu, na které by se příběh odehrával.
+	Implementace takto probíhala postupným nabalováním jednotlivých herních mechanik. Vždy se pracovalo na jedné konkrétní funkční části a dokud nebyla dotažena do uspokojivého stavu, nevěnoval se vývoj ničemu jinému. Tento postup vývoje byl validní, dokud se nedostal k tvorbě nepřátelské jednotky, která byla časově náročnější. Hra sice obsahovala nepřátelskou jednotku, která se postupně zlepšovala, ale čas určený pro praktickou část této práce se krátil a hra postrádala jakýkoliv příběh či mapu, na které by se tento příběh odehrával.
 	
-	Proto byl zvolen přístup tvorby minimálního životaschopného produktu. Prioritou bylo zhotovit hru, kterou lze dohrát od začátku do konce, a až poté se věnovat případným detailům, chybám a nedostatkům. Vývoj se po této změně zaměřoval převážně na herní mapu, příběh a grafické uživatelské rozhraní. Hra byla po dokončení své první verze odeslána malé skupince testerů, na základě jejichž zpětné vazby byly doladěny některé herní mechaniky a opraveny nalezené chyby.
+	Proto byl zvolen přístup tvorby minimálního životaschopného produktu. Prioritou bylo zhotovit hru, kterou bude možné dohrát od začátku do konce, a až poté se věnovat případným detailům, chybám a nedostatkům. Vývoj se po této změně zaměřoval převážně na herní mapu, příběh a grafické uživatelské rozhraní. Hra byla po dokončení své první verze odeslána malé skupince testerů, na základě jejichž zpětné vazby byly doladěny některé herní mechaniky a opraveny nalezené chyby.
 	
 	\section{Grafika} % GIMP, animace
 	
-	Unity v sobě nemá zabudovaný žádný grafický editor, pro tvorbu spritů do 2D hry je ale možné použít jakýkoliv program s podporou průhlednosti. Vhodným nástrojem pro tvorbu herní grafiky ve stylu pixel art je program Aseprite, pro tento projekt byl ale zvolen  GIMP kvůli své bezplatné licenci a předchozím zkušenostem s tímto programem.
+	Unity v sobě nemá zabudovaný žádný grafický editor, pro tvorbu spritů do 2D hry je ale možné použít jakýkoliv program s podporou průhlednosti. Vhodným nástrojem pro tvorbu herní grafiky ve stylu pixel art je program Aseprite, pro tento projekt byl ale zvolen GIMP kvůli své bezplatné licenci a předchozím zkušenostem s tímto programem.
 	
 	V programu GIMP byla většina potřeb grafiky této hry pokryta nástrojem tužka. Vhod přišla také možnost nechat si v obrázku vykreslit mřížku oddělující jednotlivé snímky ve spritesheetu. GIMP nemá žádné podpůrné nástroje pro tvorbu animací. Ty proto vznikaly tak, že byly nakresleny jejich jednotlivé snímky, v Unity se z nich vytvořila animace a teprve v té chvíli si bylo možné animaci prohlédnout. Kvůli neintuitivnosti a časové náročnosti tohoto procesu se nakonec postava hráče stala jediným objektem ve hře, který disponuje animacemi složenými z více snímků.
 	
@@ -266,7 +266,9 @@
 	
 	Postava hráče využívá stejnou implementaci stavového automatu jako jednotka nepřítele (podrobněji popsáno v sekci \ref{chpFSM}). FSM je typičtější používat pro nehráčské postavy, i zde se dá ale využít jeho výhod. Kód je logicky členěn do souborů podle jednotlivých činností, které může hráč vykonávat. Přechody mezi jednotlivými stavy jsou v tomto případě většinou podmíněny stiskem nějaké klávesy.
 	
-	\textit{Rigidbody2D}.
+	První implementací pohybu postavy bylo použití funkce \textit{Transform.Translate}. Ta na vstupu dostává vektor, který přičte k současným souřadnicím herního objektu a následně objekt na tyto souřadnice přemístí. Pokud do funkce dosadíme směrový vektor odpovídající aktuálně stisknutým směrovým klávesám vynásobený rychlostí a budeme ji volat v metodě \textit{Update}, pak se bude objekt pohybovat daným směrem a danou rychlostí. Metoda \textit{Update} je ale volána každý snímek a snímková frekvence hry nemusí být konstantní. Pro dosažení neměnné rychlosti je ještě třeba vynásobit směrový vektor hodnotou \textit{Time.deltaTime}, která je rovna převrácené hodnotě snímkové frekvence.
+	
+	Aby spolu dva herní objekty v Unity mohly kolidovat (aby např. hráč neprošel stolem, ale zastavil se o něj), musí oba objekty mít nějaký collider a jeden z nich navíc komponentu \textit{RigidBody2D} (dále jen RB). Po přidání této komponenty začne herní objekt podléhat fyzice. Komponenta RB byla přidána na postavu hráče a díky tomu lze s postavou pohybovat nastavováním proměnné RB.\textit{velocity}, u které už není třeba řešit snímkovou frekvenci. U komponenty RB bylo potřeba nastavit gravitační zrychlení na nulu (u top-down her se gravitace obvykle nevyužívá) ... %TODO: uzamknout osu z, continuous, interpolate, vrstvy pro kolize
 	
 	\section{Herní mapa} % Tilemap, problémy s perspektivou
 	

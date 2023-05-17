@@ -268,7 +268,7 @@
 	
 	První implementací pohybu postavy bylo použití funkce \textit{Transform.Translate}. Ta na vstupu dostává vektor, který přičte k současným souřadnicím herního objektu a následně ho na tyto souřadnice přemístí. Pokud do funkce dosadíme směrový vektor odpovídající aktuálně stisknutým směrovým klávesám vynásobený rychlostí a budeme ji volat v metodě \textit{Update}, pak se bude objekt pohybovat daným směrem a danou rychlostí. Metoda \textit{Update} je ale volána každý snímek a snímková frekvence hry nemusí být konstantní. Pro dosažení neměnné rychlosti je ještě třeba vynásobit směrový vektor hodnotou \textit{Time.deltaTime}, která je rovna převrácené hodnotě snímkové frekvence.
 	
-	Aby spolu dva herní objekty v Unity mohly kolidovat (např. aby hráč neprošel stolem, ale zastavil se o něj), musí oba objekty mít nějaký collider a jeden z nich navíc komponentu \textit{RigidBody2D} (dále jen RB). Po přidání této komponenty začne herní objekt podléhat fyzice. Komponenta RB byla přidána na postavu hráče a díky tomu lze s postavou pohybovat nastavováním proměnné RB.\textit{velocity}, u které už není třeba řešit snímkovou frekvenci.U komponenty RB bylo potřeba nastavit gravitační zrychlení na nulu (u top-down her se gravitace obvykle nevyužívá) a uzamknout rotaci na ose z. Dále byl nastaven druh kontroly kolizí na \textit{Continuous}, aby byly kolize detekovány i při vyšších rychlostech.
+	Aby spolu dva herní objekty v Unity mohly kolidovat (např. aby hráč neprošel stolem, ale zastavil se o něj), musí oba objekty mít nějaký collider a jeden z nich navíc komponentu \textit{RigidBody2D} (dále jen RB). Po přidání této komponenty začne herní objekt podléhat fyzice. Komponenta RB byla přidána na postavu hráče a díky tomu lze s postavou pohybovat nastavováním proměnné RB.\textit{velocity}, u které už není třeba řešit snímkovou frekvenci. U komponenty RB bylo potřeba nastavit gravitační zrychlení na nulu (u top-down her se gravitace obvykle nevyužívá) a uzamknout rotaci na ose z. Dále byl nastaven druh kontroly kolizí na \textit{Continuous}, aby byly kolize detekovány i při vyšších rychlostech.
 	
 	Posledním důležitým nastavením u RB je interpolace. Jelikož fyzické výpočty v Unity běží na konstantní frekvenci a grafika je vykreslována s proměnnou frekvencí, tak se pohyb herních objektů, které podléhají fyzice, může vykreslovat sekaně. Toto je zřetelné především u objektů následovaných kamerou, což je právě postava hráče, a zapnutím interpolace se tomuto jevu dá zabránit.
 	\cite{UnityDocsInterpolation}
@@ -302,7 +302,36 @@
 	\section{Nepřátelská jednotka – implementace} % FSM, URP, A*
 	\label{chpFSM}
 	
+	\subsection{Stavový automat nepřítele}
 	
+	Implementace jednotky nepřítele byla časově nejnáročnějším bodem tohoto projektu. Do hry byl přidán pouze jeden druh nepřítele, struktura implementace ale počítá s přidáváním nových druhů nepřátel a snaží se tento proces usnadnit. Každý druh nepřítele obsahuje skript (v případě implementované nepřátelské jednotky se jedná o skript \textit{Enemy1}), který je jeho komponentou a dědí z obecného skriptu \textit{Enemy}. Tento obecný skript obsahuje atributy a logiku, kterou by měl mít každý druh nepřítele, jako zdraví, zranění, pathfidning logika (hledání cesty), nebo detekce hráče. Důležitá je proměnná \textit{currentState}, která je typu \textit{EnemyState}.
+	
+	\textit{EnemyState} představuje obecný stav pro nepřátelský FSM. Obsahuje referenci na nepřítele, který ho využívá, a virtuální metody, které jsou přepisovány v potomcích. Takovým potomkem je např. \textit{EnemyPatrolState} neboli stav hlídky. Každý stav obsahuje metodu \textit{Enter}, která se stará o inicializaci, a \textit{Update}, která popisuje chování nepřítele v daném stavu.  Pokud nepřítel přejde do nového stavu, tak ho nastaví jako svůj \textit{currentState} a zavolá jeho metodu \textit{Enter}. Poté je každý snímek volána stavová metoda \textit{Update}, dokud nepřítel nepřejde do stavu jiného.
+	
+	Stav má také vlastnosti typu boolean s názvem začínajícím prefixem \quotedblbase \textit{End\_}\textquotedblleft , které jsou v metodě \textit{Enter} nastaveny na false, a při splnění určitých podmínek mohou být v metodě \textit{Update} nastaveny na true. Změna hodnoty těchto vlastností reprezentuje přechod do jiného stavu, např. ve stavu hlídky znamená nastavení vlastnosti \textit{End\_PatrolPointReached} na true, že se nepřátelská jednotka dostala na aktuálně cílené stanoviště a měla by v tomto případě přepnout do stavu rozhlížení. Popisované vlastnosti mají protected getter, což naznačuje další vrstvu dědičnosti.
+	
+	Touto vrstvou jsou už přímo implementace stavů pro jednotlivé druhy nepřátel, kteří je obsahují v podobě kompozice. \textit{Enemy1} má v sobě tedy \textit{Enemy1PatrolState}, který dědí z \textit{EnemyPatrolState}. Tento konkrétní stav ve své metodě \textit{Update} volá nejdříve stejnojmennou metodu svého předka a následně kontroluje, zdali vlastnost \textit{End\_PatrolPointReached} není rovna true. Pokud ano, tak přepne nepřítele (na kterého má referenci) do stavu rozhlížení (\textit{Enemy1LookAroundState}).
+	
+	Implementace tímto způsobem odděluje univerzální logiku jednotlivých stavů od nastavení přechodů u konkrétních druhů nepřátel. Pokud by se měl např. přidat nový druh nepřátelské jednotky, která se po dosažení stanoviště ve stavu hlídky namísto rozhlížení na pár vteřin zastaví a bude nečinná, není třeba znovu implementovat logiku hlídky. Vytvořil by se stav \textit{Enemy2PatrolState}, který by dědil z již naprogramovaného stavu \textit{EnemyPatrolState}, a nově by se musel vytvořit pouze stav \textit{EnemyIdleState} a k němu následně \textit{Enemy2IdleState}.
+		 
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=\textwidth]{img/FSM_Specific}
+		\caption{Implementace stavového automatu}		
+	\end{figure}
+		 
+	\subsection{Zorné pole}
+	
+	Jak již bylo zmíněno v sekci návrhu, nepřátelská jednotka může detekovat postavu hráče, pokud jsou splněny dvě podmínky. První podmínkou je, že se hráč musí nacházet v nepřítelově zorném poli, které má tvar kruhové výseče. Druhá podmínka tvrdí, že hráč musí být viděn přímo. Mezi hráčem a nepřítelem tedy nesmí být žádná stěna a pokud je navíc hráč skrčený, nemůže mezi nimi být ani žádný objekt jako stůl, židle, koš apod. Postavy hráče a nepřítele jsou spojeny pomyslnou úsečkou, jejíž vlastnosti určují splnění těchto podmínek.
+	
+	První je kontrolována délka úsečky. Pokud je delší než poloměr výseče $viewDistance$, znamená to, že se hráč nachází mimo zorné pole. Nepřítel se kouká směrem na hráče, pokud platí $|facingAngle - enemyToPlayerAngle| \le \frac{FOV}{2}$, kde $FOV$ značí velikost středového úhlu kruhové výseče. Druhá podmínka je kontrolována voláním Unity funkce \textit{Physics2D.Linecast}.
+	
+	% vizualizace – URP, Light, SHadowCaster2D – problém lagů, problém tvaru
+	
+	\subsection{Hledání cesty}
+	
+	Použití A*.
+	\cite{lit2}
 	
 	%\section{Příběh a postup hrou}
 	 

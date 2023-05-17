@@ -281,15 +281,36 @@
 	
 	Kód těchto vizuálních kopií hráčské postavy si získá referenci na barvu jejího spritu, postupně odečítá od hodnoty alfa kanálu a při dosažení nulové hodnoty objekt smaže. Pokud by se toto odečítání provádělo každý snímek v metodě \textit{Update}, muselo by být odečítané číslo velmi malé (aby objekt nezmizel okamžitě) a opět by se musel řešit problém variabilní snímkové frekvence. Pro implementaci logiky, která se má odehrávat napříč několika snímky, je v Unity vhodné použít tzv. \textit{Coroutine}. Jedná se o koprogram, ve kterém lze použít např. funkci \textit{WaitForSeconds}. Tato funkce zabalená v cyklu s nějakou jinou činností znamená, že daná činnost se provede každých n vteřin. 
 	
-	\section{Herní mapa} % Tilemap, problémy s perspektivou
+	\section{Herní mapa} % Tilemap, sprite atlas, problémy s perspektivou, PŘEPÍNÁNÍ MEZI SCÉNAMI
+	
+	Pro vytvoření mapy byla použita tilemap se čtvercovými dlaždicemi o velikosti 16 krát 16 pixelů. Tímto nástrojem byla do mapy položena podlaha a stěny budovy. Objekty rozmístěné po mapě (stůl, koš, dveře atd.) jsou každý herním objektem, který má obvykle nějaký collider, C\# skript a popřípadě RB. Pro povrchy podlahy byl často používán nástroj \textit{Rule Tile}, aby dlaždice na krajích a v rozích místností měly odlišný vzhled oproti těm ostatním.
+	
+	Nástroj tilemap umožnil rychlou tvorbu a případnou editaci rozložení místností na mapě, nesl s sebou ale jeden problém. Při pohybu hráče a kamery, která ho následuje, mezi jednotlivými dlaždicemi problikávaly šedé čáry. Jedná se o mezery vzniklé nedokonalým vykreslováním, kdy jsou některé dlaždice vykresleny na jiném místě, než by měly. Vzniklé mezery jsou sice velmi malé, ale je skrz ně vidět pod povrch podlahy na pozadí scény (které je nastaveno na šedou barvu) a jedná se o nepříjemný vizuální bug. Tento problém se řeší přidáním tzv. bleeding edge na postižené sprity. Jedná se o dodatečný několikapixelový okraj, jehož pixely barvou kopírují původní okraj spritu. Unity pro toto řešení nabízí tzv. sprite atlas, kde stačí vybrat, jaké sprity do něj mají být zabaleny, a o zbytek se engine postará.
+	
+	Dalším problémem v této fázi implementace byla zvolená perspektiva. Pokud totiž hráč stojí před stolem, musí být vykreslen blíže ke kameře než stůl. Pokud ale stojí za stolem, musí být blíže vykreslen zase stůl. To znamená, že pořadí vykreslování jednotlivých spritů se mění za běhu. Správné řazení herních objektů v této perspektivě odpovídá jejich pozici na ose y. Čím níže na mapě se objekt nachází, tím blíže ke kameře by měl být vykreslen. Toto chování lze zapnout v nastavení projektu a ještě je nutné u všech herních objektů nastavit, aby se řadily podle svých pivotů (nikoliv podle svých středů). Tyto pivoty musí mít všechny sprity umístěny ve své spodní části, protože na tomto místě by se v reálném prostředí dotýkaly země.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=\textwidth]{img/SpriteSort}
+		\caption{Řazení spritů ve zvolené perspektivě}		
+	\end{figure}
+	
+	%Tímto nastavením ale nejsou vyřešeny všechny potíže spojené se zvolenou perspektivou. Zbraň, kterou postava hráče drží ve své pravé ruce, by také měla podléhat těmto pravidlům vykreslování. Pokud je ale postava otočená doprava, zbraň by měla být vykreslena před ní i přes to, že její ypsilonová souřadnice je v té chvíli vyšší. Toto bylo vyřešeno nastavením zbraně jako potomka postavy hráče, na kterou byla přidána komponenta \textit{Sorting Group}. Podle toho, kam je postava hráče otočena,
+	
+	% Schody + scene problems
 	
 	\section{Nepřátelská jednotka – implementace} % FSM, URP, A*
 	\label{chpFSM}
 	
-	\section{Příběh a postup hrou}
+	
+	
+	%\section{Příběh a postup hrou}
 	 
 	\chapter{Kritické zhodnocení}
 	% Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.
+	% * Combat
+	% * Chybějící accessibility features
+	% * Mesh >> URP
 	
 	\chapter{Závěr}
 	

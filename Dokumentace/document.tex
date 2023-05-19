@@ -6,9 +6,6 @@
 \setdefaultlanguage{czech}
 \usepackage{xevlna}
 
-% Pro umisťování obrázků
-%\usepackage{float}
-
 % Pro seznam použité literatury
 \usepackage[backend=biber, style=iso-numeric]{biblatex}
 \addbibresource{zdroje.bib}
@@ -58,10 +55,10 @@
 	\clearpage
 	
 	% Zkratky
-%	\begin{abbrList}
-%		\textbf{TUL} & Technická univerzita v~Liberci \\
-%		\textbf{FM} & Fakulta mechatroniky, informatiky a mezioborových studií Technické univerzity v~Liberci
-%	\end{abbrList}
+	\begin{abbrList}
+		\textbf{TUL} & Technická univerzita v~Liberci \\
+		\textbf{FM} & Fakulta mechatroniky, informatiky a mezioborových studií Technické univerzity v~Liberci
+	\end{abbrList}
 	
 	% Začátek hlavního textu
 	\chapter{Úvod}
@@ -325,21 +322,50 @@
 	Jak již bylo zmíněno v sekci návrhu, nepřátelská jednotka může detekovat postavu hráče, pokud jsou splněny dvě podmínky. První podmínkou je, že se hráč musí nacházet v nepřítelově zorném poli, které má tvar kruhové výseče. Druhá podmínka tvrdí, že hráč musí být viděn přímo. Mezi hráčem a nepřítelem tedy nesmí být žádná stěna a pokud je navíc hráč skrčený, nemůže mezi nimi být ani žádný objekt jako stůl, židle, koš apod. Postavy hráče a nepřítele jsou spojeny pomyslnou úsečkou, jejíž vlastnosti určují splnění těchto podmínek.
 	
 	První je kontrolována délka úsečky. Pokud je delší než poloměr výseče $viewDistance$, znamená to, že se hráč nachází mimo zorné pole. Nepřítel se kouká směrem na hráče, pokud platí $|facingAngle - enemyToPlayerAngle| \le \frac{FOV}{2}$, kde $FOV$ značí velikost středového úhlu kruhové výseče. Druhá podmínka je kontrolována voláním Unity funkce \textit{Physics2D.Linecast}.
+		
+	Aby hráč věděl, kde může a nemůže být spatřen, je zorné pole nepřátel ve hře vizualizováno. Logika vizualizace je nezávislá na skutečné implementaci logiky spatření hráče a není stoprocentně přesná. Na herní mapě je pro každého nepřítele vykreslena kruhová výseč, která odpovídá danému zornému poli a jejíž tvar je následně upraven, pokud se v něm nachází nějaké neprůhledné objekty.
 	
-	% vizualizace – URP, Light, SHadowCaster2D – problém lagů, problém tvaru
+	Pro vykreslení výseče je použit balík URP a jeho komponenta \textit{Light 2D}. Jak název napovídá, tato komponenta vrhá na scénu světlo s nastavitelným tvarem, barvou a intenzitou. Konkrétně každá nepřátelská jednotka využívá dvou bodových světel. To hlavní je buď zelené nebo žluté a jeho hodnoty odpovídají tvaru kruhové výseče. Sekundární světlo je červené s proměnlivým poloměrem a informuje o stavu detekce.
+	
+	Každý neprůhledný objekt pak na sobě musí mít komponentu \textit{Shadow Caster 2D}, přes kterou neprochází světlo. Tvar neprůsvitné oblasti je nutné nastavit ručně v editoru a pokud se pracuje s průhlednými sprity, situace se ještě více komplikuje (viz obrázek \ref{imgSC2D}). Tyto komponenty je nutné zapínat a vypínat za běhu podle toho, zdali je hráč v režimu plížení. Pokud se toto ve hře provedlo opakovaně (hráč se několikrát skrčil a zase postavil), nastaly velké problémy s výkonem, kdy snímková frekvence klesla z řádu stovek na jednotky FPS. Ukázalo se, že se jedná o chybu, která byla zatím opravena pouze v Unity 2022\footnote{Nahlášené chyby a reakce vývojářů lze sledovat na webu Unity Issue Tracker:\\ \url{https://web.archive.org/web/20230425215912/https://issuetracker.unity3d.com/issues/performance-loss-when-enabling-and-disabling-shadowcaster2d}}. Projekt tedy musel být upgradován na novější verzi Unity.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[width=.75\textwidth]{img/ShadowCaster}
+		\caption{Shadow Caster 2D}
+		\label{imgSC2D}
+	\end{figure}
+	
+	% TilemapShadowCaster2DGenerator
 	
 	\subsection{Hledání cesty}
 	
-	Použití A*.
-	\cite{lit2}
+	Nepřátelská jednotka má v sobě implementovaný algoritmus A* pro nalezení cesty k jejímu aktuálnímu cíli. A* vychází z Dijkstrova algoritmu, ke kterému přidává heuristickou funkci. Hodnota heuristické funkce je u každého vrcholu grafu přičítána k jeho ceně a tím vzniká kombinovaná cena vrcholu, která určuje, jaký další dočasný vrchol bude vybrán při hledání cesty. Charakteristickým rysem tohoto algoritmu je, že byl navržen tak, aby využil znalosti cílových souřadnic a tím minimalizoval čas potřebný k nalezení řešení \cite{lit2}.
+	
+	Jako heuristická funkce byla použita euklidovská vzdálenost pomocí \textit{Vector2Int.Distance}. Vrcholy pomyslného grafu jsou jednotlivé dlaždice z tilemap. Pokud je pomocí \textit{Physics2D.OverlapArea} zjištěno, že se na nějaké dlaždici nachází objekt, je dlaždice (vrchol) prohlášena za neprůchozí a ignorována při hledání cesty.
 	
 	%\section{Příběh a postup hrou}
 	 
 	\chapter{Kritické zhodnocení}
 	% Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.
-	% * Combat
+	% Povedlo se:
+	% * stealth
+	% * enemy behaviour + rozšiřitelnost
+	% * artstyle
+	% Negativa:
+	% * Chybí hudba/zvuky, animace
+	% * Délka hry
+	% * Pouze jeden enemy
+	% * Čtvercové monitory
+	% * Combat, enemy lze cheesnout
 	% * Chybějící accessibility features
 	% * Mesh >> URP
+	
+	V rámci projektu byla vytvořena demonstrativní videohra pro platformy Windows a Linux. Hra obsahuje kompletní příběhový mód a během testování se nevyskytly žádné závažné technické problémy.
+	
+	\section{Nedostatky}
+	
+	\section{Návrh na zlepšení}
 	
 	\chapter{Závěr}
 	

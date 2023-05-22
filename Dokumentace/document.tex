@@ -56,8 +56,14 @@
 	
 	% Zkratky
 	\begin{abbrList}
-		\textbf{TUL} & Technická univerzita v~Liberci \\
-		\textbf{FM} & Fakulta mechatroniky, informatiky a mezioborových studií Technické univerzity v~Liberci
+		\textbf{AC} & Animator Controller \\
+		\textbf{FM} & Fakulta mechatroniky, informatiky a mezioborových studií Technické univerzity v~Liberci \\
+		\textbf{FSM} & finite state machine \\
+		\textbf{GIMP} & GNU Image Manipulation Program \\
+		\textbf{HUD} & heads-up display \\
+		\textbf{LMB} & left mouse button \\
+		\textbf{RB} & RigidBody2D \\
+		\textbf{URP} & Universal Render Pipeline
 	\end{abbrList}
 	
 	% Začátek hlavního textu
@@ -77,7 +83,7 @@
 	% Statistika užití jednotlivých enginů – https://itch.io/game-development/engines/most-projects
 	
 	%free, (verze?), mono vs il2cpp, podporované platformy
-	Unity je multiplatformní herní engine s uzavřeným kódem vyvíjený společností Unity Technologies. První veřejná verze vyšla v roce 2005 a od té doby si Unity vybudovalo početnou komunitu a stalo se populární především mezi nezávislými vývojáři. Unity poskytuje nástroje pro vývoj 2D a 3D her, využívá se ale také ve filmovém nebo automobilovém průmyslu. Základní verze Unity je zdarma.
+	Unity je multiplatformní herní engine s uzavřeným kódem vyvíjený společností Unity Technologies. První veřejná verze vyšla v roce 2005 a od té doby si Unity vybudovalo početnou komunitu a stalo se populární především mezi nezávislými vývojáři\footnote{Užití jednotlivých herních enginů mezi nezávislými vývojáři lze sledovat např. na webu itch.io: \url{https://web.archive.org/web/20230522001606/https://itch.io/game-development/engines/most-projects}}. Unity poskytuje nástroje pro vývoj 2D a 3D her, využívá se ale také ve filmovém nebo automobilovém průmyslu. Základní verze Unity je zdarma.
 	
 	\section{Editor a základní stavební prvky}
 	
@@ -95,7 +101,7 @@
 	
 	\section{2D tvorba}
 	
-	Unity vzniklo původně jako engine pro vývoj 3D her a nástroje pro 2D tvorbu byly přidány až v pozdějších verzích. Volba mezi 2D a 3D je prvním krokem při zakládání nového projektu, rozdíl mezi nimi ale není velký a oba přístupy lze během vývoje kombinovat. Hlavním viditelným rozdílem pro 2D projekty je editor scény, který je přepnut do dvourozměrného režimu. V tomto módu je změněn význam osy Z, která místo popisu třetího rozměru značí hloubku (podobně jako např. vlastnost z-index v CSS). \cite{Unity2DAnnouncement}
+	Unity vzniklo původně jako engine pro vývoj 3D her a nástroje pro 2D tvorbu byly přidány až v pozdějších verzích. Volba mezi 2D a 3D je prvním krokem při zakládání nového projektu, rozdíl mezi nimi ale není velký a oba přístupy lze během vývoje kombinovat. Hlavním viditelným rozdílem pro 2D projekty je editor scény, který je přepnut do dvourozměrného režimu. V tomto módu je změněn význam osy z, která místo popisu třetího rozměru značí hloubku (podobně jako např. vlastnost z-index v CSS). \cite{Unity2DAnnouncement}
 	
 	\subsection{Sprite} %spriteshape, atlas;
 	
@@ -301,7 +307,7 @@
 	
 	\subsection{Stavový automat nepřítele}
 	
-	Implementace jednotky nepřítele byla časově nejnáročnějším bodem tohoto projektu. Do hry byl přidán pouze jeden druh nepřítele, struktura implementace ale počítá s přidáváním nových druhů nepřátel a snaží se tento proces usnadnit. Každý druh nepřítele obsahuje skript (v případě implementované nepřátelské jednotky se jedná o skript \textit{Enemy1}), který je jeho komponentou a dědí z obecného skriptu \textit{Enemy}. Tento obecný skript obsahuje atributy a logiku, kterou by měl mít každý druh nepřítele, jako zdraví, zranění, pathfidning logika (hledání cesty), nebo detekce hráče. Důležitá je proměnná \textit{currentState}, která je typu \textit{EnemyState}.
+	Implementace jednotky nepřítele byla časově nejnáročnějším bodem tohoto projektu. Do hry byl přidán pouze jeden druh nepřítele, struktura implementace ale počítá s přidáváním nových druhů nepřátel a snaží se tento proces usnadnit. Každý druh nepřítele obsahuje skript (v případě implementované nepřátelské jednotky se jedná o skript \textit{Enemy1}), který je jeho komponentou a dědí z obecného skriptu \textit{Enemy}. Tento obecný skript obsahuje atributy a logiku, kterou by měl mít každý druh nepřítele, jako zdraví, zranění, pathfinding logika (hledání cesty), nebo detekce hráče. Důležitá je proměnná \textit{currentState}, která je typu \textit{EnemyState}.
 	
 	\textit{EnemyState} představuje obecný stav pro nepřátelský FSM. Obsahuje referenci na nepřítele, který ho využívá, a virtuální metody, které jsou přepisovány v potomcích. Takovým potomkem je např. \textit{EnemyPatrolState} neboli stav hlídky. Každý stav obsahuje metodu \textit{Enter}, která se stará o inicializaci, a \textit{Update}, která popisuje chování nepřítele v daném stavu.  Pokud nepřítel přejde do nového stavu, tak ho nastaví jako svůj \textit{currentState} a zavolá jeho metodu \textit{Enter}. Poté je každý snímek volána stavová metoda \textit{Update}, dokud nepřítel nepřejde do stavu jiného.
 	
@@ -348,26 +354,36 @@
 	 
 	\chapter{Kritické zhodnocení}
 	% Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.
-	% Povedlo se:
-	% * stealth
-	% * enemy behaviour + rozšiřitelnost
-	% * artstyle
-	% Negativa:
-	% * Chybí hudba/zvuky, animace
-	% * Délka hry
-	% * Pouze jeden enemy
-	% * Čtvercové monitory
-	% * Combat, enemy lze cheesnout
-	% * Chybějící accessibility features
-	% * Mesh >> URP
 	
-	V rámci projektu byla vytvořena demonstrativní videohra pro platformy Windows a Linux. Hra obsahuje kompletní příběhový mód a během testování se nevyskytly žádné závažné technické problémy.
+	V rámci projektu byla vytvořena demonstrativní videohra pro platformy Windows a Linux. Hra obsahuje kompletní příběhový mód a během testování se nevyskytly žádné technické problémy.
 	
-	\section{Nedostatky}
+	Hráči je umožněno se s nepřáteli vypořádat buď s využitím boje na blízko, nebo je obejít pomocí plížení a boji se tak vyhnout. Mezi těmito dvěma přístupy může hráč libovolně přecházet a nepřátelská jednotka byla navržena tak, aby na oba přístupy byla schopna reagovat. Implementace jejího chování využívá stavového automatu a umožňuje snazší přidání nových stavů i nepřátel.
 	
-	\section{Návrh na zlepšení}
+	Nejpropracovanější mechanikou je pravděpodobně systém plížení. Hru lze dohrát od začátku do konce bez zranění jediné nepřátelské jednotky. Pokud nepřítel někde zahlédne hráče, vydá se toto místo prozkoumat. Až když se hráč nachází v jeho zorném poli déle, přepne se do stavu pronásledování. Díky vizualizaci zorného pole nepřátel může hráč plánovat načasování a cestu svých kroků.
+	
+	Grafika hry je nakreslena ve stylu pixel art a i přes nízkou zkušenost autora se podařilo vytvořit sprity, které svým vzhledem připomínají budovu FM.
+	
+	\section{Nedostatky} % Chybí audio, combat, accessibility features, DÉLKA HRY
+	
+	Největším nedostatkem, který hru dělí od hotového produktu, je absence jakéhokoliv audia. Důvodem byl nedostatek času na implementaci. I jednoduché zvukové efekty dokážou hru oživit a vylepšit požitek z hraní. Nejrychlejším řešením by bylo zvuky vygenerovat v programu Bfxr, poté by se musela v Unity implementovat logika pro jejich přehrávání.
+	
+	Nejslabší mechanikou ve hře je pravděpodobně soubojový systém. Kvůli absenci zvukových efektů a kvalitních animací není požitek ze soubojů takový, jaký byl zamýšlen. Systému by kromě zvuků a animací prospělo přidat více druhů útoků, zbraní a nových nepřátel. Momentálně je cílem každého nepřítele dostat se nejkratší cestou k hráči (pokud byl daným nepřítelem detekován) a zasáhnout ho. Pokud by spolu jednotlivé nepřátelské jednotky spolupracovali a snažili se např. hráče obklíčit, také by to soubojovému systému přidalo na hodnotě.
+	
+	Dalším prvkem, který ve hře chybí, je nějaká forma nastavení přístupnosti (accessibility settings) pro hráče s určitým handicapem. Toto téma je v posledních letech stále více diskutováno a velká vývojářská studia se většinou zahrnutím těchto nastavení snaží, aby si jejich produkt mohla zahrát co největší množina lidí \cite{disability}. V případě tohoto projektu by v takovém nastavení ideálně mělo být možné vypnout třes kamery během soubojů, zvětšit písmo, přenastavit ovládání nebo obtížnost. Problémem pro barvoslepé hráče je také fakt, že hladina podezření nepřátelské jednotky je vizualizována barvou kruhové výseče.
+	
+	%\section{Návrh na vylepšení} % přidat enemy, čtvercové monitory, mesh místo urp
+	
+	Pro vizualizaci zorného pole nepřátel by bylo lepší namísto světla z balíku URP implementovat vlastní mesh. V tom by se definovaly body, ze kterých je tvar zorného pole vykreslen. Zároveň by bylo možné výseč vykreslit s určitým vzorkováním, aby jediným nositelem informace o hladině podezření nebyla barva. Díky tomu by nebyl balík URP vůbec potřeba a jeho odebrání z projektu by znamenalo menší velikost sestavené hry a také kratší dobu nutnou pro její sestavení.
 	
 	\chapter{Závěr}
+	
+	V rámci tohoto projektu byla v herním enginu Unity vytvořena demonstrativní akční videohra zasazená do prostředí FM. Hra má jednoduchý příběh, kde je hráč uvězněn v budově fakulty umělou inteligencí. Cílem je umělou inteligenci zastavit a z budovy uniknout. Do hry byla implementována nepřátelská jednotka, která využívá konečného stavového automatu.
+	
+	Nejprve byla provedena rešerše ...
+	
+	Následně bylo navrženo ...
+	
+	Časově nejnáročnější pak byla samotná implementace v enginu Unity ...
 	
 	% Zdroje
 	\chapter*{Seznam použité literatury}

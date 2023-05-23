@@ -24,7 +24,11 @@
 	
 	% Abstrakt česky
 	\begin{abstractCZ}
-		Český abstrakt
+		Tento bakalářský projekt se zaměřuje na proces tvorby 2D videohry v herním enginu Unity a jeho výsledkem je demonstrativní hra, jejíž příběh se odehrává v budově Fakulty mechatroniky, informatiky a mezioborových studií Technické univerzity v Liberci. Žánr hry je akční a hráči je umožněno nepřátelské jednotky porazit pomocí boje na blízko nebo se jim vyhnout díky implementovanému systému plížení.
+		
+		Projekt se dělí na tři hlavní části. Tou první je rešerše, kde je herní engine Unity nejdříve popsán obecně a následně jsou zanalyzovány jeho nástroje, které umožňují produkci 2D her. Druhou částí je návrh videohry, který je nezávislý na použitých technologiích a přibližuje, co všechno je dobré si před vývojem promyslet. Poslední velkou částí je samotná implementace navrhované videohry v Unity. Zde je popsáno, jaké kroky byly učiněny, aby hra splnila navrhované cíle.
+		
+		Důležitým prvkem ve hře je jednotka nepřítele s umělou inteligencí řízenou konečným stavovým automatem. Ta je navržena tak, aby uvěřitelně reagovala na hráčovi akce. Její implementace, která je v tomto projektu podrobně popsána, využívá vlastností objektově orientovaného programování jazyka C\#.
 	\end{abstractCZ}
 	
 	% Klíčová slova česky
@@ -35,13 +39,22 @@
 	
 	% Abstrakt anglicky
 	\begin{abstractEN}
-		English abstract
+		This bachelor project focuses on the process of creating a 2D video game in the Unity game engine and results in a demonstrative game whose story takes place in the building of the Faculty of Mechatronics, Informatics and Interdisciplinary Studies of the Technical University of Liberec. The genre of the game is action and the player is allowed to defeat enemy units through close combat or avoid them thanks to the implemented sneaking system.
+		
+		The project is divided into three main parts. The first one is a research, where the Unity game engine is first described in general and then its tools that enable the production of 2D games are analysed. The second part is the design of the video game, which is independent of the technologies used and presents what to think about before development. The last big part is the actual implementation of the proposed video game in Unity. This describes what steps were taken to make the game meet the proposed goals.
+		
+		An important element in the game is an enemy AI unit controlled by a finite state machine. This is designed to react believably to the player's actions. Its implementation, which is described in detail in this project, takes advantage of the object-oriented programming features of the C\# language.
 	\end{abstractEN}
 	
 	% Klíčová slova anglicky
 	\begin{keywordsEN}
 		keywords in English
 	\end{keywordsEN}
+	
+	% Poděkování
+%	\begin{acknowledgement}
+%		Díky.
+%	\end{acknowledgement}
 	
 	% Obsah
 	\tableofcontents
@@ -57,6 +70,7 @@
 	% Zkratky
 	\begin{abbrList}
 		\textbf{AC} & Animator Controller \\
+		\textbf{CSS} & Cascading Style Sheets \\
 		\textbf{FM} & Fakulta mechatroniky, informatiky a mezioborových studií Technické univerzity v~Liberci \\
 		\textbf{FSM} & finite state machine \\
 		\textbf{GIMP} & GNU Image Manipulation Program \\
@@ -69,7 +83,10 @@
 	% Začátek hlavního textu
 	\chapter{Úvod}
 	
+	Úvod.
+	
 	\chapter{Herní engine Unity}
+	\label{chp2}
 	% Zjistěte, jaké nástroje a knihovny jsou dostupné pro vývoj 2D videoher v Unity enginu. Prozkoumejte jejich funkce, výhody a nevýhody a jak se dají použít pro vaše potřeby.
 	% * [X] Unity obecně
 	% * [X] Představení editoru a základních prvků (gameObject, prefab, scéna, asset)
@@ -139,6 +156,7 @@
 	Universal Render Pipeline (URP) je skriptovatelný vykreslovací řetězec, který je do Unity projektu přidán ve formě balíku. Otázka použití alternativního vykreslovacího řetězce bývá častější u vývoje 3D her, i pro 2D projekty ale URP přináší nové grafické možnosti. Tím nejzásadnějším jsou dvě nové komponenty \textit{Light 2D} a \textit{Shadow Caster 2D}, díky kterým lze do scény přidat dynamická světla a stíny.
 	
 	\chapter{Návrh videohry}
+	\label{chp3}
 	% Vymyslete koncept a herní mechaniky pro 2D top-down videohru.	Rozmyslete si, jak bude hráč ovládat postavu, jaké budou cíle a výzvy ve hře a jakému prostředí a překážkám budou hráči čelit.	
 	% * Základní přehled – premisa; perspektiva; žánr
 	% * Žánr podrobněji, jednotlivé herní mechaniky (co všechno hráč může dělat ?)
@@ -235,6 +253,7 @@
 	% A* a případ: patrol -> investigateAware řešit až v implementaci ?
 	
 	\chapter{Implementace}
+	\label{chp4}
 	% Implementace demonstrativní videohry v prostředí budovy FM TUL.
 	% * Unity
 	% * Grafika, animace
@@ -353,6 +372,7 @@
 	%\section{Příběh a postup hrou}
 	 
 	\chapter{Kritické zhodnocení}
+	\label{chp5}
 	% Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.
 	
 	V rámci projektu byla vytvořena demonstrativní videohra pro platformy Windows a Linux. Hra obsahuje kompletní příběhový mód a během testování se nevyskytly žádné technické problémy.
@@ -379,11 +399,13 @@
 	
 	V rámci tohoto projektu byla v herním enginu Unity vytvořena demonstrativní akční videohra zasazená do prostředí FM. Hra má jednoduchý příběh, kde je hráč uvězněn v budově fakulty umělou inteligencí. Cílem je umělou inteligenci zastavit a z budovy uniknout. Do hry byla implementována nepřátelská jednotka, která využívá konečného stavového automatu.
 	
-	Nejprve byla provedena rešerše ...
+	Prvním krokem této práce bylo provedení rešerše nástrojů pro tvorbu 2D her, kterými Unity disponuje (kapitola \ref{chp2}). Nejprve bylo potřeba popsat uživatelské rozhraní samotného Unity a definovat jeho základní stavební prvky, které jsou používané při jakékoliv tvorbě, jako asset, herní objekt, prefab atd. Díky zavedení těchto pojmů pak mohly být zanalyzovány prvky zaměřené přímo na 2D tvorbu jako sprite nebo tilemap.
 	
-	Následně bylo navrženo ...
+	Po seznámení s herním enginem se přešlo k teoretickému návrhu výsledné videohry (kapitola \ref{chp3}). Zvoleným žánrem se stala kombinace akce a stealth, proto byly následně popsány mechaniky boje na blízko a plížení. Jako grafický styl byl vybrán pixel art s top-down perspektivou, kdy kamera zabírá herní mapu shora. Velká část návrhu se zabývala stavovým automatem nepřátelské jednotky, která má celkem devět stavů a snaží se uvěřitelně reagovat na hráčovy akce.
 	
-	Časově nejnáročnější pak byla samotná implementace v enginu Unity ...
+	Časově nejnáročnější pak byla samotná implementace hry v Unity (kapitola \ref{chp4}). Třemi hlavními pilíři této videohry jsou postava hráče, nepřátelská jednotka a herní mapa. Nejdříve pro ně byla vytvořena grafika v programu GIMP a následně logika pomocí C\# skriptů. Stavový automat nepřátelské jednotky byl implementován tak, aby bylo snadné přidat další stavy nebo nové druhy nepřátel. Také byla popsána problematika, kterou s sebou nese zvolená perspektiva.
+	
+	Výslednou hru lze dohrát od začátku do konce bez technických problémů. Její povedenější částí je celkový grafický styl a mechanika plížení. Na soubojovém systému je ještě mnohé co zlepšovat. Absence audia a jakýchkoliv jiných nastavení hru dělí od hotových produktů vydávaných v herním průmyslu (podrobněji v kapitole \ref{chp5}).
 	
 	% Zdroje
 	\chapter*{Seznam použité literatury}

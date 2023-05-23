@@ -2,8 +2,10 @@
 
 % Inicializace tulthesis
 \documentclass[FM,Proj]{tulthesis}
+% Typografie pro češtinu; xelatex alternativa pro babel
 \usepackage{polyglossia}
 \setdefaultlanguage{czech}
+% Automatické pevné mezery
 \usepackage{xevlna}
 
 % Pro seznam použité literatury
@@ -24,31 +26,31 @@
 	
 	% Abstrakt česky
 	\begin{abstractCZ}
-		Tento bakalářský projekt se zaměřuje na proces tvorby 2D videohry v herním enginu Unity a jeho výsledkem je demonstrativní hra, jejíž příběh se odehrává v budově Fakulty mechatroniky, informatiky a mezioborových studií Technické univerzity v Liberci. Žánr hry je akční a hráči je umožněno nepřátelské jednotky porazit pomocí boje na blízko nebo se jim vyhnout díky implementovanému systému plížení.
+		Tento bakalářský projekt se zaměřuje na proces tvorby 2D videohry v herním enginu Unity a jeho výsledkem je demonstrativní hra, jejíž příběh se odehrává v budově Fakulty mechatroniky, informatiky a mezioborových studií Technické univerzity v Liberci. Žánr hry je akční a hráči je umožněno nepřátelské jednotky porazit pomocí boje na blízko nebo se jim vyhnout díky implementovanému systému plížení. Grafický styl hry je nakreslen ve stylu pixel art a kamera na herní svět pohlíží svrchu.
 		
 		Projekt se dělí na tři hlavní části. Tou první je rešerše, kde je herní engine Unity nejdříve popsán obecně a následně jsou zanalyzovány jeho nástroje, které umožňují produkci 2D her. Druhou částí je návrh videohry, který je nezávislý na použitých technologiích a přibližuje, co všechno je dobré si před vývojem promyslet. Poslední velkou částí je samotná implementace navrhované videohry v Unity. Zde je popsáno, jaké kroky byly učiněny, aby hra splnila navrhované cíle.
 		
-		Důležitým prvkem ve hře je jednotka nepřítele s umělou inteligencí řízenou konečným stavovým automatem. Ta je navržena tak, aby uvěřitelně reagovala na hráčovi akce. Její implementace, která je v tomto projektu podrobně popsána, využívá vlastností objektově orientovaného programování jazyka C\#.
+		Důležitým prvkem ve hře je jednotka nepřítele s umělou inteligencí řízenou konečným stavovým automatem. Ta je navržena tak, aby uvěřitelně reagovala na hráčovy akce. Její implementace, která je v tomto projektu podrobně popsána, využívá vlastností objektově orientovaného programování jazyka C\# a umožňuje snadnou rozšiřitelnost. Pro nalezení nejkratší cesty ke svému cíli využívá nepřátelská jednotka implementovaného algoritmu A*.
 	\end{abstractCZ}
 	
 	% Klíčová slova česky
 	\begin{keywordsCZ}
-		klíčová slova česky
+		Unity, 2D top-down, tilemap, stealth, konečný stavový automat, hledání nejkratší cesty, Universal Render Pipeline
 	\end{keywordsCZ}
 	\vspace{2cm}
 	
 	% Abstrakt anglicky
 	\begin{abstractEN}
-		This bachelor project focuses on the process of creating a 2D video game in the Unity game engine and results in a demonstrative game whose story takes place in the building of the Faculty of Mechatronics, Informatics and Interdisciplinary Studies of the Technical University of Liberec. The genre of the game is action and the player is allowed to defeat enemy units through close combat or avoid them thanks to the implemented sneaking system.
+		This bachelor project focuses on the process of creating a 2D video game in the Unity game engine and results in a demonstrative game with a story that takes place in the building of the Faculty of Mechatronics, Informatics and Interdisciplinary Studies of the Technical University of Liberec. The genre of the game is action and the player is allowed to defeat enemy units via close combat or avoid them thanks to the implemented sneaking system. The graphic style of the game is drawn in pixel art style and the camera views the game world from above.
 		
-		The project is divided into three main parts. The first one is a research, where the Unity game engine is first described in general and then its tools that enable the production of 2D games are analysed. The second part is the design of the video game, which is independent of the technologies used and presents what to think about before development. The last big part is the actual implementation of the proposed video game in Unity. This describes what steps were taken to make the game meet the proposed goals.
+		The project is divided into three main parts. The first one is research, where the Unity game engine is first described in general and then its tools that allow the production of 2D games are analysed. The second part is about designing the game, independent of the technologies used, and presents what needs to be considered before starting the development. The last main part is the actual implementation of the proposed video game in Unity. This describes what steps were taken to make the game meet the proposed goals.
 		
-		An important element in the game is an enemy AI unit controlled by a finite state machine. This is designed to react believably to the player's actions. Its implementation, which is described in detail in this project, takes advantage of the object-oriented programming features of the C\# language.
+		An important element in the game is an enemy AI unit controlled by a finite state machine. It is designed to react believably to the player's actions. Its implementation, which is described in detail in this project, takes advantage of the object-oriented programming features of the C\# language and allows for easy modification. The enemy unit uses implemented A* algorithm to find the shortest path to its goal.
 	\end{abstractEN}
 	
 	% Klíčová slova anglicky
 	\begin{keywordsEN}
-		keywords in English
+		Unity, 2D top-down, tilemap, stealth, finite state machine, finding shortest paths, Universal Render Pipeline
 	\end{keywordsEN}
 	
 	% Poděkování
@@ -83,7 +85,11 @@
 	% Začátek hlavního textu
 	\chapter{Úvod}
 	
-	Úvod.
+	Cílem tohoto projektu je přiblížit problematiku vývoje 2D videoher v herním enginu Unity. Videoherní průmysl je stále rostoucí průmyslové odvětví, které kromě zábavy a rekreace přispělo k rozvoji několika technologií, které své uplatnění nachází i mimo toto odvětví \cite{VideoGames}. Příkladem může být poptávka hráčů po plynulém herním zážitku, která je dodnes jednou z hnacích sil pro vývoj výkonných grafických karet. Vedle vysokorozpočtových \quotedblbase AAA\textquotedblleft\ her se začaly v posledních letech také objevovat nezávislé \quotedblbase indie\textquotedblleft\ tituly. Ty často disponují právě dvourozměrnou grafikou a snaží se o určitý umělecký projev. V implementaci těchto her mohou i přes nízký rozpočet, nedostatečný čas nebo malý tým vznikat pozoruhodná řešení vzniklých technických problémů.
+	
+	V tomto projektu je vytvořena demonstrativní akční videohra, která je příběhem zasazena do prostředí budovy FM. Dvěma hlavními herními mechanikami je boj nablízko a plížení. Kombinací těchto mechanik se může hráč vypořádat s nepřátelskými jednotkami rozmístěnými po herní mapě. Implementovaná nepřátelská jednotka využívá konečného stavového automatu pro definici logiky svého uvažování a algoritmu A* pro nalezení nejkratší cesty ke svému aktuálnímu cíli.
+	
+	Text projektu začíná rešeršní částí, kde jsou představeny základní prvky, které herní engine Unity používá pro svou obecnou a  dvourozměrnou tvorbu. Následuje kapitola návrhu, kde je probráno, jaký bude základní herní koncept, jak budou fungovat jednotlivé herní mechaniky a jak bude hra vypadat. Konec kapitoly je věnován návrhu stavového automatu pro nepřátelské jednotky. Posledním důležitým bodem je kapitola implementace popisující jednotlivé kroky provedené k dosažení výsledné videohry a problémy, které během vývoje nastaly.
 	
 	\chapter{Herní engine Unity}
 	\label{chp2}
@@ -97,10 +103,8 @@
 	% * [ ] Balíčky – CineMachine, VectorGraphics, InputSystem, ...; asset store
 	% * [ ] Canvas
 	
-	% Statistika užití jednotlivých enginů – https://itch.io/game-development/engines/most-projects
-	
-	%free, (verze?), mono vs il2cpp, podporované platformy
-	Unity je multiplatformní herní engine s uzavřeným kódem vyvíjený společností Unity Technologies. První veřejná verze vyšla v roce 2005 a od té doby si Unity vybudovalo početnou komunitu a stalo se populární především mezi nezávislými vývojáři\footnote{Užití jednotlivých herních enginů mezi nezávislými vývojáři lze sledovat např. na webu itch.io: \url{https://web.archive.org/web/20230522001606/https://itch.io/game-development/engines/most-projects}}. Unity poskytuje nástroje pro vývoj 2D a 3D her, využívá se ale také ve filmovém nebo automobilovém průmyslu. Základní verze Unity je zdarma.
+	%mono vs il2cpp, podporované platformy
+	Unity je multiplatformní herní engine s uzavřeným kódem vyvíjený společností Unity Technologies. První veřejná verze vyšla v roce 2005 a od té doby si Unity vybudovalo početnou komunitu a stalo se populární především mezi nezávislými vývojáři\footnote{Užití jednotlivých herních enginů mezi nezávislými vývojáři lze sledovat např. na webu itch.io: \url{https://web.archive.org/web/20230522001606/https://itch.io/game-development/engines/most-projects}}. Unity poskytuje nástroje pro vývoj 2D a 3D her, využívá se ale také např. ve filmovém nebo automobilovém průmyslu. Základní verze Unity je zdarma.
 	
 	\section{Editor a základní stavební prvky}
 	
@@ -186,12 +190,6 @@
 	
 	V grafickém stylu této hry není dodrženo pravidlo užití omezené palety barev. Sprite postavy hráče má rozměry 16 na 32 pixelů a od toho jsou přibližně odvozeny velikosti všech ostatních spritů. Kromě dlaždic pro tilemap mají všechny sprity přidán tmavý obrys o šířce jednoho pixelu, aby vynikly a nesplývaly s pozadím.
 	
-%	\begin{figure}[ht]
-%		\centering
-%		\includegraphics[width=0.5\textwidth]{img/SpriteBorder}
-%		\caption{Druhy obrysů u spritu}
-%	\end{figure}
-	
 	\section{Herní mechaniky}
 	
 	\subsection{Pohyb} % WASD, Dash, Stamina, Door Lock&Key, Ctrl, Airvents, stealth
@@ -235,13 +233,13 @@
 	
 	Výchozím stavem nepřátel v této hře je stav hlídky \textit{PatrolState}. Nepřítel hlídkuje mezi jednotlivými body na mapě, které má v sobě uložené jako kolekci dvourozměrných souřadnic. Jakmile se dostane na souřadnice stanoviště, zastaví se a přepne do stavu rozhlížení \textit{LookAroundState}, po kterém následuje opět stav hlídky. Tentokrát má ale tento stav jako stanoviště nastavené následující souřadnice z kolekce. Mezi těmito dvěma stavy takto nepřítel přepíná do té doby, než se do jeho zorného pole dostane postava hráče.
 	
-	Zorné pole nepřátel je ve hře vizualizováno pomocí barevné kruhové výseče, která je vykreslena na zemi tak, že střed kružnice leží nepříteli u nohou a její poloměr je roven délce dohledu nepřítele. Tvar této výseče se dynamicky mění, aby odpovídal tomu, kde nepřítel může a nemůže spatřit hráče. Pokud se tedy např. hráč krčí za stolem, tak je zkrácena délka paprsků výseče, které se stolem kolidují.
+	Zorné pole nepřátel je ve hře vizualizováno pomocí barevné kruhové výseče, která je vykreslena na zemi tak, že střed kruhu leží nepříteli u nohou a jeho poloměr je roven délce dohledu nepřítele. Tvar této výseče se dynamicky mění, aby odpovídal tomu, kde nepřítel může a nemůže spatřit hráče. Pokud se tedy např. hráč krčí za stolem, tak je zkrácena délka paprsků výseče, které se stolem kolidují.
 	
 	Výchozí barvou výseče během stavu hlídky je zelená. Jakmile do zorného pole nepřítele vstoupí hráč, změní výseč svou barvu na žlutou a nepřítel se přepne do stavu detekce \textit{DetectingState}. Pokud se hráč v určitém čase nestihne skrýt, pak nepřítel přejde do stavu pronásledování \textit{ChaseState}. Tento čas, během kterého má hráč šanci se ukrýt a nebýt detekován, je také vizualizován. Nad žlutou výsečí je vykreslena druhá červená výseč stejného tvaru, jejíž poloměr se postupně zvětšuje a jakmile se její okraj dostane až k hráči, znamená to, že byl detekován. Během stavu hlídky se pak poloměr červené výseče zmenšuje zpět na nulu. Tento druh zobrazení zorného pole a hladiny podezření nepřátelských jednotek je inspirován hrou Shadow Tactics: Blades of the Shogun.
 	
 	Při stavu pronásledování nepřítel stíhá hráče a když se dostane dostatečně blízko, tak na něj zaútočí (\textit{AttackState}). Pokud hráč zmizí z jeho dohledu, přechází nepřítel do stavu průzkumu \textit{InvestigateAwareState}, kde je cílem jeho cesty poslední pozice, na které byl hráč viděn. Spatření hráče během tohoto stavu znamená opětovné pronásledování, jinak, jakmile se dostane na konec své cesty, se nepřítel vrátí k rutině neutrálních stavů hlídka a rozhlížení. Podobně funguje stav \textit{InvestigateSuspiciousState} s tím rozdílem, že do něj se lze dostat ze stavu detekce a spatření hráče tedy znamená opětovnou detekci.
 	
-	Posledním stavem je \textit{KnockbackState} (vynechán z obrázku \ref{imgFSM} kvůli přehlednosti). Do něj se nepřítel dostane po obdržení zásahu od hráče. V tomto stavu je mírně odstrčen ve směru obdrženého útoku a následně se vrací do stavu útoku, pronásledování, nebo průzkumu podle toho, jak daleko se od něj nachází hráč a zdali je vůbec v jeho zorném poli.
+	Posledním stavem je \textit{KnockbackState} (vynechán z obrázku \ref{imgFSM} kvůli přehlednosti). Do něj se nepřítel dostane po obdržení zásahu od hráče. V tomto stavu je mírně odstrčen ve směru obdrženého zásahu a následně se vrací do stavu útoku, pronásledování, nebo průzkumu podle toho, jak daleko se od něj nachází hráč a zdali je vůbec v jeho zorném poli.
 	
 	\begin{figure}[ht]
 		\centering
@@ -276,7 +274,7 @@
 	
 	Unity v sobě nemá zabudovaný žádný grafický editor, pro tvorbu spritů do 2D hry je ale možné použít jakýkoliv program s podporou průhlednosti. Vhodným nástrojem pro tvorbu herní grafiky ve stylu pixel art je program Aseprite, pro tento projekt byl ale zvolen GIMP kvůli své bezplatné licenci a předchozím zkušenostem s tímto programem.
 	
-	V programu GIMP byla většina potřeb grafiky této hry pokryta nástrojem tužka. Vhod přišla také možnost nechat si v obrázku vykreslit mřížku oddělující jednotlivé snímky ve spritesheetu. GIMP nemá žádné podpůrné nástroje pro tvorbu animací. Ty proto vznikaly tak, že byly nakresleny jejich jednotlivé snímky, v Unity se z nich vytvořila animace a teprve v té chvíli si bylo možné animaci prohlédnout. Kvůli neintuitivnosti a časové náročnosti tohoto procesu se nakonec postava hráče stala jediným objektem ve hře, který disponuje animacemi složenými z více snímků.
+	V programu GIMP byla většina potřeb grafiky této hry pokryta nástrojem tužka. Vhod přišla také možnost nechat si v obrázku vykreslit mřížku oddělující jednotlivé snímky ve spritesheetu. GIMP nemá žádné podpůrné nástroje pro tvorbu animací. Ty proto vznikaly tak, že byly nakresleny jejich jednotlivé snímky, v Unity se z nich vytvořila animace a teprve v té chvíli bylo možné si animaci prohlédnout. Kvůli neintuitivnosti a časové náročnosti tohoto procesu se nakonec postava hráče stala jediným objektem ve hře, který disponuje animacemi složenými z více snímků.
 	
 	\begin{figure}[ht]
 		\centering
@@ -290,7 +288,7 @@
 	
 	První implementací pohybu postavy bylo použití funkce \textit{Transform.Translate}. Ta na vstupu dostává vektor, který přičte k současným souřadnicím herního objektu a následně ho na tyto souřadnice přemístí. Pokud do funkce dosadíme směrový vektor odpovídající aktuálně stisknutým směrovým klávesám vynásobený rychlostí a budeme ji volat v metodě \textit{Update}, pak se bude objekt pohybovat daným směrem a danou rychlostí. Metoda \textit{Update} je ale volána každý snímek a snímková frekvence hry nemusí být konstantní. Pro dosažení neměnné rychlosti je ještě třeba vynásobit směrový vektor hodnotou \textit{Time.deltaTime}, která je rovna převrácené hodnotě snímkové frekvence.
 	
-	Aby spolu dva herní objekty v Unity mohly kolidovat (např. aby hráč neprošel stolem, ale zastavil se o něj), musí oba objekty mít nějaký collider a jeden z nich navíc komponentu \textit{RigidBody2D} (dále jen RB). Po přidání této komponenty začne herní objekt podléhat fyzice. Komponenta RB byla přidána na postavu hráče a díky tomu lze s postavou pohybovat nastavováním proměnné RB.\textit{velocity}, u které už není třeba řešit snímkovou frekvenci. U komponenty RB bylo potřeba nastavit gravitační zrychlení na nulu (u top-down her se gravitace obvykle nevyužívá) a uzamknout rotaci na ose z. Dále byl nastaven druh kontroly kolizí na \textit{Continuous}, aby byly kolize detekovány i při vyšších rychlostech.
+	Aby spolu dva herní objekty v Unity mohly kolidovat (např. aby hráč neprošel stolem, ale zastavil se o něj), musí oba objekty mít nějaký collider a jeden z nich navíc komponentu \textit{RigidBody2D} (dále jen RB). Po přidání této komponenty začne herní objekt podléhat fyzice. Komponenta RB byla přidána na postavu hráče a díky tomu lze s postavou pohybovat nastavováním proměnné \textit{RB.velocity}, u které už není třeba řešit snímkovou frekvenci. U komponenty RB bylo potřeba nastavit gravitační zrychlení na nulu (u top-down her se gravitace obvykle nevyužívá) a uzamknout rotaci na ose z. Dále byl nastaven druh kontroly kolizí na \textit{Continuous}, aby byly kolize detekovány i při vyšších rychlostech.
 	
 	Posledním důležitým nastavením u RB je interpolace. Jelikož fyzické výpočty v Unity běží na konstantní frekvenci a grafika je vykreslována s proměnnou frekvencí, tak se pohyb herních objektů, které podléhají fyzice, může vykreslovat sekaně. Toto je zřetelné především u objektů následovaných kamerou, což je právě postava hráče, a zapnutím interpolace se tomuto jevu dá zabránit.
 	\cite{UnityDocsInterpolation}
@@ -344,7 +342,7 @@
 		 
 	\subsection{Zorné pole}
 	
-	Jak již bylo zmíněno v sekci návrhu, nepřátelská jednotka může detekovat postavu hráče, pokud jsou splněny dvě podmínky. První podmínkou je, že se hráč musí nacházet v nepřítelově zorném poli, které má tvar kruhové výseče. Druhá podmínka tvrdí, že hráč musí být viděn přímo. Mezi hráčem a nepřítelem tedy nesmí být žádná stěna a pokud je navíc hráč skrčený, nemůže mezi nimi být ani žádný objekt jako stůl, židle, koš apod. Postavy hráče a nepřítele jsou spojeny pomyslnou úsečkou, jejíž vlastnosti určují splnění těchto podmínek.
+	Jak již bylo zmíněno v sekci návrhu, nepřátelská jednotka může detekovat postavu hráče, pokud jsou splněny dvě podmínky. První podmínkou je, že se hráč musí nacházet v nepřítelově zorném poli, které má tvar kruhové výseče. Druhá podmínka tvrdí, že hráč musí být nepřítelem viděn přímo. Mezi hráčem a nepřítelem tedy nesmí být žádná stěna a pokud je navíc hráč skrčený, nemůže mezi nimi být ani žádný objekt jako stůl, židle, koš apod. Postavy hráče a nepřítele jsou spojeny pomyslnou úsečkou, jejíž vlastnosti určují splnění těchto podmínek.
 	
 	První je kontrolována délka úsečky. Pokud je delší než poloměr výseče $viewDistance$, znamená to, že se hráč nachází mimo zorné pole. Nepřítel se kouká směrem na hráče, pokud platí $|facingAngle - enemyToPlayerAngle| \le \frac{FOV}{2}$, kde $FOV$ značí velikost středového úhlu kruhové výseče. Druhá podmínka je kontrolována voláním Unity funkce \textit{Physics2D.Linecast}.
 		
@@ -381,7 +379,7 @@
 	
 	Nejpropracovanější mechanikou je pravděpodobně systém plížení. Hru lze dohrát od začátku do konce bez zranění jediné nepřátelské jednotky. Pokud nepřítel někde zahlédne hráče, vydá se toto místo prozkoumat. Až když se hráč nachází v jeho zorném poli déle, přepne se do stavu pronásledování. Díky vizualizaci zorného pole nepřátel může hráč plánovat načasování a cestu svých kroků.
 	
-	Grafika hry je nakreslena ve stylu pixel art a i přes nízkou zkušenost autora se podařilo vytvořit sprity, které svým vzhledem připomínají budovu FM.
+	Grafika hry je nakreslena ve stylu pixel art a i přes nízkou zkušenost autora se podařilo vytvořit sprity, které svým vzhledem připomínají interiér budovy FM.
 	
 	\section{Nedostatky} % Chybí audio, combat, accessibility features, DÉLKA HRY
 	

@@ -1,0 +1,121 @@
+\documentclass[10pt]{beamer}
+
+% Balíčky
+\usepackage[czech]{babel}
+\usepackage{bchart}
+
+% Makra
+\newcommand{\resources}{Resources/}
+
+% Nastavení beamer titlepage
+\title{Vývoj akční videohry zasazené do prostředí FM}
+\subtitle{Bakalářský projekt}
+\author{Radek Mocek}
+\date{\today}
+
+% Beamer template
+\input{\resources beamerTemplate}
+
+% Začátek prezentace
+\begin{document}
+	
+	% Titulní strana
+	{
+	\setbeamertemplate{footline}{} % Titulní strana bez patičky
+	\frame[noframenumbering]{\titlepage} % Nepočítat do celkového počtu framů
+	}
+	
+	% Obsah
+%	\begin{frame}{Obsah prezentace}
+%		\tableofcontents
+%	\end{frame}	
+
+	% Slide 0 :: Zadání
+	\section{Zadání} % Tohle je zde kvůli případnému obsahu
+	\begin{frame}{Zadání} % Slide a jeho napdpis
+		\begin{enumerate} \setlength\itemsep{10pt} % Číslovaný seznam
+			\item Rešerše 2D tvorby v Unity
+			\item Návrh videohry
+			\item Umělá inteligence pro nepřátele, FSM
+			\item Implementace, FM zasazení
+			\item Zhodnocení
+		\end{enumerate}
+	\end{frame}
+
+	% Slide 1 :: Motivace
+	\section{Motivace}
+	\begin{frame}{Motivace}
+		\begin{itemize}\setlength\itemsep{10pt} % Nečíslovaný seznam
+			\item Záliba ve videohrách
+			\item Rozmanitost herního vývoje
+			\item Unity $\implies$ C\#
+		\end{itemize}
+	\end{frame}
+	
+	% Slide 2 :: Unity obecně
+	\section{Unity}
+	\begin{frame}{Unity}
+		\begin{itemize}\setlength\itemsep{10pt}
+			\item Herní engine, 2D i 3D tvorba
+			\item 2005, Unity Technologies, closed source
+		\end{itemize}
+		\vfill
+		\begin{bchart}[max=108,plain,unit=\ 000,scale=1.2]
+			\bcbar[text=Unity,color=gray!40!white]{108}
+			\bcbar[text=Construct,color=teal!40!white]{32}
+			\bcbar[text=GM:S,color=green!40!white]{15}
+			\bcbar[text=Godot,color=blue!40!white]{14}
+			\bcxlabel{Počet projektů v daném enginu na itch.io (zaokrouhleno na tisíce)}
+		\end{bchart}
+	\end{frame}
+	
+	% Slide 3 :: Unity obrázek
+	% >> Zmínit komponenty, C#, IDE
+	\begin{frame}[plain]
+			\makebox[\linewidth]{\includegraphics[width=\paperwidth]{Images/Unity}}
+	\end{frame}
+	
+	% sprite editor, animation, tilemap, urp
+	\section{Unity 2D}
+	\begin{frame}{Unity 2D}
+	\end{frame}
+	
+	% pixel art, topdown
+	\section{Návrh – vizuální stránka}
+	\begin{frame}{Návrh – vizuální stránka}
+	\end{frame}
+	
+	% action, stealth
+	\section{Návrh – žánr}
+	\begin{frame}{Návrh – žánr}
+	\end{frame}
+	
+	% ...
+	\section{Návrh – FSM}
+	\begin{frame}{Návrh – FSM}
+	\end{frame}
+	
+	% gimp, c#
+	\section{Implementace}
+	\begin{frame}{Implementace}
+	\end{frame}
+	
+	% ...
+	\section{Implementace – FSM}
+	\begin{frame}{Implementace – FSM}
+	\end{frame}
+
+	% ...
+	\section{Závěr}
+	\begin{frame}{Závěr}
+	\end{frame}
+
+	% Závěr
+	{
+	\setbeamertemplate{footline}{} % Závěr bez patičky
+	\begin{frame}[noframenumbering] % Nepočítat do celkového počtu framů
+		Děkuji za pozornost
+	\end{frame}
+	}
+	
+\end{document}

@@ -1,0 +1,21 @@
+% Odrážky
+\setbeamertemplate{itemize items}[circle]
+
+% Odebrání tlačítek na navigaci
+\setbeamertemplate{navigation symbols}{}
+
+% Patička
+\setbeamertemplate{footline}{
+	\includegraphics[width=\paperwidth]{\resources fmFooter.pdf}
+	\vspace{-3.8mm}
+	% zde musí být prázdný řádek jinak je číslo slajdu špatně umístěno:
+	
+	\hspace{\stretch{1}}
+	\textcolor{white}{\insertframenumber/\inserttotalframenumber}
+	\hspace{3.5mm}	
+	\vspace{3mm}
+}
+
+% Barvičky
+\definecolor{fm}{HTML}{DE6100}
+\setbeamercolor{structure}{fg=fm}

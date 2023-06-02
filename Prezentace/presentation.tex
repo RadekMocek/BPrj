@@ -11,7 +11,7 @@
 \title{Vývoj akční videohry zasazené do prostředí FM}
 \subtitle{Bakalářský projekt}
 \author{Radek Mocek}
-\date{\today}
+\date{}
 
 % Beamer template
 \input{\resources beamerTemplate}
@@ -34,11 +34,11 @@
 	\section{Zadání} % Tohle je zde kvůli případnému obsahu
 	\begin{frame}{Zadání} % Slide a jeho napdpis
 		\begin{enumerate} \setlength\itemsep{10pt} % Číslovaný seznam
-			\item Rešerše 2D tvorby v Unity
-			\item Návrh videohry
-			\item Umělá inteligence pro nepřátele, FSM
-			\item Implementace, FM zasazení
-			\item Zhodnocení
+			\item Proveďte rešerši nástrojů pro tvorbu 2D videoher s využitím Unity engine. Prozkoumejte jejich funkce, výhody a nevýhody a jak se dají použít pro vaše potřeby.
+			\item Navrhněte koncept herní mechaniky pro 2D top-down videohru.
+			\item Vytvořte jednoduchý systém umělé inteligence pro nepřátelské jednotky ve hře,	který bude řízen stavovým automatem.
+			\item Implementujte demonstrativní videohru zasazenou do prostředí budovy FM TUL.
+			\item Výslednou videohru kriticky zhodnoťte a navrhněte případné rozšíření či vylepšení.
 		\end{enumerate}
 	\end{frame}
 
@@ -46,7 +46,7 @@
 	\section{Motivace}
 	\begin{frame}{Motivace}
 		\begin{itemize}\setlength\itemsep{10pt} % Nečíslovaný seznam
-			\item Záliba ve videohrách
+			%\item Záliba ve videohrách
 			\item Rozmanitost herního vývoje
 			\item Unity $\implies$ C\#
 		\end{itemize}
@@ -80,60 +80,65 @@
 		\makebox[\linewidth]{\includegraphics[width=\paperwidth]{Images/UnityShowcase}}
 	\end{frame}
 	
-	% Slide 5 :: Návrh vizuálu
-	\section{Návrh – vizuální stránka}
-	\begin{frame}{Návrh – vizuální stránka}
+	% Slide 5 :: Návrh
+	\section{Návrh}
+	\begin{frame}{Návrh}
 		\begin{itemize}\setlength\itemsep{10pt}
-			\item Pixel art – jednoduchost, rychlost
-			\item Top-down perspektiva
-		\end{itemize}
-		TODO: Obrázky
+			\item Příběh
+			\item Vizuální stránka
+			\begin{itemize}
+				\item Pixel art – jednoduchost, rychlost
+				\item Top-down perspektiva
+			\end{itemize}
+			\item Žánr
+			\begin{itemize}
+				\item Akční
+				\item Stealth
+			\end{itemize}
+		\end{itemize}		
 	\end{frame}
-	
-	% Slide 6 :: Návrh žánru
-	\section{Návrh – žánr}
-	\begin{frame}{Návrh – žánr}
-		\begin{itemize}\setlength\itemsep{10pt}
-			\item Akční
-			\item Stealth
-		\end{itemize}
-		TODO: Obrázky
-	\end{frame}
-	
-	% Slide 7 :: Návrh FSM
-	\section{Návrh – FSM}
-	\begin{frame}{Návrh – FSM}
+		
+	% Slide 6 :: Návrh FSM
+	\section{Návrh – stavový automat}
+	\begin{frame}{Návrh – stavový automat}
 		\begin{figure}[h]
 			\centering
 			\includegraphics[width=\textwidth]{Images/FSM}
 		\end{figure}
 	\end{frame}
 	
-	% Slide 8 :: Implementace
+	% Slide 7 :: Implementace
 	\section{Implementace}
 	\begin{frame}{Implementace}
 		\begin{itemize}\setlength\itemsep{10pt}
 			\item Grafika – GIMP, problémové animace
-			\item Postava hráče – RigidBody2D, FSM
-			\item Tvorba mapy – Tilemap, problémy s perspektivou a URP
-			\item Jednotka nepřítele – FSM, A*
+			\item Postava hráče – RigidBody2D, stavový automat
+			\item Tvorba mapy – tilemap, problémy s perspektivou a URP
+			\item Jednotka nepřítele – stavový automat, A*
 		\end{itemize}
-		TODO: Obrázky
+		\vfill
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\textwidth]{Images/Perspective}
+		\end{figure}
 	\end{frame}
 	
-	% Slide 9 :: Implementace FSM
-	\section{Implementace – FSM}
-	\begin{frame}{Implementace – FSM}
-		TODO: C\# code snippets a/nebo obrázek
+	% Slide 8 :: Implementace FSM
+	\section{Implementace – stavový automat}
+	\begin{frame}{Implementace – stavový automat}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\textwidth]{Images/FSM_Specific}
+		\end{figure}		
 	\end{frame}
 
-	% Slide 10 :: Závěr
+	% Slide 9 :: Závěr
 	\section{Závěr}
 	\begin{frame}{Závěr}
 		\begin{itemize}\setlength\itemsep{10pt}
 			\item $+$ Grafický styl
 			\item $+$ Stealth
-			\item $+$ FSM
+			\item $+$ Implementace stavového automatu
 			\item $-$ Audio
 			\item $-$ Soubojový systém
 			\item $-$ Přístupnost

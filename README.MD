@@ -1,0 +1,1 @@
+![showcase](./Prezentace/showcase.gif)
